@@ -16,4 +16,13 @@
     <string name="adhar_no">Aadhar no</string>
     <string name="agreement">By continuing,you are confirming that you have read and agree to our terms of Service and Privacy policy.</string>
     <string name="create_my_account">Create My Account</string>
+
+    <!--Tabs-->
+    <string name="home">HOME</string>
+    <string name="category">CATEGORY</string>
+    <string name="fans">FANS CLUB</string>
+    <string name="about">ABOUT US</string>
+    <string name="events">EVENTS</string>
+    <string name="language">LANGUAGE</string>
+
 </resources>
