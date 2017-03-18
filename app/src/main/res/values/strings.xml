@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Cine</string>
+    <string name="password_hint">Password</string>
+    <string name="username_hint">Username</string>
+    <string name="remember_me">Remember me</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="login">LOGIN</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="answer_few">Answer few Questions:</string>
+    <string name="you_are">You are</string>
+    <string name="cine_profession">Cine Professionist</string>
+    <string name="fans_club">Fans club</string>
+    <string name="basic_info">Your basic info..</string>
+    <string name="name">Name</string>
+    <string name="email_id">Email Id</string>
+    <string name="adhar_no">Aadhar no</string>
+    <string name="agreement">By continuing,you are confirming that you have read and agree to our terms of Service and Privacy policy.</string>
+    <string name="create_my_account">Create My Account</string>
+</resources>
