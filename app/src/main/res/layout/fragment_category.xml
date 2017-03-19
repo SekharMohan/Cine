@@ -2,14 +2,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="5dp"
     tools:context=".views.fragments.Category">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/categorySelectionSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:prompt="Select Category">
+
+    </android.support.v7.widget.AppCompatSpinner>
+
+    <View
+        android:id="@+id/lineView"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/categorySelectionSpinner"
+        android:layout_marginTop="5dp"
+        android:background="#000000">
+
+    </View>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/feedCategoryView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/category"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+        android:layout_below="@+id/lineView"
+        android:layout_marginTop="5dp" />
 
 </RelativeLayout>

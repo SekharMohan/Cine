@@ -1,15 +1,77 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     tools:context=".views.fragments.Home">
 
-    <TextView
+    <com.cine.views.widgets.CircularImageView
+        android:id="@+id/userProfilePic"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@mipmap/ic_launcher_round"
+        app:civ_border_color="#FFFFFF"
+        app:civ_border_width="2dp" />
+
+    <EditText
+        android:id="@+id/statusView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@+id/userProfilePic"
+        android:gravity="top"
+        android:hint="@string/whats_on_your_mind"
+        android:inputType="textMultiLine"
+        android:lines="3"
+        android:scrollHorizontally="false" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/pickImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/home"
-        android:textSize="40dp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"/>
+        android:layout_below="@+id/statusView"
+        android:layout_marginTop="7dp"
+        android:layout_toLeftOf="@+id/pickVideo"
+        android:src="@drawable/image" />
 
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/pickVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/statusView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="7dp"
+        android:layout_toLeftOf="@+id/sendStatus"
+        android:src="@drawable/video" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/sendStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/statusView"
+        android:layout_below="@+id/statusView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="7dp"
+        android:src="@drawable/send" />
+
+    <View
+        android:id="@+id/lineView"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/sendStatus"
+        android:layout_marginTop="5dp"
+        android:background="#000000">
+
+    </View>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/feedView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lineView"
+        android:layout_marginTop="5dp">
+
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

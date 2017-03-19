@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <com.cine.views.widgets.CircularImageView
+        android:id="@+id/feedUserProfilePic"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@mipmap/ic_launcher_round"
+        app:civ_border_color="#FFFFFF"
+        app:civ_border_width="2dp" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/nameAndProfessionView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="14dp"
+        android:layout_toRightOf="@+id/feedUserProfilePic"
+        android:text="Kumar, Movie director" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/hoursView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/nameAndProfessionView"
+        android:layout_below="@+id/nameAndProfessionView"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/feedUserProfilePic"
+        android:text="5 hours ago" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/languageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameAndProfessionView"
+
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/hoursView"
+        android:text=",Tamil" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/feedImageView"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_below="@+id/feedUserProfilePic"
+        android:layout_margin="5dp" />
+
+    <VideoView
+        android:id="@+id/feedVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_below="@+id/feedUserProfilePic"
+        android:layout_margin="5dp" />
+
+    <Button
+        android:id="@+id/likeButton"
+        android:layout_width="70dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/feedVideoView"
+        android:background="#FFFFFF"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Like"
+        android:textColor="#479F11" />
+
+    <Button
+        android:id="@+id/commentButton"
+        android:layout_width="70dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/feedVideoView"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/likeButton"
+        android:background="#FFFFFF"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:text="Comment"
+        android:textColor="#479F11" />
+
+    <View
+        android:id="@+id/lineView"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/likeButton"
+        android:layout_marginTop="2dp"
+        android:background="#000000">
+
+    </View>
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/commentViewFromServer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lineView"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/userNameWhoCommented"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="0.3"
+            android:text="Name" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/commentedText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="Showing comments from server" />
+
+        <Button
+            android:id="@+id/replyForCommentButton"
+            android:layout_width="70dp"
+            android:layout_height="35dp"
+
+            android:layout_weight="0.2"
+            android:background="#FFFFFF"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="Reply"
+            android:textColor="#479F11" />
+    </android.support.v7.widget.LinearLayoutCompat>
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:id="@+id/commentSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/commentViewFromServer"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/commentEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_weight="0.9"
+            android:hint="Comment"
+            android:maxLines="10" />
+
+        <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/sendComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:src="@drawable/send" />
+    </android.support.v7.widget.LinearLayoutCompat>
+
+
+</RelativeLayout>
