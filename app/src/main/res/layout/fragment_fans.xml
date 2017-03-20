@@ -9,7 +9,7 @@
         android:id="@+id/fansSelectionSpinner"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:prompt="Select Category">
+       >
 
     </android.support.v7.widget.AppCompatSpinner>
 
