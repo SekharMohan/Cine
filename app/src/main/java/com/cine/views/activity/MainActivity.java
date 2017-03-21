@@ -12,12 +12,18 @@
     import android.widget.TextView;
 
     import com.cine.R;
+    import com.cine.service.WebService;
+    import com.cine.service.WebServiceWrapper;
+    import com.cine.service.model.FeedModel;
+    import com.cine.service.network.Params;
+    import com.cine.service.network.callback.ICallBack;
     import com.cine.views.fragments.AboutUs;
     import com.cine.views.fragments.Category;
     import com.cine.views.fragments.Events;
     import com.cine.views.fragments.FansClub;
     import com.cine.views.fragments.Home;
     import com.cine.views.fragments.Language;
+    import com.google.gson.Gson;
 
     import java.util.ArrayList;
     import java.util.List;
@@ -26,7 +32,7 @@
     import butterknife.BindView;
     import butterknife.ButterKnife;
 
-    public class MainActivity extends AppCompatActivity {
+    public class MainActivity extends AppCompatActivity implements ICallBack<String> {
     @BindString(R.string.about)
   public   String about;
         @BindString(R.string.home)
@@ -54,6 +60,16 @@
             setupViewPager(viewPager);
             tabLayout.setupWithViewPager(viewPager);
             setupTabIcons();
+            apiCall();
+        }
+
+        private void apiCall() {
+
+            Params params=new Params();
+            params.addParam("cg_req_name","getposts");
+
+            params.addParam("cg_username","prabu944");
+            WebServiceWrapper.getInstance().callService(WebService.FEEDS_URL,params,this);
         }
 
         /**
@@ -105,6 +121,17 @@
             adapter.addFrag(new Events(),events);
             adapter.addFrag(new AboutUs(),about);
             viewPager.setAdapter(adapter);
+        }
+
+        @Override
+        public void onSuccess(String response) {
+            FeedModel model = new Gson().fromJson(response,FeedModel.class);
+            System.out.println(model);
+        }
+
+        @Override
+        public void onFailure(String response) {
+
         }
 
         class ViewPagerAdapter extends FragmentPagerAdapter {

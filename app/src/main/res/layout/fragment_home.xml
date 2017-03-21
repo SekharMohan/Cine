@@ -6,10 +6,11 @@
     android:padding="10dp"
     tools:context=".views.fragments.Home">
 
+
     <com.cine.views.widgets.CircularImageView
         android:id="@+id/userProfilePic"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:src="@mipmap/ic_launcher_round"
         app:civ_border_color="#FFFFFF"
         app:civ_border_width="2dp" />
@@ -25,7 +26,8 @@
         android:hint="@string/whats_on_your_mind"
         android:inputType="textMultiLine"
         android:lines="3"
-        android:scrollHorizontally="false" />
+        android:scrollHorizontally="false"
+        android:background="@drawable/edittext_bg"/>
 
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/pickImage"
@@ -34,7 +36,9 @@
         android:layout_below="@+id/statusView"
         android:layout_marginTop="7dp"
         android:layout_toLeftOf="@+id/pickVideo"
-        android:src="@drawable/image" />
+        android:src="@drawable/image"
+        style="@style/Widget.AppCompat.ImageButton"
+        android:background="@drawable/image_button_circle"/>
 
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/pickVideo"
@@ -44,7 +48,9 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="7dp"
         android:layout_toLeftOf="@+id/sendStatus"
-        android:src="@drawable/video" />
+        android:src="@drawable/video"
+        android:background="@drawable/image_button_circle"
+        style="@style/Widget.AppCompat.ImageButton"/>
 
     <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/sendStatus"
@@ -54,7 +60,9 @@
         android:layout_below="@+id/statusView"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="7dp"
-        android:src="@drawable/send" />
+        android:src="@drawable/send"
+        android:background="@drawable/image_button_circle"
+        style="@style/Widget.AppCompat.ImageButton"/>
 
     <View
         android:id="@+id/lineView"
