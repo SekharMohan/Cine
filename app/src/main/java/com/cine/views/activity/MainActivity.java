@@ -1,5 +1,6 @@
     package com.cine.views.activity;
 
+    import android.content.Intent;
     import android.os.Bundle;
     import android.support.design.widget.TabLayout;
     import android.support.v4.app.Fragment;
@@ -9,6 +10,8 @@
     import android.support.v7.app.AppCompatActivity;
     import android.support.v7.widget.Toolbar;
     import android.view.LayoutInflater;
+    import android.view.Menu;
+    import android.view.MenuItem;
     import android.widget.TextView;
 
     import com.cine.R;
@@ -45,8 +48,8 @@
         public    String events;
         @BindString(R.string.category)
         public String category;
-        @BindView(R.id.toolbar)
-        public   Toolbar toolbar;
+       /* @BindView(R.id.toolbar)
+        public   Toolbar toolbar;*/
         @BindView(R.id.tabs)
         public    TabLayout tabLayout;
         @BindView(R.id.viewpager)
@@ -61,6 +64,26 @@
             tabLayout.setupWithViewPager(viewPager);
             setupTabIcons();
             apiCall();
+        }
+
+
+        @Override
+        public boolean onCreateOptionsMenu(Menu menu) {
+            getMenuInflater().inflate(R.menu.main_menu, menu);
+            return super.onCreateOptionsMenu(menu);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.action_edit_profile:
+                    startActivity(new Intent(this,EditProfile.class));
+                    break;
+                case R.id.action_logout:
+
+                    break;
+            }
+            return super.onOptionsItemSelected(item);
         }
 
         private void apiCall() {
