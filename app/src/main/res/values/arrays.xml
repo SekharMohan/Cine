@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="language">
+        <item>Hindi</item>
+        <item>Kanadam</item>
+        <item>Malayalam</item>
+        <item>Tamil</item>
+        <item>Telugu</item>
+    </string-array>
+    <string-array name="category">
+        <item>Heros</item>
+        <item>Heroins</item>
+        <item>Villan</item>
+        <item>comedians</item>
+        <item>Music Directors</item>
+    </string-array>
+    </resources>
