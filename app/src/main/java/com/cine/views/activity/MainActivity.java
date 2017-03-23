@@ -1,5 +1,6 @@
     package com.cine.views.activity;
 
+    import android.content.Context;
     import android.content.Intent;
     import android.os.Bundle;
     import android.support.design.widget.TabLayout;
@@ -8,7 +9,6 @@
     import android.support.v4.app.FragmentPagerAdapter;
     import android.support.v4.view.ViewPager;
     import android.support.v7.app.AppCompatActivity;
-    import android.support.v7.widget.Toolbar;
     import android.view.LayoutInflater;
     import android.view.Menu;
     import android.view.MenuItem;
@@ -20,12 +20,15 @@
     import com.cine.service.model.FeedModel;
     import com.cine.service.network.Params;
     import com.cine.service.network.callback.ICallBack;
+    import com.cine.utils.LocalStorage;
+    import com.cine.utils.ToastUtil;
     import com.cine.views.fragments.AboutUs;
     import com.cine.views.fragments.Category;
     import com.cine.views.fragments.Events;
     import com.cine.views.fragments.FansClub;
     import com.cine.views.fragments.Home;
     import com.cine.views.fragments.Language;
+    import com.cine.views.widgets.Loader;
     import com.google.gson.Gson;
 
     import java.util.ArrayList;
@@ -55,15 +58,21 @@
         @BindView(R.id.viewpager)
         public   ViewPager viewPager;
 
+        public static Intent getStartIntent(Context context) {
+            return new Intent(context, MainActivity.class);
+        }
+
+
         @Override
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             ButterKnife.bind(this);
+            apiCall();
             setupViewPager(viewPager);
             tabLayout.setupWithViewPager(viewPager);
             setupTabIcons();
-            apiCall();
+
         }
 
 
@@ -87,12 +96,12 @@
         }
 
         private void apiCall() {
-
+            Loader.showProgressBar(this);
             Params params=new Params();
             params.addParam("cg_req_name","getposts");
 
             params.addParam("cg_username","prabu944");
-            WebServiceWrapper.getInstance().callService(WebService.FEEDS_URL,params,this);
+            WebServiceWrapper.getInstance().callService(this,WebService.FEEDS_URL,params,this);
         }
 
         /**
@@ -148,13 +157,22 @@
 
         @Override
         public void onSuccess(String response) {
-            FeedModel model = new Gson().fromJson(response,FeedModel.class);
-            System.out.println(model);
+            LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+            dismissLoader();
         }
 
         @Override
         public void onFailure(String response) {
+            updateErrorUI(response);
+            dismissLoader();
+        }
 
+        private void dismissLoader() {
+            Loader.dismissProgressBar();
+        }
+
+        private void updateErrorUI(String errorMsg) {
+            ToastUtil.showErrorUpdate(this, errorMsg);
         }
 
         class ViewPagerAdapter extends FragmentPagerAdapter {

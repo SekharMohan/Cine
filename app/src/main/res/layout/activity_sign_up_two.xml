@@ -71,6 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/card_view"
+                android:layout_marginTop="5dp"
                 app:cardElevation="4dp">
 
                 <android.support.v7.widget.LinearLayoutCompat
@@ -155,14 +156,15 @@
                         android:layout_marginTop="5dp"
                         android:text="@string/agreement"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        />
 
                     <Button
                         android:id="@+id/createMyAccountButton"
                         android:layout_width="fill_parent"
                         android:layout_height="45dp"
                         android:layout_marginTop="30dp"
-                        android:background="@color/colorPrimary"
+                        android:background="@drawable/button_bg"
                         android:text="@string/create_my_account"
                         android:textColor="@android:color/white" />
 

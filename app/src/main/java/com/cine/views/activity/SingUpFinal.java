@@ -1,8 +1,9 @@
 package com.cine.views.activity;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
 
@@ -15,7 +16,9 @@ public class SingUpFinal extends AppCompatActivity {
 
     @BindView(R.id.createMyAccountButton)
     public AppCompatButton createMyAccountButton;
-
+    public static Intent getStartIntent(Context context) {
+        return new Intent(context, SingUpFinal.class);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

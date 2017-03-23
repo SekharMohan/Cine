@@ -1,6 +1,9 @@
 package com.cine.service;
 
+import android.content.Context;
+
 import com.cine.R;
+import com.cine.service.network.NetworkUtil;
 import com.cine.service.network.Params;
 import com.cine.service.network.WebServiceRequest;
 import com.cine.service.network.callback.ICallBack;
@@ -25,20 +28,27 @@ public class WebServiceWrapper {
         return webServiceWrapper;
     }
 
-    public void callService(String url, Params params, final ICallBack listener){
-        this.listener=listener;
-        new WebServiceRequest<String>(WebServiceRequest.RequestMethod.POST, new ICallBack<String>() {
-            @Override
-            public void onSuccess(String response) {
-                listener.onSuccess(response);
+    public void callService(Context mcontext ,String url, Params params, final ICallBack listener) {
 
-            }
+        this.listener = listener;
+        if (NetworkUtil.isConnected(mcontext)) {
+            new WebServiceRequest<String>(WebServiceRequest.RequestMethod.POST, new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+                    listener.onSuccess(response);
 
-            @Override
-            public void onFailure(String response) {
-                listener.onFailure(response);
+                }
 
-            }
-        },url,params).execute();
+                @Override
+                public void onFailure(String response) {
+                    listener.onFailure(response);
+
+                }
+            }, url, params).execute();
+        }else {
+            listener.onFailure(mcontext.getString(R.string.no_internet));
+        }
     }
+        
+    
 }

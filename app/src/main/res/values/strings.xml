@@ -17,6 +17,11 @@
     <string name="agreement">By continuing,you are confirming that you have read and agree to our terms of Service and Privacy policy.</string>
     <string name="create_my_account">Create My Account</string>
     <string name="whats_on_your_mind">Whats on your mind?</string>
+    <string name="address">Address</string>
+    <string name="mobile_number">Mobile number</string>
+    <string name="city_from">Native city</string>
+    <string name="living_city">Currently living</string>
+    <string name="state">State</string>
 
     <!--Tabs-->
     <string name="home">HOME</string>
@@ -25,5 +30,7 @@
     <string name="about">MY WALL</string>
     <string name="events">EVENTS</string>
     <string name="language">LANGUAGE</string>
+    <string name="login_field_empty_warning">Please Enter the UserName and Password</string>
+    <string name="no_internet">No Internet!. Please check your internet connection</string>
 
 </resources>

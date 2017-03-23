@@ -3,6 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorErro">#FFEF0D11</color>
     <color name="material_teal">#E1B721</color>
     <color name="color_app">#495A88</color>
+
+    <color name="transparent">#00000000</color>
+
 </resources>

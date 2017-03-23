@@ -1,11 +1,11 @@
 package com.cine.views.activity;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
-import android.widget.Button;
 
 import com.cine.R;
 
@@ -17,6 +17,10 @@ public class SignUpOne extends AppCompatActivity {
     public AppCompatButton cineProfessionistButton;
     @BindView(R.id.fansClubButton)
     public   AppCompatButton fansClubButton;
+
+    public static Intent getStartIntent(Context context) {
+        return new Intent(context, SignUpOne.class);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
