@@ -29,18 +29,20 @@ public class SignUpOne extends AppCompatActivity {
         cineProfessionistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickEvent();
+                onClickEvent(getString(R.string.user_type_professional));
             }
         });
         fansClubButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onClickEvent();
+                onClickEvent(getString(R.string.user_type_fans));
             }
         });
     }
 
-    void onClickEvent(){
+    void onClickEvent(String type){
+        Intent intent =  SingUpFinal.getStartIntent(this);
+        intent.putExtra("user_type",type);
         startActivity(new Intent(this,SingUpFinal.class));
     }
 }

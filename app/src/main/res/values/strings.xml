@@ -35,4 +35,11 @@
     <string name="category_hint">Select your category</string>
     <string name="language_hint">Select your language</string>
 
+    <!--user category-->
+    <string name="user_type_professional">cineprofession</string>
+    <string name="user_type_fans">fans</string>
+    <string name="sub_category_hint">Select sub category</string>
+    <string name="lname">LName</string>
+    <string name="fname">FName</string>
+
 </resources>
