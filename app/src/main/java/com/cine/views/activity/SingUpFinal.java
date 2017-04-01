@@ -74,8 +74,11 @@ public class SingUpFinal extends AppCompatActivity {
         ButterKnife.bind(this);
         init();
     }
-
+    private void showLoader(){
+        Loader.showProgressBar(this);
+    }
     private void init() {
+        showLoader();
         int length = arrLanguage.length;
         for(int i=0 ; i<length;i++){
             languageAndId.put(arrLanguage[i],(i+1));
@@ -146,8 +149,10 @@ private void apiCallFansSubCategory(String userCategory, String user){
                               subCat[i] = subCatObject.getScat_name();
                     }
                     spinnerSetup(spiSubCategory,subCat,getString(R.string.sub_category_hint));
+                }else{
+                    updateErrorUI("Something went wrong");
                 }
-
+                dismissLoader();
             }
 
             @Override
@@ -158,9 +163,12 @@ private void apiCallFansSubCategory(String userCategory, String user){
         });
 
 
+    }else {
+
     }
 }
     private void apiCallProfSubCategory(String subCat) {
+        showLoader();
         if(!ValidationUtil.checkEmptyFields(userType,subCat)){
             Params request = new Params();
             request.addParam("REQUEST_METHOD","POST");
@@ -180,7 +188,10 @@ private void apiCallFansSubCategory(String userCategory, String user){
                         }
                         spinnerSetup(spiSubCategory,subCat,getString(R.string.sub_category_hint));
 
+                    }else {
+                        updateErrorUI("Oops! Something wrong");
                     }
+                    dismissLoader();
                 }
 
                 @Override
@@ -215,8 +226,11 @@ private void apiCallFansSubCategory(String userCategory, String user){
 
                         }
                         spinnerSetup(spiCategory,arrProCat,getString(R.string.category_hint));
-                    }
 
+                    }else{
+                        updateErrorUI("Oops! Something worng");
+                    }
+                    dismissLoader();
                 }
 
                 @Override
@@ -261,7 +275,7 @@ private void apiCallFansSubCategory(String userCategory, String user){
 }
 
 private void apiCallRegister(){
-
+showLoader();
     String language =spiLanguage.getItemAtPosition(spiLanguage.getSelectedItemPosition()).toString();
     int lanugaugeId = languageAndId.get(language);
     String category =spiCategory.getItemAtPosition(spiCategory.getSelectedItemPosition()).toString();
@@ -295,7 +309,8 @@ private void apiCallRegister(){
         WebServiceWrapper.getInstance().callService(this, WebService.SIGNUP_URL, request, new ICallBack<String>() {
             @Override
             public void onSuccess(String response) {
-
+                dismissLoader();
+                startActivity(new Intent(SingUpFinal.this,LoginActivity.class));
             }
 
             @Override
@@ -308,6 +323,8 @@ private void apiCallRegister(){
 
 
 
+    }else{
+        updateErrorUI("Select/Enter all the fields");
     }
 
 
@@ -319,7 +336,7 @@ private void apiCallRegister(){
         ToastUtil.showErrorUpdate(this, errorMsg);
     }
     void onClickEvent(){
-        startActivity(new Intent(this,LoginActivity.class));
+        apiCallRegister();
     }
 
 
