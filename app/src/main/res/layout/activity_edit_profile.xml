@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F0F0"
+
     android:orientation="vertical"
     tools:context=".views.activity.EditProfile">
 
@@ -12,6 +12,7 @@
         layout="@layout/custom_action_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -23,160 +24,258 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/card_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                app:cardElevation="4dp">
+
 
                 <RelativeLayout
+                    android:id="@+id/relLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="wrap_content">
 
-                    android:padding="5dp">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:id="@+id/frameLayout">
 
-                    <com.cine.views.widgets.CircularImageView
-                        android:id="@+id/userProfilePic"
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
-                        android:src="@mipmap/ic_launcher_round"
-                        app:civ_border_color="#FFFFFF"
-                        app:civ_border_width="2dp" />
+                        <ImageView
+                            android:id="@+id/base"
+                            android:layout_height="200dp"
+                            android:layout_width="match_parent"
+                            android:src="@drawable/background_material"
+                            />
 
+                        <com.cine.views.widgets.CircularImageView
+                            android:id="@+id/center"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@mipmap/ic_launcher_round"
+                            android:layout_gravity="bottom|center_horizontal"
+                            app:civ_border_color="#FFFFFF"
+                            app:civ_border_width="2dp"
+                            />
+                    </FrameLayout>
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/nameTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_toRightOf="@+id/userProfilePic"
-                        android:text="Name," />
+                        android:layout_below="@+id/frameLayout"
 
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/professionTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/nameTextView"
-                        android:layout_marginLeft="3dp"
-                        android:layout_toRightOf="@+id/nameTextView"
-                        android:text="Director" />
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/genderStatusCityTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/nameTextView"
-                        android:layout_below="@+id/nameTextView"
-                        android:layout_marginTop="8dp"
-                        android:text="Male, Married, Chennai"
-
-                        />
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/birthdayTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/nameTextView"
-                        android:layout_below="@+id/genderStatusCityTextView"
-                        android:layout_marginTop="8dp"
-                        android:text="December 14"
-
-                        />
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/recentProjectsTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignLeft="@+id/nameTextView"
-                        android:layout_below="@+id/birthdayTextView"
-                        android:layout_marginTop="8dp"
-                        android:text="Arunai College ad"
-
-                        />
-
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/aboutMeTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/userProfilePic"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginLeft="10dp"
-                        android:text="About Me :"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="26sp"
                         android:textStyle="bold"
+                        android:text="Santosh" />
 
-                        />
 
-                    <android.support.v7.widget.AppCompatTextView
-                        android:id="@+id/aboutMeDescriptionTextView"
-                        android:layout_width="wrap_content"
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/card_view"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/userProfilePic"
-                        android:layout_toRightOf="@+id/aboutMeTextView"
-                        android:layout_marginTop="8dp"
+                        android:layout_below="@+id/nameTextView"
                         android:layout_marginLeft="5dp"
-                        android:text="I'm a director"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginTop="5dp"
+                        app:cardElevation="2dp"
+
+                        >
+
+                    <android.support.v7.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="7dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_next_week_black" />
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:id="@+id/professionTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginTop="2dp"
+                                android:text="Director"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="12dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_place_black" />
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:id="@+id/genderStatusCityTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginTop="2dp"
+                                android:textSize="14sp"
+                                android:text="Chennai"
+
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_cake_black" />
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:id="@+id/birthdayTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginTop="2dp"
+                                android:text="December 14"
+                                android:textSize="14sp"
+
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_movie_black" />
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:id="@+id/recentProjectsTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginTop="2dp"
+                                android:text="Arunai College ad"
+                                android:textSize="14sp"
+
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="7dp"
+                            android:layout_marginTop="12dp"
+                            android:orientation="horizontal">
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:id="@+id/aboutMeTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
 
 
-                        />
+                                android:text="About Me :"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+
+                                />
+
+                            <android.support.v7.widget.AppCompatTextView
+                                android:id="@+id/aboutMeDescriptionTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+
+                                android:text="I'm a director"
+                                android:textSize="14sp"
+
+
+                                />
+                        </LinearLayout>
+                    </android.support.v7.widget.LinearLayoutCompat>
+                    </android.support.v7.widget.CardView>
                 </RelativeLayout>
-            </android.support.v7.widget.CardView>
+
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/personalInfoTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/card_view"
-
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:text="Personal Information"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/relLayout"
+                android:textSize="16sp"
+                android:paddingLeft="10dp"
+                android:gravity="center_vertical"
+                android:background="#e5e5e5"
                 android:textStyle="bold"
 
-                />
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_view_personal_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/personalInfoTextView"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            app:cardElevation="4dp"
+                android:text="Personal Information"
+                android:textColor="#999999"
 
-            >
+                />
+
 
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="5dp">
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+            android:layout_below="@+id/personalInfoTextView"
+            android:padding="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp">
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textViewEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="EMAIL ID"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                />
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/editProfileEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/email"
+                    android:layout_marginTop="7dp"
+                    android:textSize="13sp"
 
                     android:hint="@string/email_id"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_mob"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textViewMobileNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="MOBILE NUMBER"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                />
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/editProfileMobileNum"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
+                    android:drawableRight="@drawable/mobile"
+                    android:layout_marginTop="7dp"
+                    android:textSize="13sp"
                     android:hint="@string/mobile_number"
                     android:inputType="number"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+
             <EditText
                 android:id="@+id/addressView"
                 android:layout_width="fill_parent"
@@ -186,48 +285,72 @@
                 android:hint="@string/address"
                 android:layout_marginTop="8dp"
                 android:inputType="textMultiLine"
+                android:textSize="13sp"
                 android:lines="3"
                 android:scrollHorizontally="false"
                 android:background="@drawable/edittext_bg"/>
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_city_from"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textViewNativeCity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="NATIVE CITY"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                />
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/editProfileCityFrom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
+                    android:drawableRight="@drawable/ic_place_black"
+                    android:layout_marginTop="7dp"
+                    android:textSize="13sp"
                     android:hint="@string/city_from"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_city_living"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textViewCurrentlyLiving"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="CURRENTLY LIVING"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                />
 
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/editProfileLivingCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_place_black"
+                    android:layout_marginTop="7dp"
+                    android:textSize="13sp"
 
                     android:hint="@string/living_city"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/input_layout_state"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
 
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/textViewState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="STATE"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                />
                 <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/editProfileState"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_place_black"
+                    android:layout_marginTop="7dp"
+                    android:textSize="13sp"
 
                     android:hint="@string/state"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/countrySelectionSpinner"
                 android:layout_width="match_parent"
@@ -237,7 +360,7 @@
 
 
             </android.support.v7.widget.LinearLayoutCompat>
-            </android.support.v7.widget.CardView>
+
         </RelativeLayout>
     </ScrollView>
 </android.support.v7.widget.LinearLayoutCompat>
