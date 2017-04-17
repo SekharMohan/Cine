@@ -69,11 +69,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String psw = edtPassword.getText().toString();
 
         if (!ValidationUtil.checkEmptyFields(userName, psw)) {
+
             Loader.showProgressBar(this);
             Params requestQuery = new Params();
             requestQuery.addParam("cg_uname",userName);
             requestQuery.addParam("cg_upwd", psw);
-            WebServiceWrapper.getInstance().callService(this, WebService.SIGNIN_URL, requestQuery, this);
+            WebServiceWrapper.getInstance().callServicePost(this, WebService.SIGNIN_URL, requestQuery, this);
         } else {
             updateErrorUI(getString(R.string.login_field_empty_warning));
         }
@@ -82,7 +83,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onSuccess(String response) {
         dismissLoader();
+
         goToDashBoard();
+        finish();
 
     }
 

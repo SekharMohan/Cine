@@ -1,5 +1,7 @@
 package com.cine.service.network;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -36,9 +38,9 @@ public class RestService {
 	}
 
 	public HttpURLConnection executePostResquest(String url,String params)throws IOException {
-	
 
-			URL postUrl = new URL(url);
+		Log.d("URL---->",url+params);
+			URL postUrl = new URL(url+params);
 			httpConn = (HttpURLConnection) postUrl.openConnection();
 			httpConn.setUseCaches(false);
 			httpConn.setDoInput(true);
@@ -48,12 +50,23 @@ public class RestService {
 					httpConn.getOutputStream());
 			writer.write(params);
 			writer.flush();
-			    	
-
-		
 		return httpConn;
 	}
 
-	
+	public HttpURLConnection executePostWithBodyResquest(String url,String params)throws IOException {
+
+		Log.d("URL---->",url+params);
+		URL postUrl = new URL(url+params);
+		httpConn = (HttpURLConnection) postUrl.openConnection();
+		httpConn.setUseCaches(false);
+		httpConn.setDoInput(true);
+		httpConn.setDoOutput(true);
+		httpConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		/*OutputStreamWriter writer = new OutputStreamWriter(
+				httpConn.getOutputStream());
+		writer.write(params);
+		writer.flush();*/
+		return httpConn;
+	}
 
 }

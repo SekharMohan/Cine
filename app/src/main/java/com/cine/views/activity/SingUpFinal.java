@@ -28,6 +28,9 @@ import com.cine.utils.ValidationUtil;
 import com.cine.views.widgets.Loader;
 import com.google.gson.Gson;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,6 +70,7 @@ public class SingUpFinal extends AppCompatActivity {
     public static Intent getStartIntent(Context context) {
         return new Intent(context, SingUpFinal.class);
     }
+    boolean listenrEnabler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +82,7 @@ public class SingUpFinal extends AppCompatActivity {
         Loader.showProgressBar(this);
     }
     private void init() {
-        showLoader();
+
         int length = arrLanguage.length;
         for(int i=0 ; i<length;i++){
             languageAndId.put(arrLanguage[i],(i+1));
@@ -88,15 +92,32 @@ public class SingUpFinal extends AppCompatActivity {
 
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle.containsKey("user_type")){
+        if(bundle!=null&&bundle.containsKey("user_type")){
             userType = bundle.getString("user_type");
             if(userType.equals(getString(R.string.user_type_professional))){
+                showLoader();
                 apiCallProfessionalCategory();
             }else{
                 spinnerSetup(spiCategory,arrCategory,getString(R.string.category_hint));
             }
         }
+      /*  spiLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(spiCategory!=null){
+                    spiCategory.setAdapter(null);
+                }
+                if(spiSubCategory!=null){
+                    spiSubCategory.setAdapter(null);
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+*/
         createMyAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,14 +128,19 @@ public class SingUpFinal extends AppCompatActivity {
         spiCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(arrProCat!=null && userType.equals(getString(R.string.user_type_professional))){
-                    apiCallProfSubCategory(profCategory.get(arrProCat[position]));
-                }else{
-                    if(userType.equals(getString(R.string.user_type_fans))){
-                        apiCallFansSubCategory(userType,arrCategory[position]);
+                if(listenrEnabler) {
+                    if (arrProCat != null && userType.equals(getString(R.string.user_type_professional))) {
+                        apiCallProfSubCategory(profCategory.get(arrProCat[position]));
+                    } else {
+                        if (userType.equals(getString(R.string.user_type_fans))) {
+                            apiCallFansSubCategory(userType, arrCategory[position]);
+                        }
                     }
                 }
 
+                if(spiSubCategory!=null){
+                    spiSubCategory.setAdapter(null);
+                }
             }
 
             @Override
@@ -125,10 +151,24 @@ public class SingUpFinal extends AppCompatActivity {
 
 
     }
-private void apiCallFansSubCategory(String userCategory, String user){
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        listenrEnabler = true;
+    }
+
+    private void apiCallFansSubCategory( String user,String userCategory){
+        showLoader();
     String language =spiLanguage.getItemAtPosition(spiLanguage.getSelectedItemPosition()).toString();
-    int lanugaugeId = languageAndId.get(language);
-    if(ValidationUtil.checkEmptyFields(user,language,userCategory,String.valueOf(lanugaugeId))){
+        int lanugaugeId=0;
+        if(languageAndId!=null) {
+             lanugaugeId = languageAndId.get(language);
+        }else{
+            updateErrorUI("Select language");
+        }
+    if(!ValidationUtil.checkEmptyFields(user,language,userCategory,String.valueOf(lanugaugeId))){
+
 
         Params request = new Params();
         request.addParam("REQUEST_METHOD","POST");
@@ -275,7 +315,7 @@ private void apiCallFansSubCategory(String userCategory, String user){
 }
 
 private void apiCallRegister(){
-showLoader();
+
     String language =spiLanguage.getItemAtPosition(spiLanguage.getSelectedItemPosition()).toString();
     int lanugaugeId = languageAndId.get(language);
     String category =spiCategory.getItemAtPosition(spiCategory.getSelectedItemPosition()).toString();
@@ -286,8 +326,9 @@ showLoader();
     String psw = edtPassword.getText().toString();
     String email = edtEmailId.getText().toString();
     String lName = edtLName.getText().toString();
-    if(!ValidationUtil.checkEmptyFields(lName,String.valueOf(lanugaugeId),language,category,subCategory,userType,fname,uName,aadhar,psw,email)){
 
+    if(!ValidationUtil.checkEmptyFields(lName,String.valueOf(lanugaugeId),language,category,subCategory,userType,fname,uName,aadhar,psw,email)){
+        showLoader();
         Params request = new Params();
         request.addParam("REQUEST_METHOD","POST");
         request.addParam("cg_usertype",userType);
@@ -309,8 +350,20 @@ showLoader();
         WebServiceWrapper.getInstance().callService(this, WebService.SIGNUP_URL, request, new ICallBack<String>() {
             @Override
             public void onSuccess(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                if((int)jsonObject.get("status")==1) {
+
+                    startActivity(new Intent(SingUpFinal.this, LoginActivity.class));
+                    finish();
+                }else{
+                    updateErrorUI(jsonObject.getString("cg_msg"));
+                }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 dismissLoader();
-                startActivity(new Intent(SingUpFinal.this,LoginActivity.class));
             }
 
             @Override
@@ -332,8 +385,11 @@ showLoader();
 
 }
 
-    private void updateErrorUI(String errorMsg) {
-        ToastUtil.showErrorUpdate(this, errorMsg);
+    private void updateErrorUI(final String errorMsg) {
+
+                ToastUtil.showErrorUpdate(SingUpFinal.this, errorMsg);
+
+
     }
     void onClickEvent(){
         apiCallRegister();

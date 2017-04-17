@@ -43,6 +43,6 @@ public class SignUpOne extends AppCompatActivity {
     void onClickEvent(String type){
         Intent intent =  SingUpFinal.getStartIntent(this);
         intent.putExtra("user_type",type);
-        startActivity(new Intent(this,SingUpFinal.class));
+        startActivity(intent);
     }
 }

@@ -5,18 +5,15 @@ import android.util.Log;
 
 import com.cine.service.network.callback.ICallBack;
 
-
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 
 
 
 public class WebServiceRequest<R extends Object> extends
-		AsyncTask<Void, Void, Void> {
+		AsyncTask<Void, Void, Boolean> {
 
 	ICallBack<R> listener;
 	private R response;
@@ -34,7 +31,7 @@ public class WebServiceRequest<R extends Object> extends
 	}
 
 	public static enum RequestMethod {
-		GET, POST
+		GET, POST,POSTWITHBODY
 	}
 
 	public WebServiceRequest(RequestMethod reqMethod, ICallBack<R> listener,
@@ -58,27 +55,31 @@ public class WebServiceRequest<R extends Object> extends
 	}
 
 	@Override
-	protected Void doInBackground(Void... parms)  {
+	protected Boolean doInBackground(Void... parms)  {
 		// TODO Auto-generated method stub
+		HttpURLConnection result = null;
 		try{
 		RestService restService = new RestService();
 
 		if (requestMethod == RequestMethod.GET) {
-			HttpURLConnection result;
+
 			if(params!=null){
 
 			 result= restService.executeGetRequest(url+params.getParamList());
 			}else{
 				 result=restService.executeGetRequest(url);
 			}
-			setResponse(result);
+
 		}
 
-		else {
+		else if(requestMethod == RequestMethod.POST){
 
-			HttpURLConnection result= restService.executePostResquest(url,params.getParamList());
-			setResponse(result);
+			 result= restService.executePostResquest(url,params.getParamList());
+
+		}else{
+			result = restService.executePostWithBodyResquest(url,params.getParamList());
 		}
+		return setResponse(result);
 		}catch(Exception e){
 			try {
 				handleException(e);
@@ -87,27 +88,33 @@ public class WebServiceRequest<R extends Object> extends
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
-		
+		/*onerror*/
+return false;
 
-		
 		}
 		
-		return null;
 
 	}
 	
 	@Override
-	protected void onPostExecute(Void result) {
+	protected void onPostExecute(Boolean result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
+		if(result!=null){
+			if(result){
+				listener.onSuccess(response);
+			}else{
+				listener.onFailure(response);
+			}
+		}
 	}
 
 	
 	@SuppressWarnings("unchecked")
-	private void setResponse(HttpURLConnection result)throws IOException {
+	private boolean setResponse(HttpURLConnection result)throws IOException {
 		// TODO Auto-generated method stub
-		
-		BufferedReader updateResponse; 
+
+		BufferedReader updateResponse;
 		
 		if(result.getResponseCode()==HttpURLConnection.HTTP_OK){
 		Log.d("RestService-Response", result.getResponseCode()+":"+result.getResponseMessage());
@@ -117,7 +124,7 @@ public class WebServiceRequest<R extends Object> extends
 		listener.onSuccess(response);*/
 		
 		response = (R)responseString(updateResponse);
-		listener.onSuccess(response);
+		return true;
 		
 		}
 	else{
@@ -126,28 +133,27 @@ public class WebServiceRequest<R extends Object> extends
 		updateResponse=new BufferedReader(new InputStreamReader(result.getErrorStream()));
 //		response = (R)updateResponse;
 		response = (R)responseString(updateResponse);
-		listener.onFailure(response);
-		
+return false;
 		
 	}
 		
 		
-		
+
 		
 	}
 	@SuppressWarnings("unchecked")
 	private void handleException(Exception e)throws IOException{
 		String msg=e.getMessage();
-		BufferedReader updateResponse; 
+		/*BufferedReader updateResponse;
 		InputStream stream = null;
 	
 			 stream = new ByteArrayInputStream(msg.getBytes("UTF_8"));
 		
 		updateResponse=new BufferedReader(new InputStreamReader(stream));
-		response = (R)updateResponse;
-//		response = (R)msg;
+//		response = (R)updateResponse;
+		*/response = (R)msg;
 		
-		listener.onFailure(response);
+
 	}
 	
 	private String responseString(BufferedReader updateResponse)throws IOException{

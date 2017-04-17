@@ -4,30 +4,21 @@ package com.cine.service.model;
  * Created by sekhar on 21/03/17.
  */
 
-public class FeedModel {private Languages[] languages;
+public class FeedModel {
 
-    private String[] commonwall_posts;
+
+    private Commonwall_posts[] commonwall_posts;
 
     private Admin_event[] admin_event;
 
     private Categories[] Categories;
 
-    public Languages[] getLanguages ()
-    {
-        return languages;
-    }
-
-    public void setLanguages (Languages[] languages)
-    {
-        this.languages = languages;
-    }
-
-    public String[] getCommonwall_posts ()
+    public Commonwall_posts[] getCommonwall_posts ()
     {
         return commonwall_posts;
     }
 
-    public void setCommonwall_posts (String[] commonwall_posts)
+    public void setCommonwall_posts (Commonwall_posts[] commonwall_posts)
     {
         this.commonwall_posts = commonwall_posts;
     }
@@ -55,9 +46,161 @@ public class FeedModel {private Languages[] languages;
     @Override
     public String toString()
     {
-        return "ClassPojo [languages = "+languages+", commonwall_posts = "+commonwall_posts+", admin_event = "+admin_event+", Categories = "+Categories+"]";
+        return "ClassPojo [commonwall_posts = "+commonwall_posts+", admin_event = "+admin_event+", Categories = "+Categories+"]";
     }
 
+    public class Commonwall_posts
+    {
+        private String post_uscat;
+
+        private String post_comments;
+
+        private String post_photos;
+
+        private String post_text;
+
+        private String post_video_url;
+
+        private String post_likes;
+
+        private String post_comment_replies;
+
+        private String post_ucat;
+
+        private String post_id;
+
+        private String post_username;
+
+        private String post_date;
+
+        private String post_langid;
+
+        public String getPost_uscat ()
+        {
+            return post_uscat;
+        }
+
+        public void setPost_uscat (String post_uscat)
+        {
+            this.post_uscat = post_uscat;
+        }
+
+        public String getPost_comments ()
+        {
+            return post_comments;
+        }
+
+        public void setPost_comments (String post_comments)
+        {
+            this.post_comments = post_comments;
+        }
+
+        public String getPost_photos ()
+    {
+        return post_photos;
+    }
+
+        public void setPost_photos (String post_photos)
+        {
+            this.post_photos = post_photos;
+        }
+
+        public String getPost_text ()
+        {
+            return post_text;
+        }
+
+        public void setPost_text (String post_text)
+        {
+            this.post_text = post_text;
+        }
+
+        public String getPost_video_url ()
+        {
+            return post_video_url;
+        }
+
+        public void setPost_video_url (String post_video_url)
+        {
+            this.post_video_url = post_video_url;
+        }
+
+        public String getPost_likes ()
+        {
+            return post_likes;
+        }
+
+        public void setPost_likes (String post_likes)
+        {
+            this.post_likes = post_likes;
+        }
+
+        public String getPost_comment_replies ()
+        {
+            return post_comment_replies;
+        }
+
+        public void setPost_comment_replies (String post_comment_replies)
+        {
+            this.post_comment_replies = post_comment_replies;
+        }
+
+        public String getPost_ucat ()
+        {
+            return post_ucat;
+        }
+
+        public void setPost_ucat (String post_ucat)
+        {
+            this.post_ucat = post_ucat;
+        }
+
+        public String getPost_id ()
+        {
+            return post_id;
+        }
+
+        public void setPost_id (String post_id)
+        {
+            this.post_id = post_id;
+        }
+
+        public String getPost_username ()
+        {
+            return post_username;
+        }
+
+        public void setPost_username (String post_username)
+        {
+            this.post_username = post_username;
+        }
+
+        public String getPost_date ()
+        {
+            return post_date;
+        }
+
+        public void setPost_date (String post_date)
+        {
+            this.post_date = post_date;
+        }
+
+        public String getPost_langid ()
+        {
+            return post_langid;
+        }
+
+        public void setPost_langid (String post_langid)
+        {
+            this.post_langid = post_langid;
+        }
+
+        @Override
+        public String toString()
+        {
+            return "ClassPojo [post_uscat = "+post_uscat+", post_comments = "+post_comments+", post_photos = "+post_photos+", post_text = "+post_text+", post_video_url = "+post_video_url+", post_likes = "+post_likes+", post_comment_replies = "+post_comment_replies+", post_ucat = "+post_ucat+", post_id = "+post_id+", post_username = "+post_username+", post_date = "+post_date+", post_langid = "+post_langid+"]";
+        }
+    }
 
     public class Admin_event
     {
@@ -103,40 +246,6 @@ public class FeedModel {private Languages[] languages;
             return "ClassPojo [post_video = "+post_video+", post_images = "+post_images+", post_id = "+post_id+"]";
         }
     }
-
-    public class Languages
-    {
-        private String language_id;
-
-        private String language_name;
-
-        public String getLanguage_id ()
-        {
-            return language_id;
-        }
-
-        public void setLanguage_id (String language_id)
-        {
-            this.language_id = language_id;
-        }
-
-        public String getLanguage_name ()
-        {
-            return language_name;
-        }
-
-        public void setLanguage_name (String language_name)
-        {
-            this.language_name = language_name;
-        }
-
-        @Override
-        public String toString()
-        {
-            return "ClassPojo [language_id = "+language_id+", language_name = "+language_name+"]";
-        }
-    }
-
     public class Categories
     {
         private String maincategory_name;

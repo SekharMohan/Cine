@@ -5,21 +5,21 @@ package com.cine.service.model.subcategory;
  */
 
 public class ProfSubCategory {
-    private Subcategories[] Subcategories;
+    private Subcategories[] subcategories;
 
     public Subcategories[] getSubcategories ()
     {
-        return Subcategories;
+        return subcategories;
     }
 
-    public void setSubcategories (Subcategories[] Subcategories)
+    public void setSubcategories (Subcategories[] subcategories)
     {
-        this.Subcategories = Subcategories;
+        this.subcategories = subcategories;
     }
 
     @Override
     public String toString()
     {
-        return "ClassPojo [Subcategories = "+ Subcategories +"]";
+        return "ClassPojo [subcategories = "+subcategories+"]";
     }
 }

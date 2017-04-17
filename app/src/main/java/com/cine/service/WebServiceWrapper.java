@@ -49,6 +49,27 @@ public class WebServiceWrapper {
             listener.onFailure(mcontext.getString(R.string.no_internet));
         }
     }
-        
-    
+
+    public void callServicePost(Context mcontext ,String url, Params params, final ICallBack listener) {
+
+        this.listener = listener;
+        if (NetworkUtil.isConnected(mcontext)) {
+            new WebServiceRequest<String>(WebServiceRequest.RequestMethod.POSTWITHBODY, new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+                    listener.onSuccess(response);
+
+                }
+
+                @Override
+                public void onFailure(String response) {
+                    listener.onFailure(response);
+
+                }
+            }, url, params).execute();
+        }else {
+            listener.onFailure(mcontext.getString(R.string.no_internet));
+        }
+    }
+
 }

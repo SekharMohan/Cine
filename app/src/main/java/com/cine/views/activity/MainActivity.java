@@ -1,42 +1,42 @@
     package com.cine.views.activity;
 
     import android.content.Context;
-    import android.content.Intent;
-    import android.os.Bundle;
-    import android.support.design.widget.TabLayout;
-    import android.support.v4.app.Fragment;
-    import android.support.v4.app.FragmentManager;
-    import android.support.v4.app.FragmentPagerAdapter;
-    import android.support.v4.view.ViewPager;
-    import android.support.v7.app.AppCompatActivity;
-    import android.view.LayoutInflater;
-    import android.view.Menu;
-    import android.view.MenuItem;
-    import android.widget.TextView;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
 
-    import com.cine.R;
-    import com.cine.service.WebService;
-    import com.cine.service.WebServiceWrapper;
-    import com.cine.service.model.FeedModel;
-    import com.cine.service.network.Params;
-    import com.cine.service.network.callback.ICallBack;
-    import com.cine.utils.LocalStorage;
-    import com.cine.utils.ToastUtil;
-    import com.cine.views.fragments.AboutUs;
-    import com.cine.views.fragments.Category;
-    import com.cine.views.fragments.Events;
-    import com.cine.views.fragments.FansClub;
-    import com.cine.views.fragments.Home;
-    import com.cine.views.fragments.Language;
-    import com.cine.views.widgets.Loader;
-    import com.google.gson.Gson;
+import com.cine.R;
+import com.cine.service.WebService;
+import com.cine.service.WebServiceWrapper;
+import com.cine.service.model.FeedModel;
+import com.cine.service.network.Params;
+import com.cine.service.network.callback.ICallBack;
+import com.cine.utils.LocalStorage;
+import com.cine.utils.ToastUtil;
+import com.cine.views.fragments.AboutUs;
+import com.cine.views.fragments.Category;
+import com.cine.views.fragments.Events;
+import com.cine.views.fragments.FansClub;
+import com.cine.views.fragments.Home;
+import com.cine.views.fragments.Language;
+import com.cine.views.widgets.Loader;
+import com.google.gson.Gson;
 
-    import java.util.ArrayList;
-    import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
-    import butterknife.BindString;
-    import butterknife.BindView;
-    import butterknife.ButterKnife;
+import butterknife.BindString;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
     public class MainActivity extends AppCompatActivity implements ICallBack<String> {
     @BindString(R.string.about)
@@ -68,7 +68,14 @@
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             ButterKnife.bind(this);
-            apiCall();
+            /*mfeed*/
+//            apiCall();
+            /*wall post -mcwall*/
+//            callWallPostApi();
+            /*wall post sub - mscwall*/
+//            callWallPostSubCategoryApi();
+            /*wall post*/
+            apiCallWallPost();
             setupViewPager(viewPager);
             tabLayout.setupWithViewPager(viewPager);
             setupTabIcons();
@@ -98,10 +105,75 @@
         private void apiCall() {
             Loader.showProgressBar(this);
             Params params=new Params();
-            params.addParam("cg_req_name","getposts");
 
+            params.addParam("cg_api_req_name","getposts");
             params.addParam("cg_username","prabu944");
             WebServiceWrapper.getInstance().callService(this,WebService.FEEDS_URL,params,this);
+        }
+/*API CALL FOR WALL POST-MAIN CATEGORY*/
+private void callWallPostApi(){
+
+    Loader.showProgressBar(this);
+    Params params=new Params();
+
+    params.addParam("cg_api_req_name","getposts");
+    params.addParam("cg_username","prabu944");
+    params.addParam("cg_mcat","Casting");
+    WebServiceWrapper.getInstance().callService(this, WebService.WALLPOST_URL, params, new ICallBack<String>() {
+        @Override
+        public void onSuccess(String response) {
+            LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+            dismissLoader();
+        }
+
+        @Override
+        public void onFailure(String response) {
+
+        }
+    });
+}
+        /*API CALL FOR WALL POST-SUB CATEGORY*/
+        private void callWallPostSubCategoryApi(){
+
+            Loader.showProgressBar(this);
+            Params params=new Params();
+
+            params.addParam("cg_api_req_name","getposts");
+            params.addParam("cg_username","prabu944");
+            params.addParam("cg_mcat","Hero");
+            WebServiceWrapper.getInstance().callService(this, WebService.WALLPOSTSUBCAT, params, new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+                    LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+                    dismissLoader();
+                }
+
+                @Override
+                public void onFailure(String response) {
+
+                }
+            });
+        }
+
+        /*API CALL - WALL POST*/
+        private void apiCallWallPost() {
+            Loader.showProgressBar(this);
+            Params params=new Params();
+
+            params.addParam("cg_api_req_name","getposts");
+            params.addParam("cg_username","prabu944");
+            WebServiceWrapper.getInstance().callService(this, WebService.WALLPOST, params, new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+                    LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+                    dismissLoader();
+                }
+
+                @Override
+                public void onFailure(String response) {
+
+                }
+            });
         }
 
         /**

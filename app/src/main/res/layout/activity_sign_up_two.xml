@@ -20,28 +20,30 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp">
+            >
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/basic_info_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:text="@string/basic_info"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:paddingLeft="10dp"
+                android:gravity="center_vertical"
+                android:background="#e5e5e5"
+                android:textStyle="bold"
+                android:textColor="#999999"
+                />
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/card_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/basic_info_text"
-                android:layout_marginTop="5dp"
-                app:cardElevation="4dp">
 
-                <android.support.v7.widget.LinearLayoutCompat
+
+
+            <android.support.v7.widget.LinearLayoutCompat
+                android:id="@+id/linearCategory"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
+                android:layout_below="@+id/basic_info_text"
                     android:padding="7dp">
 
 
@@ -67,111 +69,160 @@
                         android:layout_marginTop="10dp" />
 
                 </android.support.v7.widget.LinearLayoutCompat>
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/card_view_personal_details"
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/personal_info_text"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/card_view"
-                android:layout_marginTop="5dp"
-                app:cardElevation="4dp">
+                android:layout_height="50dp"
+                android:text="Personal Information"
+                android:textSize="16sp"
+                android:paddingLeft="10dp"
+                android:gravity="center_vertical"
+                android:background="#e5e5e5"
+                android:textStyle="bold"
+
+                android:layout_below="@+id/linearCategory"
+                android:textColor="#999999"
+               />
+
+
 
                 <android.support.v7.widget.LinearLayoutCompat
+                    android:layout_below="@+id/personal_info_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="7dp">
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp">
 
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_layout_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/textViewFname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="FIRST NAME"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="13sp"
+                        />
 
                         <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/regName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableRight="@android:drawable/ic_menu_gallery"
+                            android:drawableRight="@drawable/name"
+                            android:layout_marginTop="7dp"
+                            android:textSize="13sp"
                             android:hint="@string/fname"
                             android:maxLines="1" />
-                    </android.support.design.widget.TextInputLayout>
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_layout_lname"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/textViewLname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="LAST NAME"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="13sp"
+                        />
 
                         <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/reglName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableRight="@android:drawable/ic_menu_gallery"
+                            android:drawableRight="@drawable/name"
+                            android:layout_marginTop="7dp"
+                            android:textSize="13sp"
                             android:hint="@string/lname"
                             android:maxLines="1" />
-                    </android.support.design.widget.TextInputLayout>
 
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_layout_user_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/textViewUserName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="USER NAME"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="13sp"
+                        />
 
                         <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/regUserName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableRight="@android:drawable/ic_menu_gallery"
+                            android:drawableRight="@drawable/name"
+                            android:layout_marginTop="7dp"
+                            android:textSize="13sp"
                             android:hint="@string/username_hint"
                             android:maxLines="1" />
-                    </android.support.design.widget.TextInputLayout>
 
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_layout_email_id"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/textViewEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="EMAIL ID"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="13sp"
+                        />
 
                         <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/regEmailId"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableRight="@android:drawable/ic_dialog_email"
+                            android:drawableRight="@drawable/email"
+                            android:layout_marginTop="7dp"
+                            android:textSize="13sp"
                             android:hint="@string/email_id"
-                            android:singleLine="true" />
-                    </android.support.design.widget.TextInputLayout>
+                            android:maxLines="1" />
 
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_layout_password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
 
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/textViewPassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="PASSWORD"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="13sp"
+                        />
                         <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/regPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableRight="@android:drawable/ic_lock_idle_lock"
+                            android:drawableRight="@drawable/psw"
+                            android:layout_marginTop="7dp"
+                            android:textSize="13sp"
                             android:hint="@string/password_hint"
                             android:maxLines="1" />
-                    </android.support.design.widget.TextInputLayout>
 
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/input_layout_aadhar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/textViewAdhar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:text="AADHAR NUMBER"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="13sp"
+                        />
                         <android.support.v7.widget.AppCompatEditText
                             android:id="@+id/regAadhar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableRight="@android:drawable/ic_menu_gallery"
+                            android:drawableRight="@drawable/mobile"
+                            android:layout_marginTop="7dp"
+                            android:textSize="13sp"
                             android:hint="@string/adhar_no"
                             android:maxLines="1" />
-                    </android.support.design.widget.TextInputLayout>
+
 
                     <android.support.v7.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="10dp"
                         android:text="@string/agreement"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         />
 
@@ -185,7 +236,7 @@
                         android:textColor="@android:color/white" />
 
                 </android.support.v7.widget.LinearLayoutCompat>
-            </android.support.v7.widget.CardView>
+
         </RelativeLayout>
     </ScrollView>
 </LinearLayout>
