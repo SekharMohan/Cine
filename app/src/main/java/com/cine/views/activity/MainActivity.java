@@ -38,7 +38,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-    public class MainActivity extends AppCompatActivity implements ICallBack<String> {
+    public class MainActivity extends AppCompatActivity {
     @BindString(R.string.about)
   public   String about;
         @BindString(R.string.home)
@@ -69,13 +69,13 @@ import butterknife.ButterKnife;
             setContentView(R.layout.activity_main);
             ButterKnife.bind(this);
             /*mfeed*/
-//            apiCall();
+
             /*wall post -mcwall*/
 //            callWallPostApi();
             /*wall post sub - mscwall*/
 //            callWallPostSubCategoryApi();
             /*wall post*/
-            apiCallWallPost();
+//            apiCallWallPost();
             setupViewPager(viewPager);
             tabLayout.setupWithViewPager(viewPager);
             setupTabIcons();
@@ -102,14 +102,7 @@ import butterknife.ButterKnife;
             return super.onOptionsItemSelected(item);
         }
 
-        private void apiCall() {
-            Loader.showProgressBar(this);
-            Params params=new Params();
 
-            params.addParam("cg_api_req_name","getposts");
-            params.addParam("cg_username","prabu944");
-            WebServiceWrapper.getInstance().callService(this,WebService.FEEDS_URL,params,this);
-        }
 /*API CALL FOR WALL POST-MAIN CATEGORY*/
 private void callWallPostApi(){
 
@@ -227,17 +220,7 @@ private void callWallPostApi(){
             viewPager.setAdapter(adapter);
         }
 
-        @Override
-        public void onSuccess(String response) {
-            LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
-            dismissLoader();
-        }
 
-        @Override
-        public void onFailure(String response) {
-            updateErrorUI(response);
-            dismissLoader();
-        }
 
         private void dismissLoader() {
             Loader.dismissProgressBar();
