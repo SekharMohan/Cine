@@ -14,13 +14,25 @@
 
         card_view:cardCornerRadius="2dp"
         card_view:contentPadding="8dp">
-    <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/categorySelectionSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-       >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/categorySelectionSpinner"
+                style="@android:style/Widget.Holo.Light.Spinner"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp" />
 
-    </android.support.v7.widget.AppCompatSpinner>
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/subCategorySelectionSpinner"
+                android:layout_width="match_parent"
+                style="@android:style/Widget.Holo.Light.Spinner"
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+
 
     </android.support.v7.widget.CardView>
 
@@ -30,6 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/card_view"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>

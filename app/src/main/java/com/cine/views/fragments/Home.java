@@ -1,7 +1,10 @@
 package com.cine.views.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,11 +26,21 @@ import com.google.gson.Gson;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
 
-public class Home extends Fragment implements ICallBack<String> {
+
+public class Home extends Fragment implements ICallBack<String>, View.OnClickListener {
 
     @BindView(R.id.feedView)
     public RecyclerView homeFeedView;
+
+    @BindView(R.id.pickImage)
+    public AppCompatImageButton pickImage;
+
+    @BindView(R.id.pickVideo)
+    public AppCompatImageButton pickVideo;
+
+    private static final int SELECT_PICTURE = 100;
 
     public Home() {
         // Required empty public constructor
@@ -91,4 +104,34 @@ public class Home extends Fragment implements ICallBack<String> {
         ToastUtil.showErrorUpdate(getContext(), errorMsg);
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.pickImage:
+                openImageChooser();
+                break;
+
+            case R.id.pickVideo:
+
+                break;
+        }
+    }
+
+    private void openImageChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+
+                Uri selectedImageUri = data.getData();
+
+
+            }
+        }
+    }
 }
