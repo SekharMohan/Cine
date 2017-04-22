@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.cine.R;
 import com.cine.service.WebService;
@@ -35,10 +36,10 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     public RecyclerView homeFeedView;
 
     @BindView(R.id.pickImage)
-    public AppCompatImageButton pickImage;
+    public Button pickImage;
 
     @BindView(R.id.pickVideo)
-    public AppCompatImageButton pickVideo;
+    public Button pickVideo;
 
     private static final int SELECT_PICTURE = 100;
 

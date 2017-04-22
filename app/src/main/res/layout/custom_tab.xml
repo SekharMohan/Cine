@@ -4,5 +4,5 @@
     android:layout_height="wrap_content"
     android:id="@+id/tab"
     android:textColor="@color/cardview_light_background"
-    android:textSize="@dimen/tab_label"
+    android:textSize="12sp"
     android:fontFamily="@string/font_fontFamily_medium"/>

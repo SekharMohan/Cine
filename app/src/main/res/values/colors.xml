@@ -7,6 +7,7 @@
     <color name="material_teal">#E1B721</color>
     <color name="color_app">#495A88</color>
 
+    <color name="status_text_color">#AAA695</color>
     <color name="transparent">#00000000</color>
 
 </resources>

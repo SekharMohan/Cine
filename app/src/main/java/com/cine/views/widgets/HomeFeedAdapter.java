@@ -38,7 +38,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
     }
 
     @Override
-    public HomeFeedAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.feed_row_layout, parent, false);
 
@@ -47,7 +47,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(final HomeFeedAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         FeedModel.Commonwall_posts post = commonwall_posts[position];
        /* "post_id":"37",
                 "post_username":"iamsanthosh",
@@ -61,61 +61,68 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                 "post_comments":"",
                 "post_comment_replies":"",
                 "post_likes":""*/
-        holder.nameAndProfessionView.setText(post.getPost_username() + ", " + post.getPost_uscat());
-        if(post.getPost_photos()==null){
-            holder.feedImageView.setVisibility(View.GONE);
 
-            if(!TextUtils.isEmpty(post.getPost_text())){
-                holder.postTextView.setVisibility(View.VISIBLE);
-                holder.postTextView.setText(post.getPost_text());
-            }else{
-                holder.postTextView.setVisibility(View.GONE);
-            }
-            if(post.getPost_video_url()!=null) {
-                holder.feedVideoView.setVisibility(View.VISIBLE);
-                holder.feedVideoView.setVideoURI(Uri.parse(post.getPost_video_url()));
-                holder.feedVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-
-                    @Override
-                    public boolean onError(MediaPlayer mp, int what, int extra) {
-                        Log.d("video", "setOnErrorListener ");
-                        return true;
-                    }
-                });
-            }else{
-                holder.feedVideoView.setVisibility(View.GONE);
-            }
-
+        if(!TextUtils.isEmpty(post.getPost_likes())){
+            holder.nameOfLikedPersonsTextView.setVisibility(View.VISIBLE);
+            holder.nameOfLikedPersonsTextView.setText(post.getPost_likes() + "likes this");
         }else{
-            if(!TextUtils.isEmpty(post.getPost_text())){
-                holder.postTextView.setVisibility(View.VISIBLE);
-                holder.postTextView.setText(post.getPost_text());
-            }else{
-                holder.postTextView.setVisibility(View.GONE);
-            }
-            holder.feedVideoView.setVisibility(View.GONE);
-
-            if(post.getPost_photos()!=null) {
-                holder.feedImageView.setVisibility(View.VISIBLE);
-                Picasso.with(mContext).load("http://www.buyarecaplates.com/vpb-wall-photos/" + post.getPost_photos()).into(holder.feedImageView);
-            }else{
-                holder.feedImageView.setVisibility(View.GONE);
-            }
+            holder.nameOfLikedPersonsTextView.setVisibility(View.GONE);
         }
+       holder.nameView.setText(post.getPost_username());
+       holder.professionView.setText((!TextUtils.isEmpty(post.getPost_uscat())) ? ", " + post.getPost_uscat() : "");
+       if(post.getPost_photos()==null){
+           holder.feedImageView.setVisibility(View.GONE);
+
+           if(!TextUtils.isEmpty(post.getPost_text())){
+               holder.postTextView.setVisibility(View.VISIBLE);
+               holder.postTextView.setText(post.getPost_text());
+           }else{
+               holder.postTextView.setVisibility(View.GONE);
+           }
+           if(post.getPost_video_url()!=null) {
+               holder.feedVideoView.setVisibility(View.VISIBLE);
+               holder.feedVideoView.setVideoURI(Uri.parse(post.getPost_video_url()));
+               holder.feedVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+
+                   @Override
+                   public boolean onError(MediaPlayer mp, int what, int extra) {
+                       Log.d("video", "setOnErrorListener ");
+                       return true;
+                   }
+               });
+           }else{
+               holder.feedVideoView.setVisibility(View.GONE);
+           }
+
+       }else{
+           if(!TextUtils.isEmpty(post.getPost_text())){
+               holder.postTextView.setVisibility(View.VISIBLE);
+               holder.postTextView.setText(post.getPost_text());
+           }else{
+               holder.postTextView.setVisibility(View.GONE);
+           }
+           holder.feedVideoView.setVisibility(View.GONE);
+
+           if(post.getPost_photos()!=null) {
+               holder.feedImageView.setVisibility(View.VISIBLE);
+               Picasso.with(mContext).load("http://www.buyarecaplates.com/vpb-wall-photos/" + post.getPost_photos()).into(holder.feedImageView);
+           }else{
+               holder.feedImageView.setVisibility(View.GONE);
+           }
+       }
 
         holder.likeButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
                 /// button click event
-                if (holder.likeButton.getTextColors().getDefaultColor() == Color.parseColor("#0C5872")) {
+                if (holder.likeButton.getTextColors().getDefaultColor() == Color.parseColor("#FFFFFF")) {
                     holder.likeButton.setBackgroundResource(R.drawable.button_click);
                     holder.likeButton.setTextColor(Color.BLACK);
-                    holder.likeButton.setText("Unlike");
                 } else {
                     holder.likeButton.setBackgroundResource(R.drawable.feed_button_normal);
-                    holder.likeButton.setTextColor(Color.parseColor("#0C5872"));
-                    holder.likeButton.setText("Like");
+                    holder.likeButton.setTextColor(Color.parseColor("#FFFFFF"));
+
                 }
             }
         });
@@ -129,7 +136,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public CircularImageView userProfilePic;
-        public AppCompatTextView hoursView, nameAndProfessionView, languageView, userNameCommented, commmentedText, postTextView;
+        public AppCompatTextView hoursView, nameView, professionView, languageView, userNameCommented, commmentedText, postTextView, nameOfLikedPersonsTextView;
         public AppCompatImageView feedImageView;
         public VideoView feedVideoView;
         public Button likeButton, commentButton, replyForComment;
@@ -140,11 +147,13 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
             super(view);
             userProfilePic = (CircularImageView) view.findViewById(R.id.feedUserProfilePic);
             hoursView = (AppCompatTextView) view.findViewById(R.id.hoursView);
-            nameAndProfessionView = (AppCompatTextView) view.findViewById(R.id.nameAndProfessionView);
+            nameView = (AppCompatTextView) view.findViewById(R.id.nameView);
+            professionView = (AppCompatTextView) view.findViewById(R.id.professionView);
             languageView = (AppCompatTextView) view.findViewById(R.id.languageView);
             commmentedText = (AppCompatTextView) view.findViewById(R.id.commentedText);
             userNameCommented = (AppCompatTextView) view.findViewById(R.id.userNameWhoCommented);
             postTextView = (AppCompatTextView) view.findViewById(R.id.postTextView);
+            nameOfLikedPersonsTextView = (AppCompatTextView) view.findViewById(R.id.nameOfLikedPersonsTextView);
             feedImageView = (AppCompatImageView) view.findViewById(R.id.feedImageView);
             feedVideoView = (VideoView) view.findViewById(R.id.feedVideoView);
             likeButton = (Button) view.findViewById(R.id.likeButton);
@@ -153,7 +162,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
             sendReply = (AppCompatImageButton) view.findViewById(R.id.sendComment);
             commentEditText = (EditText) view.findViewById(R.id.commentEditText);
             likeButton.setBackgroundResource(R.drawable.feed_button_normal);
-            likeButton.setTextColor(Color.parseColor("#0C5872"));
+            likeButton.setTextColor(Color.parseColor("#FFFFFF"));
 
         }
 

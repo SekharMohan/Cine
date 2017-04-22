@@ -52,8 +52,8 @@ import butterknife.ButterKnife;
         public    String events;
         @BindString(R.string.category)
         public String category;
-       /* @BindView(R.id.toolbar)
-        public   Toolbar toolbar;*/
+        @BindView(R.id.toolbar)
+        public   Toolbar toolbar;
         @BindView(R.id.tabs)
         public    TabLayout tabLayout;
         @BindView(R.id.viewpager)
@@ -80,8 +80,14 @@ import butterknife.ButterKnife;
             setupViewPager(viewPager);
             tabLayout.setupWithViewPager(viewPager);
             setupTabIcons();
-            createSupportedToolbar(false);
-            setTitle(getString(R.string.app_name));
+            setSupportActionBar(toolbar);
+           // getSupportActionBar().setDisplayShowHomeEnabled(true);
+           // getSupportActionBar().setIcon(R.drawable.logo_small);
+            getSupportActionBar().setDisplayUseLogoEnabled(true);
+            getSupportActionBar().setCustomView(R.layout.custom_action_bar);
+            getSupportActionBar().setDisplayShowCustomEnabled(true);
+            //createSupportedToolbar(false);
+           // setTitle(getString(R.string.app_name));
         }
 
         public void createSupportedToolbar(boolean value) {
@@ -93,8 +99,6 @@ import butterknife.ButterKnife;
                 setSupportActionBar(toolbar);
             }
         }
-
-
 
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
@@ -110,6 +114,9 @@ import butterknife.ButterKnife;
                     break;
                 case R.id.action_logout:
 
+                    break;
+                case R.id.action_my_profile:
+                    startActivity(new Intent(this,MyWallActivity.class));
                     break;
             }
             return super.onOptionsItemSelected(item);
@@ -212,10 +219,7 @@ private void callWallPostApi(){
             tabFive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tab_call, 0, 0);
             tabLayout.getTabAt(4).setCustomView(tabFive);
 
-            TextView tabSix = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-            tabSix.setText(about);
-            tabSix.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tab_contacts, 0, 0);
-            tabLayout.getTabAt(5).setCustomView(tabSix);
+
         }
 
         /**
@@ -229,7 +233,7 @@ private void callWallPostApi(){
             adapter.addFrag(new FansClub(), fans);
             adapter.addFrag(new Language(),language);
             adapter.addFrag(new Events(),events);
-            adapter.addFrag(new AboutUs(),about);
+
             viewPager.setAdapter(adapter);
         }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Cine</string>
+    <string name="app_name">CineGate</string>
     <string name="password_hint">Password</string>
     <string name="username_hint">Username</string>
     <string name="remember_me">Remember me</string>
@@ -22,6 +22,18 @@
     <string name="city_from">Native city</string>
     <string name="living_city">Currently living</string>
     <string name="state">State</string>
+
+    <string name="day">Day</string>
+    <string name="month">Month</string>
+    <string name="year">Year</string>
+    <string name="who_are_you">Who are you?</string>
+    <string name="completed_projects">Completed projects</string>
+    <string name="recent_projects">Recent projects</string>
+    <string name="awards">Awards</string>
+    <string name="known_languages">Known languages</string>
+    <string name="skills">Skills</string>
+    <string name="hobbies">Hobbies</string>
+    <string name="likes">Likes</string>
 
     <!--Tabs-->
     <string name="home">HOME</string>
