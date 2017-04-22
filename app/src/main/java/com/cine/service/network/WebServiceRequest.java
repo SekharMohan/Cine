@@ -6,10 +6,11 @@ import android.util.Log;
 import com.cine.service.network.callback.ICallBack;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-
 
 
 public class WebServiceRequest<R extends Object> extends
@@ -72,12 +73,10 @@ public class WebServiceRequest<R extends Object> extends
 
 		}
 
-		else if(requestMethod == RequestMethod.POST){
+		else {
 
 			 result= restService.executePostResquest(url,params.getParamList());
 
-		}else{
-			result = restService.executePostWithBodyResquest(url,params.getParamList());
 		}
 		return setResponse(result);
 		}catch(Exception e){
@@ -162,8 +161,22 @@ return false;
 	
 			while ((line =updateResponse.readLine()) != null) {
 			    total.append(line);
+				System.out.println(line);
 			}
 			return total.toString();
+	}
+	public String readFullyAsString(InputStream inputStream, String encoding) throws IOException {
+		return readFully(inputStream).toString(encoding);
+	}
+
+	private ByteArrayOutputStream readFully(InputStream inputStream) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] buffer = new byte[1024];
+		int length = 0;
+		while ((length = inputStream.read(buffer)) != -1) {
+			baos.write(buffer, 0, length);
+		}
+		return baos;
 	}
 
 }

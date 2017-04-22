@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -33,8 +32,9 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
     Context mContext;
 
     public HomeFeedAdapter(FeedModel.Commonwall_posts[] commonwall_posts, Context mcontext) {
-        this.mContext = mcontext;
         this.commonwall_posts = commonwall_posts;
+        this.mContext = mcontext;
+
     }
 
     @Override

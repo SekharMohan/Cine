@@ -317,7 +317,7 @@ public class SingUpFinal extends AppCompatActivity {
 private void apiCallRegister(){
 
     String language =spiLanguage.getItemAtPosition(spiLanguage.getSelectedItemPosition()).toString();
-    int lanugaugeId = languageAndId.get(language);
+    int lanugaugeId = languageAndId.get(language)!=null?languageAndId.get(language):0;
     String category =spiCategory.getItemAtPosition(spiCategory.getSelectedItemPosition()).toString();
     String subCategory = spiSubCategory.getItemAtPosition(spiSubCategory.getSelectedItemPosition()).toString();
     String fname = edtName.getText().toString();

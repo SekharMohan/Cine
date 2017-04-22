@@ -3,7 +3,6 @@ package com.cine.service.network;
 import android.util.Log;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -41,32 +40,31 @@ public class RestService {
 
 		Log.d("URL---->",url+params);
 			URL postUrl = new URL(url+params);
+
 			httpConn = (HttpURLConnection) postUrl.openConnection();
-			httpConn.setUseCaches(false);
-			httpConn.setDoInput(true);
-			httpConn.setDoOutput(true);
-			httpConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-			OutputStreamWriter writer = new OutputStreamWriter(
-					httpConn.getOutputStream());
-			writer.write(params);
-			writer.flush();
-		return httpConn;
-	}
-
-	public HttpURLConnection executePostWithBodyResquest(String url,String params)throws IOException {
-
-		Log.d("URL---->",url+params);
-		URL postUrl = new URL(url+params);
-		httpConn = (HttpURLConnection) postUrl.openConnection();
 		httpConn.setUseCaches(false);
 		httpConn.setDoInput(true);
 		httpConn.setDoOutput(true);
+		httpConn.setReadTimeout(10000 /* milliseconds */);
+		httpConn.setConnectTimeout(15000 /* milliseconds */);
+		httpConn.setChunkedStreamingMode(0);
+
+		httpConn.setRequestProperty("User-Agent", "android");
+		httpConn.setRequestProperty("Accept", "application/json");
 		httpConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		/*OutputStreamWriter writer = new OutputStreamWriter(
-				httpConn.getOutputStream());
+		httpConn.connect();
+
+		/*OutputStream os = httpConn.getOutputStream();
+		BufferedWriter writer = new BufferedWriter(
+				new OutputStreamWriter(os, "UTF-8"));
 		writer.write(params);
-		writer.flush();*/
+		writer.flush();
+		writer.close();
+		os.close();*/
+
 		return httpConn;
 	}
+
+
 
 }
