@@ -117,7 +117,8 @@ return false;
 		
 		if(result.getResponseCode()==HttpURLConnection.HTTP_OK){
 		Log.d("RestService-Response", result.getResponseCode()+":"+result.getResponseMessage());
-		updateResponse=new BufferedReader(new InputStreamReader(result.getInputStream()));
+		updateResponse=new BufferedReader(new InputStreamReader(
+				result.getInputStream(), "iso-8859-1"), 8);;
 		
 		/*response = (R)updateResponse;
 		listener.onSuccess(response);*/
@@ -135,7 +136,7 @@ return false;
 return false;
 		
 	}
-		
+
 		
 
 		
@@ -157,12 +158,17 @@ return false;
 	
 	private String responseString(BufferedReader updateResponse)throws IOException{
 		StringBuilder total = new StringBuilder();
-		String line;
-	
-			while ((line =updateResponse.readLine()) != null) {
+		String line ="";
+		int BUFFER_SIZE=1024;
+		char[] buffer = new char[BUFFER_SIZE]; // or some other size,
+		int charsRead = 0;
+		while ( (charsRead  = updateResponse.read(buffer, 0, BUFFER_SIZE)) != -1) {
+			total.append(buffer, 0, charsRead);
+		}
+		/*	while ((line =updateResponse.readLine()) != null) {
 			    total.append(line);
 				System.out.println(line);
-			}
+			}*/
 			return total.toString();
 	}
 	public String readFullyAsString(InputStream inputStream, String encoding) throws IOException {

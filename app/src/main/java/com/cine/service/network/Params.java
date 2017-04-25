@@ -39,7 +39,7 @@ public class Params {
         if(this.contentType.equals("plain")) {
             StringBuilder json1 = new StringBuilder();
             if(this.params.size() > 0) {
-                json1.append("?");
+//                json1.append("?");
             }
 
             var3 = this.params.entrySet().iterator();

@@ -83,7 +83,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onSuccess(String response) {
         dismissLoader();
-
         goToDashBoard();
         finish();
 
