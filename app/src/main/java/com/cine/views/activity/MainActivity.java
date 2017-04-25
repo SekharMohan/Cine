@@ -9,8 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-    import android.support.v7.widget.Toolbar;
-    import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -23,7 +23,6 @@ import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
-import com.cine.views.fragments.AboutUs;
 import com.cine.views.fragments.Category;
 import com.cine.views.fragments.Events;
 import com.cine.views.fragments.FansClub;
@@ -72,11 +71,11 @@ import butterknife.ButterKnife;
             /*mfeed*/
 
             /*wall post -mcwall*/
-//            callWallPostApi();
+//          callWallPostApi();
             /*wall post sub - mscwall*/
-//            callWallPostSubCategoryApi();
+//           callWallPostSubCategoryApi();
             /*wall post*/
-//            apiCallWallPost();
+//           apiCallWallPost();
             setupViewPager(viewPager);
             tabLayout.setupWithViewPager(viewPager);
             setupTabIcons();

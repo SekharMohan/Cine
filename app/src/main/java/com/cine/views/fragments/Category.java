@@ -2,6 +2,7 @@ package com.cine.views.fragments;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSpinner;
 import android.view.LayoutInflater;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 import com.cine.R;
 import com.cine.service.model.FeedModel;
 import com.cine.utils.LocalStorage;
-import com.cine.views.widgets.Loader;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,12 +54,24 @@ public class Category extends Fragment {
     }
 
     private void init() {
-
-        category = new HashMap<>();
         subCategory = new HashMap<>();
+        category = new HashMap<>();
+
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         if(LocalStorage.feedModel!=null && LocalStorage.feedModel.getCategories()!=null) {
             setUp();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 
     private void setUp() {
@@ -67,7 +79,7 @@ public class Category extends Fragment {
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                Loader.showProgressBar(getContext());
+
             }
 
             @Override
@@ -91,9 +103,10 @@ String catName = cat.getMaincategory_name();
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
+
                 spinnerSetup(spCategory,categoryArr,"Select category");
                 spinnerSetup(spSubCagegory,subCategoryArr,"Select sub category");
-                Loader.dismissProgressBar();
+
 
             }
         }.execute();
