@@ -138,7 +138,7 @@
         android:drawableLeft="@drawable/ic_new_comment"
         android:drawablePadding="2dp"
         android:background="@drawable/feed_button_bg"
-        android:textColor="#0C5872"
+        android:textColor="#FFFFFF"
         android:focusable="false"
         android:textAllCaps="false"
         android:textSize="10sp"
@@ -149,7 +149,7 @@
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/nameOfLikedPersonsTextView"
                 android:layout_width="match_parent"
-                android:layout_height="20dp"
+                android:layout_height="30dp"
                 android:layout_below="@+id/commentButton"
                 android:textSize="10sp"
                 android:padding="5dp"

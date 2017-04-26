@@ -1,19 +1,25 @@
     package com.cine.views.activity;
 
     import android.content.Context;
-import android.content.Intent;
+    import android.content.DialogInterface;
+    import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+    import android.support.v7.app.AlertDialog;
+    import android.support.v7.app.AppCompatActivity;
+    import android.support.v7.widget.AppCompatTextView;
+    import android.support.v7.widget.Toolbar;
+    import android.text.TextUtils;
+    import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+    import android.view.View;
+    import android.widget.EditText;
+    import android.widget.TextView;
 
 import com.cine.R;
 import com.cine.service.WebService;
@@ -117,12 +123,65 @@ import butterknife.ButterKnife;
                 case R.id.action_my_profile:
                     startActivity(new Intent(this,MyWallActivity.class));
                     break;
+                case R.id.action_reset_password:
+                    invokeDialog(R.layout.reset_password, "Update Password");
+                    break;
             }
             return super.onOptionsItemSelected(item);
         }
 
 
-/*API CALL FOR WALL POST-MAIN CATEGORY*/
+        private void invokeDialog(int resId, String title){ // change password dialogue
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = this.getLayoutInflater();
+            View dialogView = inflater.inflate(resId, null);
+            dialogBuilder.setView(dialogView);
+            dialogBuilder.setTitle(title);
+            dialogBuilder.setIcon(R.mipmap.ic_launcher);
+            final EditText currentPassword = (EditText) dialogView.findViewById(R.id.currentPasswordView);
+            final EditText newPassword = (EditText) dialogView.findViewById(R.id.newPasswordView);
+            final EditText verifyNewPassword = (EditText) dialogView.findViewById(R.id.verifyNewPasswordView);
+            final AppCompatTextView errorTextView = (AppCompatTextView) dialogView.findViewById(R.id.errorText);
+
+            dialogBuilder.setPositiveButton("Save Changes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            dialogBuilder.setNegativeButton("Cancel",  new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    dialog.dismiss();
+                }
+            });
+
+            final AlertDialog alertDialog = dialogBuilder.create();
+            alertDialog.show();
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    currentPassword.getText().toString();
+                    newPassword.getText().toString();
+                    verifyNewPassword.getText().toString();
+                    if(!TextUtils.isEmpty(currentPassword.getText().toString()) && !TextUtils.isEmpty(newPassword.getText().toString())){
+                        errorTextView.setText("");
+
+
+                        alertDialog.dismiss();
+                    }else{
+                        errorTextView.setText("Fields should not be empty");
+
+                    }
+                }
+            });
+        }
+
+        /*API CALL FOR WALL POST-MAIN CATEGORY*/
 private void callWallPostApi(){
 
     Loader.showProgressBar(this);
