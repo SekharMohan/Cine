@@ -5,15 +5,26 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.cine.R;
+import com.cine.service.WebService;
+import com.cine.service.WebServiceWrapper;
 import com.cine.service.model.FeedModel;
+import com.cine.service.network.Params;
+import com.cine.service.network.callback.ICallBack;
 import com.cine.utils.LocalStorage;
+import com.cine.utils.ToastUtil;
+import com.cine.views.widgets.HomeFeedAdapter;
+import com.cine.views.widgets.Loader;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,19 +35,26 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class Category extends Fragment {
+public class Category extends Fragment implements ICallBack<String>{
     @BindView(R.id.categorySelectionSpinner)
     AppCompatSpinner spCategory;
     @BindView(R.id.subCategorySelectionSpinner)
     AppCompatSpinner spSubCagegory;
+    @BindView(R.id.feedCategoryView)
+    RecyclerView categoryFeed;
     private Map<String ,String> category;
     private Map<String,String> subCategory;
     private List<String> categoryArr;
     private List<String> subCategoryArr;
+    private UserInteraction userActive;
 
     public Category() {
         // Required empty public constructor
     }
+
+   public interface UserInteraction{
+       public boolean isUserActive();
+   }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,14 +67,114 @@ public class Category extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_category, container, false);
         ButterKnife.bind(this,view);
+        apiCall();
         init();
         return  view;
     }
 
     private void init() {
+        userActive = (UserInteraction) getActivity();
         subCategory = new HashMap<>();
         category = new HashMap<>();
+        spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(userActive.isUserActive()){
+                    categoryFeedApi(categoryArr.get(position));
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spSubCagegory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(userActive.isUserActive()){
+                    callWallPostSubCategoryApi(subCategoryArr.get(position));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+    }
+
+    private void setFeedAdapter() {
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        categoryFeed.setLayoutManager(mLayoutManager);
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext());
+        categoryFeed.setAdapter(adapter);
+    }
+    private void categoryFeedApi(String category){
+
+        Loader.showProgressBar(getContext());
+        Params params=new Params();
+
+        params.addParam("cg_api_req_name","getposts");
+        params.addParam("cg_username","prabu944");
+        params.addParam("cg_mcat",category);
+        WebServiceWrapper.getInstance().callService(getContext(), WebService.WALLPOST_URL, params, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+                if(LocalStorage.feedModel.getCommonwall_posts().length>0) {
+                    setFeedAdapter();
+                }else {
+                    updateErrorUI("No post available");
+                }
+                dismissLoader();
+            }
+
+            @Override
+            public void onFailure(String response) {
+                dismissLoader();
+                updateErrorUI(response);
+            }
+        });
+    }
+    private void callWallPostSubCategoryApi(String subcategory){
+
+        Loader.showProgressBar(getContext());
+        Params params=new Params();
+
+        params.addParam("cg_api_req_name","getposts");
+        params.addParam("cg_username","prabu944");
+        params.addParam("cg_scat",subcategory);
+        WebServiceWrapper.getInstance().callService(getContext(), WebService.WALLPOSTSUBCAT, params, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+                if(LocalStorage.feedModel.getCommonwall_posts().length>0) {
+                    setFeedAdapter();
+                }else {
+                    updateErrorUI("No post available");
+                }
+                dismissLoader();
+            }
+
+            @Override
+            public void onFailure(String response) {
+                dismissLoader();
+                updateErrorUI(response);
+            }
+        });
+    }
+    private void showLoader(){
+        Loader.showProgressBar(getContext());
+    }
+
+    private void apiCall() {
+        Params params=new Params();
+
+        params.addParam("cg_api_req_name","getposts");
+        params.addParam("cg_username","prabu944");
+        WebServiceWrapper.getInstance().callService(getContext(), WebService.FEEDS_URL,params,this);
     }
 
     @Override
@@ -89,7 +207,7 @@ public class Category extends Fragment {
                 categoryArr = new ArrayList<String>();
                 subCategoryArr = new ArrayList<String>();
                 for(FeedModel.Categories cat:catArr){
-String catName = cat.getMaincategory_name();
+                  String catName = cat.getMaincategory_name();
                     String subCatName = cat.getSubcategory_names();
                     category.put(catName,cat.getCategory_id());
                     subCategory.put(subCatName,cat.getCategory_id());
@@ -137,5 +255,25 @@ String catName = cat.getMaincategory_name();
         adapter.add(hint);
         spinner.setAdapter(adapter);
         spinner.setSelection(adapter.getCount());
+    }
+
+    @Override
+    public void onSuccess(String response) {
+        LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+        setUp();
+        dismissLoader();
+    }
+
+    @Override
+    public void onFailure(String response) {
+        updateErrorUI(response);
+dismissLoader();;
+    }
+    private void dismissLoader() {
+        Loader.dismissProgressBar();
+    }
+
+    private void updateErrorUI(String errorMsg) {
+        ToastUtil.showErrorUpdate(getContext(), errorMsg);
     }
 }

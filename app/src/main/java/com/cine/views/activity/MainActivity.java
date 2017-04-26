@@ -44,7 +44,7 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-    public class MainActivity extends AppCompatActivity {
+    public class MainActivity extends AppCompatActivity implements Category.UserInteraction{
     @BindString(R.string.about)
   public   String about;
         @BindString(R.string.home)
@@ -63,6 +63,7 @@ import butterknife.ButterKnife;
         public    TabLayout tabLayout;
         @BindView(R.id.viewpager)
         public   ViewPager viewPager;
+        boolean listenrEnabler;
 
         public static Intent getStartIntent(Context context) {
             return new Intent(context, MainActivity.class);
@@ -181,6 +182,12 @@ import butterknife.ButterKnife;
             });
         }
 
+        @Override
+        public void onUserInteraction() {
+            super.onUserInteraction();
+            listenrEnabler = true;
+        }
+
         /*API CALL FOR WALL POST-MAIN CATEGORY*/
 private void callWallPostApi(){
 
@@ -211,7 +218,7 @@ private void callWallPostApi(){
 
             params.addParam("cg_api_req_name","getposts");
             params.addParam("cg_username","prabu944");
-            params.addParam("cg_mcat","Hero");
+            params.addParam("cg_scat","Hero");
             WebServiceWrapper.getInstance().callService(this, WebService.WALLPOSTSUBCAT, params, new ICallBack<String>() {
                 @Override
                 public void onSuccess(String response) {
@@ -303,6 +310,11 @@ private void callWallPostApi(){
 
         private void updateErrorUI(String errorMsg) {
             ToastUtil.showErrorUpdate(this, errorMsg);
+        }
+
+        @Override
+        public boolean isUserActive() {
+            return listenrEnabler;
         }
 
         class ViewPagerAdapter extends FragmentPagerAdapter {

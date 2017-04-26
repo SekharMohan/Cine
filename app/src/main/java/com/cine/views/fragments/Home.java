@@ -4,7 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatImageButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ import butterknife.ButterKnife;
 import static android.app.Activity.RESULT_OK;
 
 
-public class Home extends Fragment implements ICallBack<String>, View.OnClickListener {
+public class Home extends Fragment implements ICallBack<String>, View.OnClickListener ,SwipeRefreshLayout.OnRefreshListener{
 
     @BindView(R.id.feedView)
     public RecyclerView homeFeedView;
@@ -40,6 +41,9 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
 
     @BindView(R.id.pickVideo)
     public Button pickVideo;
+
+    @BindView(R.id.pull_to_refresh)
+    SwipeRefreshLayout pullToRefresh;
 
     private static final int SELECT_PICTURE = 100;
 
@@ -59,10 +63,17 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
         View rootView = inflater.inflate(R.layout.fragment_home,
                 container, false);
         ButterKnife.bind(this,rootView);
+        init();
         apiCall();
 
         return rootView;
     }
+
+    private void init() {
+        pullToRefresh.setOnRefreshListener(this);
+        pullToRefresh.setColorSchemeColors(ContextCompat.getColor(getContext(),R.color.colorErro),ContextCompat.getColor(getContext(),R.color.color_app),ContextCompat.getColor(getContext(),R.color.material_teal));
+    }
+
     private void apiCall() {
         Loader.showProgressBar(getContext());
         Params params=new Params();
@@ -88,12 +99,14 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     public void onSuccess(String response) {
         LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
         setFeedAdapter();
+        dimissSwipeLayout();
         dismissLoader();
     }
 
     @Override
     public void onFailure(String response) {
         updateErrorUI(response);
+        dimissSwipeLayout();
         dismissLoader();
     }
 
@@ -133,6 +146,17 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
 
 
             }
+        }
+    }
+
+    @Override
+    public void onRefresh() {
+        apiCall();
+    }
+
+    private void dimissSwipeLayout(){
+        if(pullToRefresh.isRefreshing()){
+            pullToRefresh.setRefreshing(false);
         }
     }
 }
