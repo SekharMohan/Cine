@@ -346,4 +346,9 @@ private void callWallPostApi(){
                 return mFragmentTitleList.get(position);
             }
         }
+        @Override
+        public void setUserAction(){
+            listenrEnabler = false;
+
+        }
     }

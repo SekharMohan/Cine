@@ -52,8 +52,10 @@ public class Category extends Fragment implements ICallBack<String>{
         // Required empty public constructor
     }
 
+
    public interface UserInteraction{
        public boolean isUserActive();
+      public void setUserAction();
    }
 
     @Override
@@ -76,11 +78,26 @@ public class Category extends Fragment implements ICallBack<String>{
         userActive = (UserInteraction) getActivity();
         subCategory = new HashMap<>();
         category = new HashMap<>();
+        categoryArr = new ArrayList<String>();
+        subCategoryArr = new ArrayList<String>();
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(userActive.isUserActive()){
-                    categoryFeedApi(categoryArr.get(position));
+                    userActive.setUserAction();
+                    String selectedCategory = categoryArr.get(position);
+                    categoryFeedApi(selectedCategory);
+                    String selectedCategoryId = category.get(selectedCategory);
+                    subCategoryArr.clear();
+                    String subCatName = subCategory.get(selectedCategoryId);
+                    if(subCatName != null && !subCatName.isEmpty()) {
+                        String subcatNameArr[] = subCatName.split(",");
+                        for (String subCat : subcatNameArr) {
+                            subCategoryArr.add(subCat.trim());
+
+                        }
+                        spinnerSetup(spSubCagegory,subCategoryArr,"Select sub category");
+                    }
                 }
             }
 
@@ -93,6 +110,7 @@ public class Category extends Fragment implements ICallBack<String>{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(userActive.isUserActive()){
+                    userActive.setUserAction();
                     callWallPostSubCategoryApi(subCategoryArr.get(position));
                 }
             }
@@ -150,6 +168,7 @@ public class Category extends Fragment implements ICallBack<String>{
             @Override
             public void onSuccess(String response) {
                 LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+
                 if(LocalStorage.feedModel.getCommonwall_posts().length>0) {
                     setFeedAdapter();
                 }else {
@@ -204,31 +223,73 @@ public class Category extends Fragment implements ICallBack<String>{
             protected Void doInBackground(Void... params) {
                 FeedModel.Categories[] catArr = LocalStorage.feedModel.getCategories();
                 int length = LocalStorage.feedModel.getCategories().length;
-                categoryArr = new ArrayList<String>();
-                subCategoryArr = new ArrayList<String>();
+
                 for(FeedModel.Categories cat:catArr){
                   String catName = cat.getMaincategory_name();
-                    String subCatName = cat.getSubcategory_names();
                     category.put(catName,cat.getCategory_id());
-                    subCategory.put(subCatName,cat.getCategory_id());
-                    categoryArr .add(catName);
-                    subCategoryArr.add(subCatName);
-                }
+                    String subCatName = cat.getSubcategory_names();
+                    subCategory.put(cat.getCategory_id(),subCatName);
 
+                    categoryArr .add(catName);
+
+                }
+subCategoryArr.clear();
                 return null;
             }
+
+
 
             @Override
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
 
                 spinnerSetup(spCategory,categoryArr,"Select category");
-                spinnerSetup(spSubCagegory,subCategoryArr,"Select sub category");
+
 
 
             }
         }.execute();
     }
+
+   /* private void setUpSubcategory() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+
+            }
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                FeedModel.Categories[] catArr = LocalStorage.feedModel.getCategories();
+                int length = LocalStorage.feedModel.getCategories().length;
+
+
+                for(FeedModel.Categories cat:catArr){
+
+                    String subCatName = cat.getSubcategory_names();
+                    if(subCatName != null && !subCatName.isEmpty()) {
+                        String subcatNameArr[] = subCatName.split(",");
+                        for (String subCat : subcatNameArr) {
+                            subCategoryArr.add(subCat.trim());
+                            subCategory.put(subCat, cat.getCategory_id());
+                        }
+                    }
+
+                }
+
+                return null;
+            } @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+
+                spinnerSetup(spSubCagegory,subCategoryArr,"Select sub category");
+
+
+            }
+        }.execute();
+    }*/
     public void spinnerSetup(AppCompatSpinner spinner, List values, String hint){
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item) {
 
