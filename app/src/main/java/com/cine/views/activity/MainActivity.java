@@ -92,8 +92,9 @@ import butterknife.ButterKnife;
             getSupportActionBar().setDisplayUseLogoEnabled(true);
             getSupportActionBar().setCustomView(R.layout.custom_action_bar);
             getSupportActionBar().setDisplayShowCustomEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             //createSupportedToolbar(false);
-           // setTitle(getString(R.string.app_name));
+            setTitle("");
         }
 
         public void createSupportedToolbar(boolean value) {

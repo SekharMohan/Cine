@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.VideoView;
@@ -49,18 +50,20 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         FeedModel.Commonwall_posts post = commonwall_posts[position];
-       /* "post_id":"37",
-                "post_username":"iamsanthosh",
-                "post_text":"",
-                "post_ucat":"Direction",
-                "post_uscat":"Movie Director",
-                "post_langid":"4",
-                "post_date":"1480787483",
-                "post_photos":"1480787492236474623.jpg",
-                "post_video_url":null,
-                "post_comments":"",
-                "post_comment_replies":"",
-                "post_likes":""*/
+       /* "post_id": "37",
+            "post_username": "iamsanthosh",
+            "post_user_fullname": "Santhosh kumar",
+            "post_user_image": "photos/1488479400282922383.jpg",
+            "post_text": "",
+            "post_ucat": "Direction",
+            "post_uscat": "Movie Director",
+            "post_langid": "4",
+            "post_date": "1480787483",
+            "post_photos": "1480787492236474623.jpg",
+            "post_video_url": null,
+            "post_comments": "",
+            "post_comment_replies": "",
+            "post_likes": ""*/
 
         if(!TextUtils.isEmpty(post.getPost_likes())){
             holder.nameOfLikedPersonsTextView.setVisibility(View.VISIBLE);
@@ -126,7 +129,14 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                 }
             }
         });
+        holder.commentEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(holder.commentEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        });
     }
 
     @Override

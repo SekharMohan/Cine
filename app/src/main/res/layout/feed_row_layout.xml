@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="10dp"
         android:textColor="#CF313D"
         android:textStyle="bold"
         android:layout_toRightOf="@+id/feedUserProfilePic"
@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="10dp"
         android:textColor="#446C90"
         android:layout_toRightOf="@+id/nameView"
         android:text="Movie director" />
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/nameView"
                 android:layout_below="@+id/nameView"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="7dp"
                 android:src="@drawable/clock"/>
 
 
@@ -64,7 +64,7 @@
         android:textColor="#AFAFAF"
         android:textSize="13sp"
         android:layout_below="@+id/nameView"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="7dp"
         android:layout_marginLeft="5dp"
 
         android:layout_toRightOf="@+id/clockImage"
@@ -78,7 +78,7 @@
         android:layout_below="@+id/nameView"
         android:textColor="#AFAFAF"
         android:textSize="13sp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="7dp"
         android:layout_toRightOf="@+id/hoursView"
         android:text=",Tamil" />
 

@@ -8,12 +8,6 @@
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
     android:background="@color/color_app">
 
-    <ImageView
-        android:layout_width="2dp"
-        android:layout_height="25dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:src="@color/material_teal" />
 
     <TextView
         android:id="@+id/toolbar_textview"
