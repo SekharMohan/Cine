@@ -20,7 +20,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants">
 
 
 
@@ -237,6 +238,14 @@
             </android.support.v7.widget.LinearLayoutCompat>
         </android.support.v7.widget.CardView>
     </RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/myWallFeedView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/relLayout"
+            android:layout_marginTop="5dp">
+
+        </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
     </ScrollView>
 </LinearLayout>
