@@ -1,9 +1,14 @@
 package com.cine.views.widgets;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -16,31 +21,63 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.MediaController;
 import android.widget.VideoView;
 
 import com.cine.R;
 import com.cine.service.model.FeedModel;
+import com.cine.views.activity.MyWallActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
+import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+import com.google.android.youtube.player.YouTubePlayerView;
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
+import com.google.android.youtube.player.YouTubeThumbnailLoader;
+import com.google.android.youtube.player.YouTubeThumbnailView;
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 
 /**
  * Created by DELL on 19-03-2017.
  */
 
-public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyViewHolder> {
+public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyViewHolder>  {
 
     private FeedModel.Commonwall_posts[] commonwall_posts;
+    FragmentManager fManager;
     Context mContext;
+    MediaController ctrl;
+    private static final String KEY = "AIzaSyDu8qNvu0-dSvuAmsPQmIkqT0gH1YfTf1k";
 
-    public HomeFeedAdapter(FeedModel.Commonwall_posts[] commonwall_posts, Context mcontext) {
+
+    public HomeFeedAdapter(FeedModel.Commonwall_posts[] commonwall_posts, Context myWallActivity, FragmentManager fragmentManager) {
         this.commonwall_posts = commonwall_posts;
-        this.mContext = mcontext;
+        this.mContext = myWallActivity;
 
+        fManager =fragmentManager;
     }
+
+
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
+        View itemView = LayoutInflater.from(mContext)
                 .inflate(R.layout.feed_row_layout, parent, false);
 
         return new MyViewHolder(itemView);
@@ -83,18 +120,50 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                holder.postTextView.setVisibility(View.GONE);
            }
            if(post.getPost_video_url()!=null) {
-               holder.feedVideoView.setVisibility(View.VISIBLE);
-               holder.feedVideoView.setVideoURI(Uri.parse(post.getPost_video_url()));
-               holder.feedVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
 
-                   @Override
-                   public boolean onError(MediaPlayer mp, int what, int extra) {
-                       Log.d("video", "setOnErrorListener ");
-                       return true;
-                   }
-               });
+               if(post.getPost_video_url().contains("youtube")) {
+                   holder.youTubeThump.setVisibility(View.VISIBLE);
+
+                   final YouTubeThumbnailLoader.OnThumbnailLoadedListener onThumbnailLoadedListener = new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
+                       @Override
+                       public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
+
+                       }
+
+                       @Override
+                       public void onThumbnailLoaded(YouTubeThumbnailView youTubeThumbnailView, String s) {
+                           youTubeThumbnailView.setVisibility(View.VISIBLE);
+
+
+                       }
+                   };
+                   holder.youTubeThump.setOnClickListener(new View.OnClickListener() {
+                       @Override
+                       public void onClick(View v) {
+                           Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) mContext, KEY, "a5FvgdI6h-c", 0, true, true);
+                           mContext.startActivity(intent);
+                       }
+                   });
+                   holder.youTubeThump.initialize(KEY, new YouTubeThumbnailView.OnInitializedListener() {
+                       @Override
+                       public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
+
+                           youTubeThumbnailLoader.setVideo("94BzBOpv42g");
+                           youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
+                       }
+
+                       @Override
+                       public void onInitializationFailure(YouTubeThumbnailView youTubeThumbnailView, YouTubeInitializationResult youTubeInitializationResult) {
+                           System.out.println(youTubeInitializationResult.toString());
+                           //In case of failure
+                       }
+                   });
+               }else{
+                   holder.youTubeThump.setVisibility(View.GONE);
+
+               }
+
            }else{
-               holder.feedVideoView.setVisibility(View.GONE);
            }
 
        }else{
@@ -104,7 +173,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
            }else{
                holder.postTextView.setVisibility(View.GONE);
            }
-           holder.feedVideoView.setVisibility(View.GONE);
+
 
            if(post.getPost_photos()!=null) {
                holder.feedImageView.setVisibility(View.VISIBLE);
@@ -139,16 +208,20 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
         });
     }
 
+
     @Override
     public int getItemCount() {
         return commonwall_posts.length;
     }
 
+
+
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public CircularImageView userProfilePic;
         public AppCompatTextView hoursView, nameView, professionView, languageView, userNameCommented, commmentedText, postTextView, nameOfLikedPersonsTextView;
         public AppCompatImageView feedImageView;
-        public VideoView feedVideoView;
+        public YouTubeThumbnailView youTubeThump;
+        public YouTubePlayerSupportFragment feedVideoView;
         public Button likeButton, commentButton, replyForComment;
         public AppCompatImageButton sendReply;
         public EditText commentEditText;
@@ -165,7 +238,11 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
             postTextView = (AppCompatTextView) view.findViewById(R.id.postTextView);
             nameOfLikedPersonsTextView = (AppCompatTextView) view.findViewById(R.id.nameOfLikedPersonsTextView);
             feedImageView = (AppCompatImageView) view.findViewById(R.id.feedImageView);
-            feedVideoView = (VideoView) view.findViewById(R.id.feedVideoView);
+            youTubeThump = (YouTubeThumbnailView) view.findViewById(R.id.youtube_thumbnail);
+
+                feedVideoView = new YouTubePlayerSupportFragment();
+
+
             likeButton = (Button) view.findViewById(R.id.likeButton);
             commentButton = (Button) view.findViewById(R.id.commentButton);
             replyForComment = (Button) view.findViewById(R.id.replyForCommentButton);
@@ -185,5 +262,4 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
             }
         }
     }
-
-}
+  }

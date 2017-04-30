@@ -103,12 +103,33 @@
         android:layout_height="160dp"
 
          />
+    <RelativeLayout
 
-    <VideoView  android:id="@+id/feedVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="160dp">
+
+    <com.google.android.youtube.player.YouTubeThumbnailView
+        android:id="@+id/youtube_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="160dp"
 
          />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:src="@drawable/video_icon"
+            android:layout_height="160dp" />
+
+        <VideoView
+            android:visibility="gone"
+            android:id="@+id/videoview"
+
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+
+            />
+
+    </RelativeLayout>
 </RelativeLayout>
     <Button
         android:id="@+id/likeButton"

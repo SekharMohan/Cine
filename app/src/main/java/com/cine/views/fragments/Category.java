@@ -83,7 +83,7 @@ public class Category extends Fragment implements ICallBack<String>{
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(userActive.isUserActive()){
+                if(userActive.isUserActive()&& categoryArr.size()> position){
                     userActive.setUserAction();
                     String selectedCategory = categoryArr.get(position);
                     categoryFeedApi(selectedCategory);
@@ -126,7 +126,7 @@ public class Category extends Fragment implements ICallBack<String>{
     private void setFeedAdapter() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         categoryFeed.setLayoutManager(mLayoutManager);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext());
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(),getFragmentManager());
         categoryFeed.setAdapter(adapter);
     }
     private void categoryFeedApi(String category){
