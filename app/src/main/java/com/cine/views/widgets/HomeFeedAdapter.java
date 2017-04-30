@@ -60,17 +60,17 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyViewHolder>  {
 
     private FeedModel.Commonwall_posts[] commonwall_posts;
-    FragmentManager fManager;
+
     Context mContext;
     MediaController ctrl;
     private static final String KEY = "AIzaSyDu8qNvu0-dSvuAmsPQmIkqT0gH1YfTf1k";
 
 
-    public HomeFeedAdapter(FeedModel.Commonwall_posts[] commonwall_posts, Context myWallActivity, FragmentManager fragmentManager) {
+    public HomeFeedAdapter(FeedModel.Commonwall_posts[] commonwall_posts, Context myWallActivity) {
         this.commonwall_posts = commonwall_posts;
         this.mContext = myWallActivity;
 
-        fManager =fragmentManager;
+
     }
 
 

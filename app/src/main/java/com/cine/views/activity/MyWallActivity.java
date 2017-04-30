@@ -71,7 +71,7 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         myWallFeedView.setLayoutManager(mLayoutManager);
         myWallFeedView.setFocusable(false);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),this,getSupportFragmentManager());
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),this);
         myWallFeedView.setAdapter(adapter);
     }
 }

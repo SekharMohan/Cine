@@ -126,7 +126,7 @@ public class Category extends Fragment implements ICallBack<String>{
     private void setFeedAdapter() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         categoryFeed.setLayoutManager(mLayoutManager);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(),getFragmentManager());
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext());
         categoryFeed.setAdapter(adapter);
     }
     private void categoryFeedApi(String category){

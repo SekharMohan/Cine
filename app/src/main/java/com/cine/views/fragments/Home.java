@@ -91,7 +91,7 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     private void setFeedAdapter() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         homeFeedView.setLayoutManager(mLayoutManager);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(),getFragmentManager());
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext());
         homeFeedView.setAdapter(adapter);
     }
 
