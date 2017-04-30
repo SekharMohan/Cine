@@ -18,10 +18,12 @@
         <android.support.v7.widget.AppCompatSpinner
             android:id="@+id/languageSelectionSpinner"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            >
+            style="@android:style/Widget.Holo.Light.Spinner"
+            android:layout_height="35dp"
+            android:layout_marginTop="10dp"
+            />
 
-        </android.support.v7.widget.AppCompatSpinner>
+
 
     </android.support.v7.widget.CardView>
 

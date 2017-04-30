@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+<ImageView
+    android:id="@+id/firstPostImage"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:scaleType="fitXY"/>
+    <RelativeLayout
+        android:id="@+id/relVideoYouTubeViewFirst"
+        android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
+        android:layout_height="160dp">
+
+        <com.google.android.youtube.player.YouTubeThumbnailView
+            android:id="@+id/youtube_thumbnailFirst"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+
+            />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:src="@drawable/send"
+            android:layout_height="wrap_content" />
+
+        <VideoView
+            android:visibility="gone"
+            android:id="@+id/firstPostVideo"
+
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+
+            />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/secondPostImage"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="fitXY"/>
+    <RelativeLayout
+        android:layout_marginTop="15dp"
+        android:id="@+id/relVideoYouTubeViewTwo"
+        android:layout_width="match_parent"
+        android:layout_height="160dp">
+
+        <com.google.android.youtube.player.YouTubeThumbnailView
+            android:id="@+id/youtube_thumbnailtwo"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+
+            />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:src="@drawable/send"
+            android:layout_height="wrap_content" />
+
+        <VideoView
+            android:visibility="gone"
+            android:id="@+id/secondPostVideo"
+
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+
+            />
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/thirdPostImage"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="fitXY"/>
+    <RelativeLayout
+        android:id="@+id/relVideoYouTubeViewThree"
+        android:layout_width="match_parent"
+        android:layout_marginTop="15dp"
+        android:layout_height="160dp">
+
+        <com.google.android.youtube.player.YouTubeThumbnailView
+            android:id="@+id/youtube_thumbnail_three"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+
+            />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:src="@drawable/send"
+            android:layout_height="wrap_content" />
+
+        <VideoView
+            android:visibility="gone"
+            android:id="@+id/thirdPostVideo"
+
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+
+            />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

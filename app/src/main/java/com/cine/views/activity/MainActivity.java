@@ -29,7 +29,8 @@ import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
-import com.cine.views.fragments.Category;
+    import com.cine.views.fragments.Bonus;
+    import com.cine.views.fragments.Category;
 import com.cine.views.fragments.Events;
 import com.cine.views.fragments.FansClub;
 import com.cine.views.fragments.Home;
@@ -51,6 +52,8 @@ import butterknife.ButterKnife;
         public   String home;
         @BindString(R.string.language)
         public    String language;
+        @BindString(R.string.bonus)
+        public    String bonus;
         @BindString(R.string.fans)
         public     String fans;
         @BindString(R.string.events)
@@ -128,6 +131,9 @@ import butterknife.ButterKnife;
                 case R.id.action_reset_password:
                     invokeDialog(R.layout.reset_password, "Update Password");
                     break;
+               /* case R.id.action_ads:
+                    startActivity(new Intent(this,AdsActivity.class));
+                    break;*/
             }
             return super.onOptionsItemSelected(item);
         }
@@ -262,28 +268,33 @@ private void callWallPostApi(){
 
             TextView tabOne = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
             tabOne.setText(home);
-            tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tab_favourite, 0, 0);
+            tabOne.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.home, 0, 0);
             tabLayout.getTabAt(0).setCustomView(tabOne);
 
             TextView tabTwo = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
             tabTwo.setText(category);
-            tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tab_call, 0, 0);
+            tabTwo.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.category, 0, 0);
             tabLayout.getTabAt(1).setCustomView(tabTwo);
 
             TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-            tabThree.setText(fans);
-            tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tab_contacts, 0, 0);
+            tabThree.setText(bonus);
+            tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tab_favourite, 0, 0);
             tabLayout.getTabAt(2).setCustomView(tabThree);
 
             TextView tabfour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-            tabfour.setText(language);
-            tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tab_favourite, 0, 0);
+            tabfour.setText(fans);
+            tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.fans_club, 0, 0);
             tabLayout.getTabAt(3).setCustomView(tabfour);
 
             TextView tabFive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-            tabFive.setText(events);
-            tabFive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tab_call, 0, 0);
+            tabFive.setText(language);
+            tabFive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.language, 0, 0);
             tabLayout.getTabAt(4).setCustomView(tabFive);
+
+            TextView tabSix = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+            tabSix.setText(events);
+            tabSix.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.events, 0, 0);
+            tabLayout.getTabAt(5).setCustomView(tabSix);
 
 
         }
@@ -296,6 +307,7 @@ private void callWallPostApi(){
             ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
             adapter.addFrag(new Home(), home);
             adapter.addFrag(new Category(), category);
+            adapter.addFrag(new Bonus(), bonus);
             adapter.addFrag(new FansClub(), fans);
             adapter.addFrag(new Language(),language);
             adapter.addFrag(new Events(),events);

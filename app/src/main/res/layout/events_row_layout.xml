@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".views.fragments.Events"
+    android:padding="5dp">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/evTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#CF313D"
+        android:textStyle="bold"
+
+        android:text="Test," />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/evDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+android:layout_alignParentRight="true"
+        android:layout_marginRight="3dp"
+
+        android:textColor="#446C90"
+        android:textStyle="bold"
+        android:text="18 Apr,17" />
+    <View
+        android:id="@+id/evSeperatorView"
+        android:layout_below="@+id/evTitle"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="3dp"
+        android:background="#EEEEEE"/>
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/evDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/evSeperatorView"
+        android:layout_margin="3dp"
+        android:text="Event description"
+        android:textSize="15sp" />
+    <RelativeLayout
+        android:id="@+id/evImageVideoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/evDescription"
+        android:layout_marginTop="5dp">
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/evImage"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+
+            />
+        <RelativeLayout
+            android:id="@+id/evRelVideoYouTubeView"
+            android:layout_width="match_parent"
+            android:layout_height="160dp">
+
+            <com.google.android.youtube.player.YouTubeThumbnailView
+                android:id="@+id/ev_youtube_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+
+                />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_centerInParent="true"
+                android:src="@drawable/send"
+                android:layout_height="wrap_content" />
+
+            <VideoView
+                android:visibility="gone"
+                android:id="@+id/evVideoView"
+
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+
+                />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

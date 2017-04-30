@@ -18,11 +18,11 @@ public class ToastUtil {
     public static void showErrorUpdate(Context context,String msg){
 
         Toast toast = Toast.makeText(context, msg, Toast.LENGTH_LONG);
-        toast. setGravity(Gravity.TOP|Gravity.LEFT|Gravity.FILL_HORIZONTAL, 0, 0);
+        toast. setGravity(Gravity.BOTTOM|Gravity.LEFT|Gravity.FILL_HORIZONTAL, 0, 0);
         View view = toast.getView();
 
         //To change the Background of Toast)
-        view.setBackgroundResource(R.color.colorErro);
+        view.setBackgroundResource(R.color.tab_text_color);
         TextView text = (TextView) view.findViewById(android.R.id.message);
 
         //Shadow of the Of the Text Color

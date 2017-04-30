@@ -46,6 +46,7 @@
     <string name="about">MY WALL</string>
     <string name="events">EVENTS</string>
     <string name="language">LANGUAGE</string>
+    <string name="bonus">BONUS</string>
     <string name="login_field_empty_warning">Please Enter the UserName and Password</string>
     <string name="no_internet">No Internet!. Please check your internet connection</string>
     <string name="category_hint">Select your category</string>

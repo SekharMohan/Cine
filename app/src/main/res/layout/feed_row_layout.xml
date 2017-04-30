@@ -4,14 +4,111 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/tools"
-    android:paddingTop="10dp">
+    android:paddingTop="5dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    >
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view_status"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="8dp">
+        <RelativeLayout
+            android:id="@+id/relativeLayoutStatusUpdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:padding="5dp"
+            >
+            <com.cine.views.widgets.CircularImageView
+                android:id="@+id/userProfilePic"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@mipmap/ic_launcher_round"
+                app:civ_border_color="#FFFFFF"
+                app:civ_border_width="2dp" />
+
+            <EditText
+                android:id="@+id/statusView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="2dp"
+                android:layout_toRightOf="@+id/userProfilePic"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:gravity="top"
+                android:textSize="14sp"
+                android:textColor="#999999"
+                android:hint="@string/whats_on_your_mind"
+                android:inputType="textMultiLine"
+                android:lines="3"
+                android:scrollHorizontally="false"
+                android:background="@drawable/edittext_bg"/>
+
+            <Button
+                android:id="@+id/pickImage"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_toLeftOf="@+id/pickVideo"
+                android:layout_below="@+id/statusView"
+                android:background="@drawable/feed_button_status_bg"
+                android:drawableLeft="@drawable/image_icon"
+                android:drawablePadding="5dp"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:textColor="@color/status_text_color"
+                android:text="Add Photos" />
+
+            <Button
+                android:id="@+id/pickVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="7dp"
+                android:layout_toLeftOf="@+id/sendStatus"
+                android:layout_below="@+id/statusView"
+                android:background="@drawable/feed_button_status_bg"
+                android:drawableLeft="@drawable/video_icon"
+                android:drawablePadding="5dp"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:textColor="@color/status_text_color"
+                android:text="Add Videos" />
+
+            <Button
+                android:id="@+id/sendStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="7dp"
+                android:layout_alignRight="@+id/statusView"
+                android:layout_below="@+id/statusView"
+                android:background="@drawable/feed_button_status_bg"
+                android:drawableLeft="@drawable/post_icon"
+                android:drawablePadding="5dp"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:textColor="@color/status_text_color"
+                android:text="Publish Now" />
+
+
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:layout_below="@+id/card_view_status"
         card_view:cardCornerRadius="2dp"
+        android:layout_marginTop="5dp"
         card_view:contentPadding="8dp">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -19,19 +116,20 @@
             >
     <com.cine.views.widgets.CircularImageView
         android:id="@+id/feedUserProfilePic"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_marginLeft="7dp"
         android:src="@mipmap/ic_launcher_round"
         app:civ_border_color="#FFFFFF"
-        app:civ_border_width="2dp" />
+        app:civ_border_width="4dp"
+        android:layout_marginTop="2dp"/>
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/nameView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="7dp"
         android:textColor="#CF313D"
         android:textStyle="bold"
         android:layout_toRightOf="@+id/feedUserProfilePic"
@@ -42,8 +140,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="3dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="7dp"
         android:textColor="#446C90"
+        android:textStyle="bold"
         android:layout_toRightOf="@+id/nameView"
         android:text="Movie director" />
 
@@ -53,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/nameView"
                 android:layout_below="@+id/nameView"
-                android:layout_marginTop="7dp"
+                android:layout_marginTop="5dp"
                 android:src="@drawable/clock"/>
 
 
@@ -64,8 +163,9 @@
         android:textColor="#AFAFAF"
         android:textSize="13sp"
         android:layout_below="@+id/nameView"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
+        android:textStyle="bold"
 
         android:layout_toRightOf="@+id/clockImage"
         android:text="5 hours ago" />
@@ -78,16 +178,23 @@
         android:layout_below="@+id/nameView"
         android:textColor="#AFAFAF"
         android:textSize="13sp"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
         android:layout_toRightOf="@+id/hoursView"
         android:text=",Tamil" />
-
+<View
+    android:id="@+id/seperatorView"
+    android:layout_below="@+id/feedUserProfilePic"
+    android:layout_width="match_parent"
+    android:layout_height="2dp"
+    android:layout_marginTop="3dp"
+    android:background="#EEEEEE"/>
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/postTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/feedUserProfilePic"
-        android:layout_margin="5dp"
+        android:layout_below="@+id/seperatorView"
+        android:layout_margin="3dp"
         android:text="Post text"
         android:textSize="15sp" />
 
@@ -104,7 +211,7 @@
 
          />
     <RelativeLayout
-
+android:id="@+id/relVideoYouTubeView"
         android:layout_width="match_parent"
         android:layout_height="160dp">
 
@@ -117,12 +224,12 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_centerInParent="true"
-            android:src="@drawable/video_icon"
-            android:layout_height="160dp" />
+            android:src="@drawable/send"
+            android:layout_height="wrap_content" />
 
         <VideoView
             android:visibility="gone"
-            android:id="@+id/videoview"
+            android:id="@+id/feedVideoView"
 
             android:layout_width="match_parent"
             android:layout_height="160dp"
@@ -141,7 +248,7 @@
         android:focusableInTouchMode="false"
         android:layout_marginTop="7dp"
         android:layout_marginLeft="5dp"
-        android:text="Like"
+        android:text="Claps"
         android:drawablePadding="2dp"
         android:drawableLeft="@drawable/ic_new_like"
         android:textAllCaps="false"
@@ -191,7 +298,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/nameOfLikedPersonsTextView"
         android:background="#D6D3C8"
-
+        android:layout_marginTop="2dp"
         android:orientation="horizontal"
         android:paddingLeft="5dp"
         android:paddingBottom="10dp"
@@ -202,6 +309,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="#FFFFFF"
+
     >
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/userNameWhoCommented"
@@ -245,6 +353,8 @@
         android:layout_below="@+id/commentViewFromServer"
         android:layout_marginTop="3dp"
         android:orientation="horizontal"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:padding="3dp">
 
         <com.cine.views.widgets.CircularImageView
@@ -263,7 +373,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             android:layout_marginLeft="5dp"
-            android:focusableInTouchMode="false"
             android:hint="Comment"
             android:textSize="11sp"
             android:scrollHorizontally="true"

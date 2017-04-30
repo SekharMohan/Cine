@@ -8,6 +8,7 @@
     <color name="color_app">#495A88</color>
 
     <color name="status_text_color">#AAA695</color>
+    <color name="tab_text_color">#828282</color>
     <color name="transparent">#00000000</color>
 
 </resources>

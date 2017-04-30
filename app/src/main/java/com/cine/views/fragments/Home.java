@@ -36,11 +36,13 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     @BindView(R.id.feedView)
     public RecyclerView homeFeedView;
 
+/*
     @BindView(R.id.pickImage)
     public Button pickImage;
 
     @BindView(R.id.pickVideo)
     public Button pickVideo;
+*/
 
     @BindView(R.id.pull_to_refresh)
     SwipeRefreshLayout pullToRefresh;
@@ -91,7 +93,7 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     private void setFeedAdapter() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         homeFeedView.setLayoutManager(mLayoutManager);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext());
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(), true);
         homeFeedView.setAdapter(adapter);
     }
 
@@ -121,6 +123,7 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+/*
             case R.id.pickImage:
                 openImageChooser();
                 break;
@@ -128,6 +131,7 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
             case R.id.pickVideo:
 
                 break;
+*/
         }
     }
 

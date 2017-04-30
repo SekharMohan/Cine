@@ -51,6 +51,10 @@ public class FeedModel {
 
     public class Commonwall_posts
     {
+        private String post_user_fullname;
+
+        private String post_user_image;
+
         private String post_uscat;
 
         private String post_comments;
@@ -198,7 +202,23 @@ public class FeedModel {
         @Override
         public String toString()
         {
-            return "ClassPojo [post_uscat = "+post_uscat+", post_comments = "+post_comments+", post_photos = "+post_photos+", post_text = "+post_text+", post_video_url = "+post_video_url+", post_likes = "+post_likes+", post_comment_replies = "+post_comment_replies+", post_ucat = "+post_ucat+", post_id = "+post_id+", post_username = "+post_username+", post_date = "+post_date+", post_langid = "+post_langid+"]";
+            return "ClassPojo [post_user_fullname = "+post_user_fullname+", post_user_image = "+post_user_image+", post_uscat = "+post_uscat+", post_comments = "+post_comments+", post_photos = "+post_photos+", post_text = "+post_text+", post_video_url = "+post_video_url+", post_likes = "+post_likes+", post_comment_replies = "+post_comment_replies+", post_ucat = "+post_ucat+", post_id = "+post_id+", post_username = "+post_username+", post_date = "+post_date+", post_langid = "+post_langid+"]";
+        }
+
+        public String getPost_user_fullname() {
+            return post_user_fullname;
+        }
+
+        public void setPost_user_fullname(String post_user_fullname) {
+            this.post_user_fullname = post_user_fullname;
+        }
+
+        public String getPost_user_image() {
+            return post_user_image;
+        }
+
+        public void setPost_user_image(String post_user_image) {
+            this.post_user_image = post_user_image;
         }
     }
 

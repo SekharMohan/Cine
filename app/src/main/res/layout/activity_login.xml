@@ -17,8 +17,8 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
-            android:scaleType="fitXY"
-            android:src="@mipmap/ic_launcher_round" />
+
+            android:src="@drawable/login_icon" />
     </RelativeLayout>
 
     <android.support.v7.widget.LinearLayoutCompat
@@ -40,7 +40,7 @@
                 android:id="@+id/loginUserName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="mss"
+
                 android:hint="@string/username_hint"
                 android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
@@ -55,7 +55,7 @@
                 android:id="@+id/loginPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="sekarmohan77"
+
                 android:hint="@string/password_hint"
                 android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>

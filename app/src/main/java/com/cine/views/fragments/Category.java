@@ -4,15 +4,25 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cine.R;
 import com.cine.service.WebService;
@@ -20,10 +30,12 @@ import com.cine.service.WebServiceWrapper;
 import com.cine.service.model.FeedModel;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
+import com.cine.utils.ItemClickListener;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
 import com.cine.views.widgets.HomeFeedAdapter;
 import com.cine.views.widgets.Loader;
+import com.cine.views.widgets.SubCategoryAdapter;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -35,28 +47,44 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class Category extends Fragment implements ICallBack<String>{
+public class Category extends Fragment implements ICallBack<String>,ItemClickListener {
     @BindView(R.id.categorySelectionSpinner)
     AppCompatSpinner spCategory;
     @BindView(R.id.subCategorySelectionSpinner)
     AppCompatSpinner spSubCagegory;
     @BindView(R.id.feedCategoryView)
     RecyclerView categoryFeed;
+    @BindView(R.id.subCategoryViewRecycler)
+    RecyclerView subCategoryRecyclerView;
+    @BindView(R.id.linearSubCategoryFrag)
+    RelativeLayout subCategoryRelativeLayout;
+    @BindView(R.id.selectSubCatTExtView)
+    AppCompatTextView selectSubCatTExtView;
+    @BindView(R.id.subCatcard_view)
+    CardView subCatCardView;
+    @BindView(R.id.radio_group)
+    RadioGroup radioGroup;
+    @BindView(R.id.radioWall)
+    RadioButton wallRadioButton;
+    @BindView(R.id.radioUser)
+    RadioButton userRadioButton;
+
     private Map<String ,String> category;
     private Map<String,String> subCategory;
     private List<String> categoryArr;
     private List<String> subCategoryArr;
     private UserInteraction userActive;
+    private SubCategoryAdapter subCategoryAdapter;
 
     public Category() {
         // Required empty public constructor
     }
 
 
-   public interface UserInteraction{
-       public boolean isUserActive();
-      public void setUserAction();
-   }
+    public interface UserInteraction{
+        public boolean isUserActive();
+        public void setUserAction();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +96,8 @@ public class Category extends Fragment implements ICallBack<String>{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_category, container, false);
+        radioGroup = (RadioGroup)view.findViewById(R.id.radio_group);
+        wallRadioButton = (RadioButton)view.findViewById(R.id.radioWall);
         ButterKnife.bind(this,view);
         apiCall();
         init();
@@ -75,28 +105,38 @@ public class Category extends Fragment implements ICallBack<String>{
     }
 
     private void init() {
+
         userActive = (UserInteraction) getActivity();
         subCategory = new HashMap<>();
         category = new HashMap<>();
         categoryArr = new ArrayList<String>();
         subCategoryArr = new ArrayList<String>();
+        spSubCagegory.setVisibility(View.GONE);
+        subCategoryRelativeLayout.setVisibility(View.GONE);
+        subCatCardView.setVisibility(View.GONE);
+        radioGroup.setVisibility(View.GONE);
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(userActive.isUserActive()&& categoryArr.size()> position){
-                    userActive.setUserAction();
-                    String selectedCategory = categoryArr.get(position);
-                    categoryFeedApi(selectedCategory);
-                    String selectedCategoryId = category.get(selectedCategory);
-                    subCategoryArr.clear();
-                    String subCatName = subCategory.get(selectedCategoryId);
-                    if(subCatName != null && !subCatName.isEmpty()) {
-                        String subcatNameArr[] = subCatName.split(",");
-                        for (String subCat : subcatNameArr) {
-                            subCategoryArr.add(subCat.trim());
+                if(userActive.isUserActive()){
+                    try {
+                        userActive.setUserAction();
+                        String selectedCategory = categoryArr.get(position);
+                        categoryFeedApi(selectedCategory);
+                        String selectedCategoryId = category.get(selectedCategory);
+                        subCategoryArr.clear();
+                        String subCatName = subCategory.get(selectedCategoryId);
+                        if (subCatName != null && !subCatName.isEmpty()) {
+                            String subcatNameArr[] = subCatName.split(",");
+                            for (String subCat : subcatNameArr) {
+                                subCategoryArr.add(subCat.trim());
 
+                            }
+                            // spinnerSetup(spSubCagegory,subCategoryArr,"Select sub category");
+                            setValuesForSubCategory(subCategoryArr);
                         }
-                        spinnerSetup(spSubCagegory,subCategoryArr,"Select sub category");
+                    }catch (IndexOutOfBoundsException ex){
+
                     }
                 }
             }
@@ -106,7 +146,7 @@ public class Category extends Fragment implements ICallBack<String>{
 
             }
         });
-        spSubCagegory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*spSubCagegory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(userActive.isUserActive()){
@@ -119,14 +159,49 @@ public class Category extends Fragment implements ICallBack<String>{
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
+        });*/
+        subCategoryRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subCategoryRecyclerView.setVisibility(View.VISIBLE);
+                radioGroup.setVisibility(View.GONE);
+            }
         });
 
     }
 
+    private void setValuesForSubCategory(List<String> subCategoryList){
+        subCatCardView.setVisibility(View.VISIBLE);
+        subCategoryRelativeLayout.setVisibility(View.VISIBLE);
+        subCategoryRecyclerView.setVisibility(View.VISIBLE);
+        radioGroup.setVisibility(View.GONE);
+        selectSubCatTExtView.setText("Select Subcategory");
+        subCategoryAdapter = new SubCategoryAdapter(getContext(), subCategoryList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        subCategoryRecyclerView.setLayoutManager(mLayoutManager);
+        subCategoryRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        subCategoryRecyclerView.setAdapter(subCategoryAdapter);
+        subCategoryAdapter.setClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        String selectedSub = subCategoryArr.get(position);
+
+
+     //   Toast.makeText(getContext(), selectedSub, Toast.LENGTH_LONG).show();
+        selectSubCatTExtView.setText(selectedSub);
+        subCategoryRecyclerView.setVisibility(View.GONE);
+        radioGroup.setVisibility(View.VISIBLE);
+        wallRadioButton.setChecked(true);
+        callWallPostSubCategoryApi(selectedSub);
+    }
+
+
     private void setFeedAdapter() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         categoryFeed.setLayoutManager(mLayoutManager);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext());
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(), false);
         categoryFeed.setAdapter(adapter);
     }
     private void categoryFeedApi(String category){
@@ -225,7 +300,7 @@ public class Category extends Fragment implements ICallBack<String>{
                 int length = LocalStorage.feedModel.getCategories().length;
 
                 for(FeedModel.Categories cat:catArr){
-                  String catName = cat.getMaincategory_name();
+                    String catName = cat.getMaincategory_name();
                     category.put(catName,cat.getCategory_id());
                     String subCatName = cat.getSubcategory_names();
                     subCategory.put(cat.getCategory_id(),subCatName);
@@ -233,7 +308,7 @@ public class Category extends Fragment implements ICallBack<String>{
                     categoryArr .add(catName);
 
                 }
-subCategoryArr.clear();
+                subCategoryArr.clear();
                 return null;
             }
 
@@ -251,45 +326,45 @@ subCategoryArr.clear();
         }.execute();
     }
 
-   /* private void setUpSubcategory() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
+    /* private void setUpSubcategory() {
+         new AsyncTask<Void, Void, Void>() {
+             @Override
+             protected void onPreExecute() {
+                 super.onPreExecute();
 
-            }
+             }
 
-            @Override
-            protected Void doInBackground(Void... params) {
-                FeedModel.Categories[] catArr = LocalStorage.feedModel.getCategories();
-                int length = LocalStorage.feedModel.getCategories().length;
-
-
-                for(FeedModel.Categories cat:catArr){
-
-                    String subCatName = cat.getSubcategory_names();
-                    if(subCatName != null && !subCatName.isEmpty()) {
-                        String subcatNameArr[] = subCatName.split(",");
-                        for (String subCat : subcatNameArr) {
-                            subCategoryArr.add(subCat.trim());
-                            subCategory.put(subCat, cat.getCategory_id());
-                        }
-                    }
-
-                }
-
-                return null;
-            } @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
+             @Override
+             protected Void doInBackground(Void... params) {
+                 FeedModel.Categories[] catArr = LocalStorage.feedModel.getCategories();
+                 int length = LocalStorage.feedModel.getCategories().length;
 
 
-                spinnerSetup(spSubCagegory,subCategoryArr,"Select sub category");
+                 for(FeedModel.Categories cat:catArr){
+
+                     String subCatName = cat.getSubcategory_names();
+                     if(subCatName != null && !subCatName.isEmpty()) {
+                         String subcatNameArr[] = subCatName.split(",");
+                         for (String subCat : subcatNameArr) {
+                             subCategoryArr.add(subCat.trim());
+                             subCategory.put(subCat, cat.getCategory_id());
+                         }
+                     }
+
+                 }
+
+                 return null;
+             } @Override
+             protected void onPostExecute(Void aVoid) {
+                 super.onPostExecute(aVoid);
 
 
-            }
-        }.execute();
-    }*/
+                 spinnerSetup(spSubCagegory,subCategoryArr,"Select sub category");
+
+
+             }
+         }.execute();
+     }*/
     public void spinnerSetup(AppCompatSpinner spinner, List values, String hint){
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item) {
 
@@ -321,14 +396,16 @@ subCategoryArr.clear();
     @Override
     public void onSuccess(String response) {
         LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+        setFeedAdapter();
         setUp();
         dismissLoader();
     }
 
+
     @Override
     public void onFailure(String response) {
         updateErrorUI(response);
-dismissLoader();;
+        dismissLoader();;
     }
     private void dismissLoader() {
         Loader.dismissProgressBar();

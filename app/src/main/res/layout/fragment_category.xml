@@ -1,3 +1,4 @@
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -35,13 +36,64 @@
 
 
     </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:id="@+id/subCatcard_view"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/card_view"
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="8dp">
+        <RelativeLayout
+            android:id="@+id/linearSubCategoryFrag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
 
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/selectSubCatTExtView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Select Subcategory"
+                />
+            <RadioGroup
+                android:id="@+id/radio_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:orientation="horizontal"
+                >
+
+                <RadioButton
+                    android:id="@+id/radioUser"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:text="User" />
+
+                <RadioButton
+                    android:id="@+id/radioWall"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:text="Wall" />
+            </RadioGroup>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/subCategoryViewRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/selectSubCatTExtView"/>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/feedCategoryView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/card_view"
-        android:layout_marginTop="10dp" />
+        android:layout_below="@+id/subCatcard_view"
+        android:layout_marginTop="3dp" />
 
 </RelativeLayout>

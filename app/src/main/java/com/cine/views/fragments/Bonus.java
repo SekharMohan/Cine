@@ -11,12 +11,11 @@ import android.view.ViewGroup;
 import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
-import com.cine.service.model.EventsModel;
+import com.cine.service.model.AdsModel;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
-import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
-import com.cine.views.widgets.EventsAdapter;
+import com.cine.views.widgets.AdsAdapter;
 import com.cine.views.widgets.Loader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -26,16 +25,19 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Created by DELL on 30-04-2017.
+ */
 
-public class Events extends Fragment implements ICallBack<String> {
+public class Bonus extends Fragment implements ICallBack<String> {
 
-    @BindView(R.id.evRecyclerView)
-    RecyclerView evRecyclerView;
+    @BindView(R.id.adRecyclerView)
+    public RecyclerView adRecyclerView;
 
-    public Events() {
+
+    public Bonus() {
         // Required empty public constructor
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +47,8 @@ public class Events extends Fragment implements ICallBack<String> {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_event, container, false);
+        View view = inflater.inflate(R.layout.activity_ads, container, false);
+
         ButterKnife.bind(this,view);
         apiCall();
         return  view;
@@ -55,30 +58,39 @@ public class Events extends Fragment implements ICallBack<String> {
         Loader.showProgressBar(getContext());
         Params params=new Params();
 
-        params.addParam("cg_api_req_name","getevents");
+        params.addParam("cg_api_req_name","getadminad");
         params.addParam("cg_user_name","prabu944");
-        WebServiceWrapper.getInstance().callService(getContext(), WebService.EVENTSURL,params,this);
+        WebServiceWrapper.getInstance().callService(getContext(), WebService.ADPOST,params,this);
     }
+
+
+
 
     @Override
     public void onSuccess(String response) {
-        ArrayList<EventsModel> eventsList = new Gson().fromJson(response,new TypeToken<ArrayList<EventsModel>>(){}.getType());
-        setFeedAdapter(eventsList);
+        ArrayList<AdsModel> adsList = new Gson().fromJson(response,new TypeToken<ArrayList<AdsModel>>(){}.getType());
+        //ArrayList<AdsModel> adsList = new ArrayList<>();
+        // adsList.add(adsModel);
+        setFeedAdapter(adsList);
+
         dismissLoader();
     }
 
-    private void setFeedAdapter(ArrayList<EventsModel> eventsList) {
+    private void setFeedAdapter(ArrayList<AdsModel> adsList) {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        evRecyclerView.setLayoutManager(mLayoutManager);
-        EventsAdapter adsAdapter =new EventsAdapter(eventsList,getContext());
-        evRecyclerView.setAdapter(adsAdapter);
+        adRecyclerView.setLayoutManager(mLayoutManager);
+        AdsAdapter adsAdapter =new AdsAdapter(adsList,getContext());
+        adRecyclerView.setAdapter(adsAdapter);
     }
 
 
     @Override
     public void onFailure(String response) {
-        dismissLoader();
+
         updateErrorUI(response);
+
+        dismissLoader();
+
     }
 
     private void dismissLoader() {

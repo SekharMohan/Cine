@@ -13,6 +13,8 @@ public class WebService {
     private static final String WALL_ENDPOINT="mpwall";
     private static final String WALLPOST_ENDPOINT = "mcwall";
     private static final String WALLPOSTSUBCAT_ENDPOINT = "mscwall";
+    private static final String ADS_ENDPOINT = "madvertise";
+    private static final String EVENTS_ENDPOINT = "mevents";
 
     /*get signin url*/
     public  static final String SIGNIN_URL=BASE_URL+SIGNIN_ENDPOINT;
@@ -25,4 +27,6 @@ public class WebService {
     public static final String WALLPOST_URL = BASE_URL+WALLPOST_ENDPOINT;
     public static final String WALLPOSTSUBCAT = BASE_URL+WALLPOSTSUBCAT_ENDPOINT;
     public static final String WALLPOST = BASE_URL+WALL_ENDPOINT;
+    public static final String ADPOST = BASE_URL+ADS_ENDPOINT;
+    public static final String EVENTSURL = BASE_URL+EVENTS_ENDPOINT;
 }
