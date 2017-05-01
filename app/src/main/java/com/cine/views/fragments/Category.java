@@ -4,26 +4,23 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.cine.CineApplication;
 import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
@@ -75,7 +72,7 @@ public class Category extends Fragment implements ICallBack<String>,ItemClickLis
     private List<String> subCategoryArr;
     private UserInteraction userActive;
     private SubCategoryAdapter subCategoryAdapter;
-
+private CineApplication app = CineApplication.getInstance();
     public Category() {
         // Required empty public constructor
     }
@@ -205,70 +202,75 @@ public class Category extends Fragment implements ICallBack<String>,ItemClickLis
         categoryFeed.setAdapter(adapter);
     }
     private void categoryFeedApi(String category){
+        if(app.getUserInfo()!=null) {
 
-        Loader.showProgressBar(getContext());
-        Params params=new Params();
+            Loader.showProgressBar(getContext());
+            Params params = new Params();
 
-        params.addParam("cg_api_req_name","getposts");
-        params.addParam("cg_username","prabu944");
-        params.addParam("cg_mcat",category);
-        WebServiceWrapper.getInstance().callService(getContext(), WebService.WALLPOST_URL, params, new ICallBack<String>() {
-            @Override
-            public void onSuccess(String response) {
-                LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
-                if(LocalStorage.feedModel.getCommonwall_posts().length>0) {
-                    setFeedAdapter();
-                }else {
-                    updateErrorUI("No post available");
+            params.addParam("cg_api_req_name", "getposts");
+            params.addParam("cg_username", app.getUserInfo().getCg_info().getCgusername());
+            params.addParam("cg_mcat", category);
+            WebServiceWrapper.getInstance().callService(getContext(), WebService.WALLPOST_URL, params, new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+                    LocalStorage.feedModel = new Gson().fromJson(response, FeedModel.class);
+                    if (LocalStorage.feedModel.getCommonwall_posts().length > 0) {
+                        setFeedAdapter();
+                    } else {
+                        updateErrorUI("No post available");
+                    }
+                    dismissLoader();
                 }
-                dismissLoader();
-            }
 
-            @Override
-            public void onFailure(String response) {
-                dismissLoader();
-                updateErrorUI(response);
-            }
-        });
+                @Override
+                public void onFailure(String response) {
+                    dismissLoader();
+                    updateErrorUI(response);
+                }
+            });
+        }
     }
     private void callWallPostSubCategoryApi(String subcategory){
+        if(app.getUserInfo()!=null) {
 
-        Loader.showProgressBar(getContext());
-        Params params=new Params();
+            Loader.showProgressBar(getContext());
+            Params params = new Params();
 
-        params.addParam("cg_api_req_name","getposts");
-        params.addParam("cg_username","prabu944");
-        params.addParam("cg_scat",subcategory);
-        WebServiceWrapper.getInstance().callService(getContext(), WebService.WALLPOSTSUBCAT, params, new ICallBack<String>() {
-            @Override
-            public void onSuccess(String response) {
-                LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+            params.addParam("cg_api_req_name", "getposts");
+            params.addParam("cg_username", app.getUserInfo().getCg_info().getCgusername());
+            params.addParam("cg_scat", subcategory);
+            WebServiceWrapper.getInstance().callService(getContext(), WebService.WALLPOSTSUBCAT, params, new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+                    LocalStorage.feedModel = new Gson().fromJson(response, FeedModel.class);
 
-                if(LocalStorage.feedModel.getCommonwall_posts().length>0) {
-                    setFeedAdapter();
-                }else {
-                    updateErrorUI("No post available");
+                    if (LocalStorage.feedModel.getCommonwall_posts().length > 0) {
+                        setFeedAdapter();
+                    } else {
+                        updateErrorUI("No post available");
+                    }
+                    dismissLoader();
                 }
-                dismissLoader();
-            }
 
-            @Override
-            public void onFailure(String response) {
-                dismissLoader();
-                updateErrorUI(response);
-            }
-        });
+                @Override
+                public void onFailure(String response) {
+                    dismissLoader();
+                    updateErrorUI(response);
+                }
+            });
+        }
     }
     private void showLoader(){
         Loader.showProgressBar(getContext());
     }
 
     private void apiCall() {
-        Params params=new Params();
-
-        params.addParam("cg_api_req_name","getposts");
-        params.addParam("cg_username","prabu944");
-        WebServiceWrapper.getInstance().callService(getContext(), WebService.FEEDS_URL,params,this);
+        if(app.getUserInfo()!=null) {
+            Params params = new Params();
+            params.addParam("cg_api_req_name", "getposts");
+            params.addParam("cg_username", app.getUserInfo().getCg_info().getCgusername());
+            WebServiceWrapper.getInstance().callService(getContext(), WebService.FEEDS_URL, params, this);
+        }
     }
 
     @Override

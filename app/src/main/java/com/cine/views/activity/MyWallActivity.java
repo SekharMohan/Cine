@@ -13,6 +13,8 @@ import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
+import com.cine.utils.permission.Permission;
+import com.cine.views.widgets.CircularImageView;
 import com.cine.views.widgets.HomeFeedAdapter;
 import com.cine.views.widgets.Loader;
 import com.google.gson.Gson;
@@ -26,13 +28,22 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
     @BindView(R.id.myWallFeedView)
     public RecyclerView myWallFeedView;
 
+    @BindView(R.id.center)
+    public CircularImageView civProfileImage;
+    private Permission permission;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_wall);
         ButterKnife.bind(this);
+        init();
         apiCallWallPost();
     }
+
+    private void init() {
+    }
+
 
     /*API CALL - WALL POST*/
     private void apiCallWallPost() {

@@ -3,6 +3,8 @@ package com.cine;
 import android.app.Application;
 import android.os.Handler;
 
+import com.cine.service.model.userinfo.User;
+
 /**
  * Created by vijayarvind.j on 17-03-2017.
  */
@@ -10,10 +12,14 @@ import android.os.Handler;
 public class CineApplication extends Application {
 
     private static CineApplication mCineApplication;
+    private static User info;
 
     private static Handler mApplicationHandler;
 
-    public static Application getInstance() {
+    public static CineApplication getInstance() {
+        if(mCineApplication == null){
+            mCineApplication = new CineApplication();
+        }
         return mCineApplication;
     }
 
@@ -24,7 +30,6 @@ public class CineApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mCineApplication = this;
         InItInitializer();
     }
 
@@ -32,6 +37,14 @@ public class CineApplication extends Application {
 
         mApplicationHandler = new Handler();
 
+    }
+
+    public void setUserInfo(User info){
+        this.info = info;
+    }
+
+    public User getUserInfo(){
+        return  info;
     }
 
 }

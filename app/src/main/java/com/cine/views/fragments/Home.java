@@ -11,12 +11,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
+import com.cine.CineApplication;
 import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
 import com.cine.service.model.FeedModel;
+import com.cine.service.model.userinfo.User;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
 import com.cine.utils.LocalStorage;
@@ -48,6 +49,9 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     SwipeRefreshLayout pullToRefresh;
 
     private static final int SELECT_PICTURE = 100;
+    CineApplication app =  CineApplication.getInstance();
+    User info;
+
 
     public Home() {
         // Required empty public constructor
@@ -66,12 +70,16 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
                 container, false);
         ButterKnife.bind(this,rootView);
         init();
-        apiCall();
+
 
         return rootView;
     }
 
     private void init() {
+        if(app.getUserInfo()!=null){
+            info = app.getUserInfo();
+            apiCall();
+        }
         pullToRefresh.setOnRefreshListener(this);
         pullToRefresh.setColorSchemeColors(ContextCompat.getColor(getContext(),R.color.colorErro),ContextCompat.getColor(getContext(),R.color.color_app),ContextCompat.getColor(getContext(),R.color.material_teal));
     }
@@ -81,7 +89,7 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
         Params params=new Params();
 
         params.addParam("cg_api_req_name","getposts");
-        params.addParam("cg_username","prabu944");
+        params.addParam("cg_username",info.getCg_info().getCgusername());
         WebServiceWrapper.getInstance().callService(getContext(), WebService.FEEDS_URL,params,this);
     }
     @Override

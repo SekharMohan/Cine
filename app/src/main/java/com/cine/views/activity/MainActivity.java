@@ -1,27 +1,28 @@
     package com.cine.views.activity;
 
     import android.content.Context;
-    import android.content.DialogInterface;
-    import android.content.Intent;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-    import android.support.v7.app.AlertDialog;
-    import android.support.v7.app.AppCompatActivity;
-    import android.support.v7.widget.AppCompatTextView;
-    import android.support.v7.widget.Toolbar;
-    import android.text.TextUtils;
-    import android.view.LayoutInflater;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-    import android.view.View;
-    import android.widget.EditText;
-    import android.widget.TextView;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import com.cine.R;
+    import com.cine.CineApplication;
+    import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
 import com.cine.service.model.FeedModel;
@@ -37,6 +38,8 @@ import com.cine.views.fragments.Home;
 import com.cine.views.fragments.Language;
 import com.cine.views.widgets.Loader;
 import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +70,7 @@ import butterknife.ButterKnife;
         @BindView(R.id.viewpager)
         public   ViewPager viewPager;
         boolean listenrEnabler;
+        CineApplication app = CineApplication.getInstance();
 
         public static Intent getStartIntent(Context context) {
             return new Intent(context, MainActivity.class);
@@ -155,6 +159,7 @@ import butterknife.ButterKnife;
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
+
                 }
             });
             dialogBuilder.setNegativeButton("Cancel",  new DialogInterface.OnClickListener() {
@@ -177,10 +182,45 @@ import butterknife.ButterKnife;
                     newPassword.getText().toString();
                     verifyNewPassword.getText().toString();
                     if(!TextUtils.isEmpty(currentPassword.getText().toString()) && !TextUtils.isEmpty(newPassword.getText().toString())){
-                        errorTextView.setText("");
-
-
+if(newPassword.getText().toString().equals(verifyNewPassword.getText().toString())) {
+    if(app.getUserInfo()!=null) {
+        Loader.showProgressBar(MainActivity.this);
+        Params query = new Params();
+        query.addParam("REQUEST_METHOD", "POST");
+        query.addParam("cg_api_req_name", "updateusepawd");
+        query.addParam("user_name", app.getUserInfo().getCg_info().getCgusername());
+        query.addParam("user_oldpass", currentPassword.getText().toString());
+        query.addParam("user_newpass", newPassword.getText().toString());
+        query.addParam("user_newconfirmpass", verifyNewPassword.getText().toString());
+        WebServiceWrapper.getInstance().callService(MainActivity.this, WebService.USER_PROFILE_URL, query, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                dismissLoader();
+                try {
+                    JSONObject json = new JSONObject(response);
+                    if (json.getString("status").equals("1")) {
                         alertDialog.dismiss();
+                    }
+                    updateErrorUI(json.getString("cg_msg"));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(String response) {
+                updateErrorUI(response);
+                dismissLoader();
+            }
+        });
+    }
+    errorTextView.setText("");
+}else {
+    errorTextView.setText("New password and confirm password should be same");
+}
+
+
                     }else{
                         errorTextView.setText("Fields should not be empty");
 
@@ -188,6 +228,7 @@ import butterknife.ButterKnife;
                 }
             });
         }
+
 
         @Override
         public void onUserInteraction() {

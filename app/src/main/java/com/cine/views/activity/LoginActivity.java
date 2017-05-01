@@ -6,14 +6,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.cine.CineApplication;
 import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
+import com.cine.service.model.userinfo.User;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
 import com.cine.utils.ToastUtil;
 import com.cine.utils.ValidationUtil;
 import com.cine.views.widgets.Loader;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,8 +88,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onSuccess(String response) {
         dismissLoader();
-        goToDashBoard();
-        finish();
+        try {
+
+            JSONObject json = new JSONObject(response);
+            if(json.getString("cg_log_status").equals("1")) {
+               CineApplication app =  CineApplication.getInstance();
+                app.setUserInfo(new Gson().fromJson(response, User.class));
+
+                goToDashBoard();
+                finish();
+            }else {
+                updateErrorUI("Login Failed. Pls verify credentials");
+            }
+
+        }catch (Exception e){
+            updateErrorUI("Login Failed. Pls verify credentials");
+
+            e.printStackTrace();
+        }
 
     }
 
