@@ -1,6 +1,7 @@
 package com.cine.views.activity;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,9 +13,15 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatSpinner;
 import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.cine.R;
@@ -30,16 +37,44 @@ import com.cine.views.widgets.Loader;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Calendar;
 
+import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class EditProfile extends AppCompatActivity {
     @BindView(R.id.center)
     public CircularImageView civProfileImage;
     private Permission permission;
-
+    @BindView(R.id.editProfileCityFrom)
+    AppCompatEditText etCity;
+    @BindView(R.id.editProfileMobileNum)
+    AppCompatEditText etMobile;
+    @BindView(R.id.editProfileLivingCity)
+    AppCompatEditText etCurrentCity;
+    @BindView(R.id.editProfileState)
+    AppCompatEditText etState;
+    @BindView(R.id.editProfileFullName)
+    AppCompatEditText etName;
+    @BindView(R.id.martialStatusSpinner)
+    AppCompatSpinner spMaritalStatus;
+    @BindView(R.id.categorySpinner)
+    AppCompatSpinner spCategorySpinner;
+    @BindView(R.id.subCategorySpinner)
+    AppCompatSpinner spSubCategory;
+    @BindView(R.id.genderRadioGroup)
+    RadioGroup rgGender;
+@BindView(R.id.editProfileDayView)
+AppCompatEditText etDay;
+    @BindView(R.id.editProfileMonthView)
+    AppCompatEditText etMonth;
+    @BindView(R.id.editProfileYearView)
+    AppCompatEditText etYear;
+@BindArray(R.array.marital_status)
+String[] maritalStatus;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +83,53 @@ public class EditProfile extends AppCompatActivity {
         init();
     }
 
+    @OnClick({R.id.editProfileYearView,R.id.editProfileMonthView,R.id.editProfileDayView})
+    void setDOB(){
+      final  Calendar dateSelected = Calendar.getInstance();
+         DatePickerDialog datePickerDialog;
+        Calendar newCalendar = dateSelected;
+        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                dateSelected.set(year, monthOfYear, dayOfMonth, 0, 0);
+                etDay.setText(String.valueOf(dayOfMonth));
+                etMonth.setText(String.valueOf(monthOfYear));
+                etYear.setText(String.valueOf(year));
+            }
+
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+
+    }
+    public void spinnerSetup(AppCompatSpinner spinner,String[] values,String hint){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+
+                View v = super.getView(position, convertView, parent);
+                if (position == getCount()) {
+                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
+                    ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(getCount())); //"Hint to be displayed"
+                }
+
+                return v;
+            }
+
+            @Override
+            public int getCount() {
+                return super.getCount()-1; // you dont display last item. It is used as hint.
+            }
+
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.addAll(values);
+        adapter.add(hint);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(adapter.getCount());
+    }
     private void init() {
+        spinnerSetup(spMaritalStatus,maritalStatus,"Select Marital status");
         permission =  new Permission(this);
         civProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override

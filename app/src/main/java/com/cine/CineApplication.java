@@ -4,6 +4,9 @@ import android.app.Application;
 import android.os.Handler;
 
 import com.cine.service.model.userinfo.User;
+import com.cine.service.model.userinfo.UserPersonal;
+
+import java.util.List;
 
 /**
  * Created by vijayarvind.j on 17-03-2017.
@@ -13,6 +16,7 @@ public class CineApplication extends Application {
 
     private static CineApplication mCineApplication;
     private static User info;
+    private static List<UserPersonal> userPersonal;
 
     private static Handler mApplicationHandler;
 
@@ -46,5 +50,12 @@ public class CineApplication extends Application {
     public User getUserInfo(){
         return  info;
     }
+public void setUserPersonal(List<UserPersonal> personal){
+    userPersonal = personal;
+}
+
+public List<UserPersonal> getUserPersonal(){
+    return userPersonal;
+}
 
 }
