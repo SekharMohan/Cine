@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatImageView;
@@ -12,7 +11,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,24 +19,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
-import android.widget.MediaController;
 import android.widget.VideoView;
 
+import com.cine.CineApplication;
 import com.cine.R;
+import com.cine.service.WebService;
+import com.cine.service.WebServiceWrapper;
 import com.cine.service.model.FeedModel;
+import com.cine.service.model.userinfo.Cg_info;
+import com.cine.service.network.Params;
+import com.cine.service.network.callback.ICallBack;
 import com.cine.utils.AppUtils;
-import com.cine.utils.PrefUtils;
+import com.cine.utils.LocalStorage;
+import com.cine.utils.ToastUtil;
 import com.cine.views.activity.ImageViewer;
-
+import com.cine.views.activity.MainActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-
+import org.json.JSONObject;
 
 
 /**
@@ -50,12 +54,14 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
     private FeedModel.Commonwall_posts[] commonwall_posts;
     Context mContext;
     private boolean isFromHome;
+    public CineApplication app = CineApplication.getInstance();
     MediaController ctrl;
     private static final String KEY = "AIzaSyDu8qNvu0-dSvuAmsPQmIkqT0gH1YfTf1k";
+    private  String videoUrl;
+    String imageBitMap;
 
 
     public HomeFeedAdapter(FeedModel.Commonwall_posts[] commonwall_posts, Context mcontext, boolean isFromHome) {
-
 
         this.commonwall_posts = commonwall_posts;
         this.mContext = mcontext;
@@ -72,7 +78,6 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
         return new MyViewHolder(itemView);
 
     }
-
 
 
     @Override
@@ -99,6 +104,49 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
             if(holder.getAdapterPosition() == 0){
                 holder.relativeLayoutStatusUpdate.setVisibility(View.VISIBLE);
                     holder.cardViewForStatus.setVisibility(View.VISIBLE);
+                holder.pickPhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity) mContext).selectImage(new ICallBack<String>() {
+                            @Override
+                            public void onSuccess(String response) {
+                                imageBitMap =response;
+                            }
+
+                            @Override
+                            public void onFailure(String response) {
+
+                            }
+                        });
+                    }
+                });
+                holder.pickVideo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((MainActivity) mContext).showVideoPopup(new ICallBack<String>() {
+                            @Override
+                            public void onSuccess(String response) {
+                                videoUrl = response;
+                            }
+
+                            @Override
+                            public void onFailure(String response) {
+
+                            }
+                        });
+                    }
+                });
+                holder.sendStatus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String status =holder.statusEditText.getText().toString();
+                        if(status!=null & !status.isEmpty()||(imageBitMap!=null&&!imageBitMap.isEmpty()) || (videoUrl!=null&&!videoUrl.isEmpty())) {
+                            sendStatusApi(status);
+                        }else {
+                   updateUserToast("Enter the status to post ");
+                        }
+                    }
+                });
                 }else{
                 holder.relativeLayoutStatusUpdate.setVisibility(View.GONE);
                 holder.cardViewForStatus.setVisibility(View.GONE);
@@ -267,9 +315,9 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
         public AppCompatTextView hoursView, nameView, professionView, languageView, userNameCommented, commmentedText, postTextView, nameOfLikedPersonsTextView;
         public AppCompatImageView feedImageView;
         public VideoView feedVideoView;
-        public Button likeButton, commentButton, replyForComment;
+        public Button likeButton, commentButton, replyForComment,pickPhoto,pickVideo,sendStatus;
         public AppCompatImageButton sendReply;
-        public EditText commentEditText;
+        public EditText commentEditText,statusEditText;
         public CardView cardViewForStatus;
         public RelativeLayout relativeLayoutStatusUpdate, relVideoYouTubeView;
 
@@ -279,6 +327,10 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
         public MyViewHolder(View view) {
             super(view);
             relativeLayoutStatusUpdate = (RelativeLayout)view.findViewById(R.id.relativeLayoutStatusUpdate);
+            statusEditText = (EditText) view.findViewById(R.id.statusView);
+            pickPhoto = (Button) view.findViewById(R.id.pickImage);
+            pickVideo = (Button) view.findViewById(R.id.pickVideo);
+            sendStatus = (Button) view.findViewById(R.id.sendStatus);
             relVideoYouTubeView  = (RelativeLayout)view.findViewById(R.id.relVideoYouTubeView);
             cardViewForStatus = (CardView)view.findViewById(R.id.card_view_status);
             userProfilePic = (CircularImageView) view.findViewById(R.id.feedUserProfilePic);
@@ -316,4 +368,101 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
         }
     }
 
+    private  void sendStatusApi(String status){
+        /*
+REQUEST_METHOD = POST
+		cg_api_req_name = cgnewpost
+		cg_postuser_name = (pass current username)
+		cg_page_id = feeds
+cg_user_maincat = (pass user main category value)
+cg_user_subcat = (pass user sub category value)
+cg_user_clag = (pass user current language id  value)
+cg_user_post = (pass user entered status text value)
+*/
+
+        if(app.getUserInfo()!=null){
+            showLoader();
+        Cg_info obj =   app.getUserInfo().getCg_info();
+            Params query = new Params();
+            if(imageBitMap!=null){
+                query.addParam("cg_post_imgs","YES");
+                query.addParam("tmp_name",imageBitMap);
+            }else{
+                if(videoUrl !=null){
+                    query.addParam("cg_post_video","https://www.youtube.com/watch?v=EAvwxWEFoBc");
+                }
+            }
+
+                query.addParam("REQUEST_METHOD","POST");
+            query.addParam("cg_api_req_name","cgnewpost");
+            query.addParam("cg_postuser_name",obj.getCgusername());
+            query.addParam("cg_page_id","feeds");
+            query.addParam("cg_user_maincat",obj.getUsermaincategory());
+            query.addParam("cg_user_subcat",obj.getUsersubcategory());
+            query.addParam("cg_user_clag",obj.getUser_languageid());
+            query.addParam("cg_user_post",status);
+            WebServiceWrapper.getInstance().callService(mContext, WebService.FEEDS_URL, query, new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+                    try {
+                        JSONObject json = new JSONObject(response);
+                        imageBitMap = null;
+                        videoUrl = null;
+if(json.getString("status").equals("1")){
+    apiCall();
+
+}else{
+    dimissLoader();
+    updateUserToast(json.getString("cg_msg"));
+}
+
+                    }catch (Exception e){
+                        dimissLoader();
+                        e.printStackTrace();
+                    }
+
+                    System.out.println();
+                }
+
+                @Override
+                public void onFailure(String response) {
+                    dimissLoader();
+                }
+            });
+        }
+    }
+
+private void updateUserToast(String msg){
+    ToastUtil.showErrorUpdate(mContext,msg);
+}
+private void dimissLoader(){
+    Loader.dismissProgressBar();
+}
+
+private void showLoader(){
+    Loader.showProgressBar(mContext);
+}
+
+    private void apiCall() {
+
+        Params params=new Params();
+
+        params.addParam("cg_api_req_name","getposts");
+        params.addParam("cg_username",app.getUserInfo().getCg_info().getCgusername());
+        WebServiceWrapper.getInstance().callService(mContext, WebService.FEEDS_URL, params, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+                commonwall_posts = LocalStorage.feedModel.getCommonwall_posts();
+                notifyDataSetChanged();
+                dimissLoader();
+            }
+
+            @Override
+            public void onFailure(String response) {
+                updateUserToast(response);
+              dimissLoader();
+            }
+        });
+    }
 }

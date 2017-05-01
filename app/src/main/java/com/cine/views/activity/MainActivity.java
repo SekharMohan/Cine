@@ -1,52 +1,66 @@
     package com.cine.views.activity;
 
+    import android.Manifest;
+    import android.app.Dialog;
     import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
+    import android.content.DialogInterface;
+    import android.content.Intent;
+    import android.content.pm.PackageManager;
+    import android.graphics.Bitmap;
+    import android.graphics.Color;
+    import android.net.Uri;
+    import android.os.Bundle;
+    import android.provider.MediaStore;
+    import android.support.annotation.NonNull;
+    import android.support.design.widget.TabLayout;
+    import android.support.v4.app.Fragment;
+    import android.support.v4.app.FragmentManager;
+    import android.support.v4.app.FragmentPagerAdapter;
+    import android.support.v4.view.ViewPager;
+    import android.support.v7.app.AlertDialog;
+    import android.support.v7.app.AppCompatActivity;
+    import android.support.v7.widget.AppCompatTextView;
+    import android.support.v7.widget.Toolbar;
+    import android.text.TextUtils;
+    import android.util.Base64;
+    import android.view.Gravity;
+    import android.view.LayoutInflater;
+    import android.view.Menu;
+    import android.view.MenuItem;
+    import android.view.View;
+    import android.view.WindowManager;
+    import android.widget.Button;
+    import android.widget.EditText;
+    import android.widget.TextView;
 
     import com.cine.CineApplication;
     import com.cine.R;
-import com.cine.service.WebService;
-import com.cine.service.WebServiceWrapper;
-import com.cine.service.model.FeedModel;
-import com.cine.service.network.Params;
-import com.cine.service.network.callback.ICallBack;
-import com.cine.utils.LocalStorage;
-import com.cine.utils.ToastUtil;
+    import com.cine.service.WebService;
+    import com.cine.service.WebServiceWrapper;
+    import com.cine.service.model.FeedModel;
+    import com.cine.service.network.Params;
+    import com.cine.service.network.callback.ICallBack;
+    import com.cine.utils.LocalStorage;
+    import com.cine.utils.ToastUtil;
+    import com.cine.utils.permission.Permission;
     import com.cine.views.fragments.Bonus;
     import com.cine.views.fragments.Category;
-import com.cine.views.fragments.Events;
-import com.cine.views.fragments.FansClub;
-import com.cine.views.fragments.Home;
-import com.cine.views.fragments.Language;
-import com.cine.views.widgets.Loader;
-import com.google.gson.Gson;
+    import com.cine.views.fragments.Events;
+    import com.cine.views.fragments.FansClub;
+    import com.cine.views.fragments.Home;
+    import com.cine.views.fragments.Language;
+    import com.cine.views.widgets.Loader;
+    import com.google.gson.Gson;
 
-import org.json.JSONObject;
+    import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+    import java.io.ByteArrayOutputStream;
+    import java.util.ArrayList;
+    import java.util.List;
 
-import butterknife.BindString;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+    import butterknife.BindString;
+    import butterknife.BindView;
+    import butterknife.ButterKnife;
 
     public class MainActivity extends AppCompatActivity implements Category.UserInteraction{
     @BindString(R.string.about)
@@ -71,6 +85,8 @@ import butterknife.ButterKnife;
         public   ViewPager viewPager;
         boolean listenrEnabler;
         CineApplication app = CineApplication.getInstance();
+        private Permission permission;
+        ICallBack<String> statusListener;
 
         public static Intent getStartIntent(Context context) {
             return new Intent(context, MainActivity.class);
@@ -82,6 +98,7 @@ import butterknife.ButterKnife;
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             ButterKnife.bind(this);
+            permission =  new Permission(this);
             /*mfeed*/
 
             /*wall post -mcwall*/
@@ -404,4 +421,163 @@ private void callWallPostApi(){
             listenrEnabler = false;
 
         }
+        public void selectImage(ICallBack<String> listener ) {
+            statusListener = listener;
+
+            final CharSequence[] items = { "Take Photo", "Gallery",
+                    "Cancel" };
+
+            TextView title = new TextView(this);
+            title.setText("Add Photo!");
+            title.setBackgroundColor(Color.BLACK);
+            title.setPadding(10, 15, 15, 10);
+            title.setGravity(Gravity.CENTER);
+            title.setTextColor(Color.WHITE);
+            title.setTextSize(22);
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(
+                    this);
+
+
+
+            builder.setCustomTitle(title);
+
+            // builder.setTitle("Add Photo!");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int item) {
+                    if (items[item].equals("Take Photo")) {
+
+                        if(permission.hasPermission(Manifest.permission.CAMERA)){
+                            takePhoto();
+                        }else {
+                            permission.requestPermission(Manifest.permission.CAMERA,100);
+                        }
+
+                    } else if (items[item].equals("Gallery")) {
+                        Intent intent = new Intent(
+                                Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        intent.setType("image/*");
+                        startActivityForResult(
+                                Intent.createChooser(intent, "Select Picture"),
+                                1);
+                    } else if (items[item].equals("Cancel")) {
+                        dialog.dismiss();
+                    }
+                }
+            });
+            builder.show();
+        }
+
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                takePhoto();
+            }else {
+                updateErrorUI("Need camera permission");
+            }
+        }
+
+        void takePhoto(){
+
+            Intent intent = new Intent(
+                    android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(intent, 0);
+        }
+
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            Bitmap bitmap = null;
+            Uri selectedImage = null;
+            try {
+                switch (requestCode) {
+
+
+                    case 0:
+                        if (resultCode == RESULT_OK) {
+                            if (data.getData() == null) {
+                                bitmap = (Bitmap) data.getExtras().get("data");
+                            } else {
+                                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                            }
+
+                            break;
+                        }
+
+                        break;
+                    case 1:
+                        if (resultCode == RESULT_OK) {
+                            if (data.getData() == null) {
+                                bitmap = (Bitmap) data.getExtras().get("data");
+                            } else {
+                                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                            }
+                        }
+                        break;
+
+                }
+         if(bitmap !=null){
+             statusListener.onSuccess(getStringImage(bitmap));
+         }
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        public String getStringImage(Bitmap bmp){
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] imageBytes = baos.toByteArray();
+            String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+            return encodedImage;
+        }
+        public  void showVideoPopup(final ICallBack<String> listener){
+            statusListener = listener;
+            final Dialog d = new Dialog(this);
+            d.setContentView(R.layout.video_url_popup);
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(d.getWindow().getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            d.show();
+            d.getWindow().setAttributes(lp);
+            final Button continueNext = (Button) d.findViewById(R.id.continuevide);
+            continueNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    d.dismiss();
+                }
+            });
+            Button fetch = (Button) d.findViewById(R.id.fetch);
+            final EditText editUrl = (EditText) d.findViewById(R.id.editTextVide);
+            fetch.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+if(!editUrl.getText().toString().isEmpty()){
+    if(verifyVideoUrl(editUrl.getText().toString())){
+        continueNext.setClickable(true);
+        continueNext.setAlpha(1.0f);
+        statusListener.onSuccess(editUrl.getText().toString());
+
+    }else{
+        updateErrorUI("Video Url is invalid");
+    }
+}else {
+    updateErrorUI("Video Url is empty");
+}
+                }
+            });
+        }
+private boolean verifyVideoUrl(String url){
+    String verifyUrl = url.toLowerCase();
+if(verifyUrl.contains("youtube")||verifyUrl.contains("vimeo")||verifyUrl.contains("metacafe")||verifyUrl.contains("dailymotion")||verifyUrl.contains("flickr")){
+    return true;
+}
+return  false;
+}
     }
