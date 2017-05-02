@@ -10,6 +10,12 @@
                 android:id="@+id/action_my_profile"
                 android:title="My profile"
                 app:showAsAction="always" />
+
+            <item
+                android:id="@+id/action_language"
+                android:title="Language"
+                app:showAsAction="always" />
+
             <item
                 android:id="@+id/action_edit_profile"
                 android:title="Edit profile"
@@ -23,11 +29,7 @@
                 android:title="Logout"
                 app:showAsAction="always" />
 
-            <!--<item
-                android:id="@+id/action_ads"
-                android:title="Ads"
-                app:showAsAction="always" />
--->
+
         </menu>
     </item>
 </menu>

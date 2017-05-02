@@ -62,7 +62,7 @@
     import butterknife.BindView;
     import butterknife.ButterKnife;
 
-    public class MainActivity extends AppCompatActivity implements Category.UserInteraction{
+    public class MainActivity extends AppCompatActivity implements Category.UserInteraction,FansClub.UserInteraction{
     @BindString(R.string.about)
   public   String about;
         @BindString(R.string.home)
@@ -152,9 +152,9 @@
                 case R.id.action_reset_password:
                     invokeDialog(R.layout.reset_password, "Update Password");
                     break;
-               /* case R.id.action_ads:
-                    startActivity(new Intent(this,AdsActivity.class));
-                    break;*/
+               case R.id.action_language:
+                    startActivity(new Intent(this,LanguageActivity.class));
+                    break;
             }
             return super.onOptionsItemSelected(item);
         }
@@ -336,7 +336,7 @@ private void callWallPostApi(){
 
             TextView tabThree = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
             tabThree.setText(bonus);
-            tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_tab_favourite, 0, 0);
+            tabThree.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_bonus, 0, 0);
             tabLayout.getTabAt(2).setCustomView(tabThree);
 
             TextView tabfour = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
@@ -344,15 +344,15 @@ private void callWallPostApi(){
             tabfour.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.fans_club, 0, 0);
             tabLayout.getTabAt(3).setCustomView(tabfour);
 
-            TextView tabFive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+            /*TextView tabFive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
             tabFive.setText(language);
             tabFive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.language, 0, 0);
-            tabLayout.getTabAt(4).setCustomView(tabFive);
+            tabLayout.getTabAt(4).setCustomView(tabFive);*/
 
-            TextView tabSix = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-            tabSix.setText(events);
-            tabSix.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.events, 0, 0);
-            tabLayout.getTabAt(5).setCustomView(tabSix);
+            TextView tabFive = (TextView) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+            tabFive.setText(events);
+            tabFive.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.events, 0, 0);
+            tabLayout.getTabAt(4).setCustomView(tabFive);
 
 
         }
@@ -366,8 +366,8 @@ private void callWallPostApi(){
             adapter.addFrag(new Home(), home);
             adapter.addFrag(new Category(), category);
             adapter.addFrag(new Bonus(), bonus);
-            adapter.addFrag(new FansClub(), fans);
-            adapter.addFrag(new Language(),language);
+
+            adapter.addFrag(new FansClub(),fans);
             adapter.addFrag(new Events(),events);
 
             viewPager.setAdapter(adapter);

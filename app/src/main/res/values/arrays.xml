@@ -10,9 +10,11 @@
     <string-array name="category">
         <item>Heros</item>
         <item>Heroins</item>
-        <item>Villan</item>
-        <item>comedians</item>
+        <item>Villain</item>
+        <item>Comedians</item>
         <item>Music Directors</item>
+        <item>Dance Master</item>
+        <item>Cinematography</item>
     </string-array>
     <string-array name="marital_status">
         <item>Single</item>

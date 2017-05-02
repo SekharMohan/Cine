@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+<com.cine.views.widgets.CircularImageView
+    android:id="@+id/uwImageView"
+    android:layout_width="50dp"
+    android:layout_centerHorizontal="true"
+    android:layout_height="50dp" />
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/uwFullName"
+        android:layout_below="@+id/uwImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:textColor="#CF313D"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        />
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/uwMainCategory"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/uwFullName"
+        android:textColor="#808080"
+        android:textStyle="bold"
+        android:textSize="13sp"
+        />
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/uwSubCategory"
+        android:layout_below="@+id/uwMainCategory"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#808080"
+        android:textSize="13sp"
+        />
+</RelativeLayout>

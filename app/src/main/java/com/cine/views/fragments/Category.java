@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
 import com.cine.service.model.FeedModel;
+import com.cine.service.model.UserWallModel;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
 import com.cine.utils.ItemClickListener;
@@ -33,7 +35,9 @@ import com.cine.utils.ToastUtil;
 import com.cine.views.widgets.HomeFeedAdapter;
 import com.cine.views.widgets.Loader;
 import com.cine.views.widgets.SubCategoryAdapter;
+import com.cine.views.widgets.UserWallAdapter;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,12 +70,15 @@ public class Category extends Fragment implements ICallBack<String>,ItemClickLis
     @BindView(R.id.radioUser)
     RadioButton userRadioButton;
 
+
     private Map<String ,String> category;
     private Map<String,String> subCategory;
     private List<String> categoryArr;
     private List<String> subCategoryArr;
     private UserInteraction userActive;
     private SubCategoryAdapter subCategoryAdapter;
+    private String selectedSub;
+    private String selectedCategory;
 private CineApplication app = CineApplication.getInstance();
     public Category() {
         // Required empty public constructor
@@ -112,13 +119,32 @@ private CineApplication app = CineApplication.getInstance();
         subCategoryRelativeLayout.setVisibility(View.GONE);
         subCatCardView.setVisibility(View.GONE);
         radioGroup.setVisibility(View.GONE);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId)
+            {
+                // TODO Auto-generated method stub
+                if(wallRadioButton.isChecked()) {
+
+                    callWallPostSubCategoryApi(selectedSub);
+                    dismissLoader();
+                } else if(userRadioButton.isChecked()) {
+                    selectSubCatTExtView.setText(selectedSub);
+                    subCategoryRecyclerView.setVisibility(View.GONE);
+                    radioGroup.setVisibility(View.VISIBLE);
+                    callUserPostApi(selectedSub, selectedCategory);
+
+                }
+            }
+        });
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(userActive.isUserActive()){
                     try {
                         userActive.setUserAction();
-                        String selectedCategory = categoryArr.get(position);
+                        selectedCategory = categoryArr.get(position);
                         categoryFeedApi(selectedCategory);
                         String selectedCategoryId = category.get(selectedCategory);
                         subCategoryArr.clear();
@@ -167,6 +193,51 @@ private CineApplication app = CineApplication.getInstance();
 
     }
 
+    private void callUserPostApi(String selectedSub, String selectedCategory) {
+        Loader.showProgressBar(getContext());
+        Params params = new Params();
+
+        params.addParam("cg_api_req_name", "getusers");
+        params.addParam("cg_user_name", app.getUserInfo().getCg_info().getCgusername());
+        params.addParam("cg_category", selectedCategory);
+        params.addParam("cg_subcategory", selectedSub);
+        WebServiceWrapper.getInstance().callService(getContext(), WebService.WALLPOSTSUBCAT, params, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                try {
+
+                    ArrayList<UserWallModel> userWallList = new Gson().fromJson(response, new TypeToken<ArrayList<UserWallModel>>(){}.getType());
+                    if (userWallList.size() > 0) {
+                        setUserFeedAdapter(userWallList);
+                    } else {
+                        updateErrorUI("No post available");
+                    }
+                    dismissLoader();
+                } catch (Exception e) {
+                    dismissLoader();
+                    updateErrorUI("No users available");
+
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(String response) {
+                dismissLoader();
+                updateErrorUI(response);
+            }
+        });
+
+    }
+
+    private void setUserFeedAdapter(ArrayList<UserWallModel> userWallList) {
+        GridLayoutManager mLayoutManager = new GridLayoutManager(getContext(), 2);
+        categoryFeed.setLayoutManager(mLayoutManager);
+        UserWallAdapter adapter =new UserWallAdapter(userWallList,getContext());
+        categoryFeed.setAdapter(adapter);
+    }
+
     private void setValuesForSubCategory(List<String> subCategoryList){
         subCatCardView.setVisibility(View.VISIBLE);
         subCategoryRelativeLayout.setVisibility(View.VISIBLE);
@@ -183,7 +254,7 @@ private CineApplication app = CineApplication.getInstance();
 
     @Override
     public void onClick(View view, int position) {
-        String selectedSub = subCategoryArr.get(position);
+        selectedSub = subCategoryArr.get(position);
 
 
      //   Toast.makeText(getContext(), selectedSub, Toast.LENGTH_LONG).show();

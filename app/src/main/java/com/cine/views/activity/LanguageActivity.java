@@ -1,11 +1,10 @@
-package com.cine.views.fragments;
+package com.cine.views.activity;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -33,8 +32,12 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * Created by DELL on 01-05-2017.
+ */
 
-public class Language extends Fragment implements ICallBack<String> {
+public class LanguageActivity extends AppCompatActivity implements ICallBack<String> {
+
     @BindArray(R.array.language)
     String[] arrLanguage;
     @BindView(R.id.languageSelectionSpinner)
@@ -42,28 +45,16 @@ public class Language extends Fragment implements ICallBack<String> {
     @BindView(R.id.languageFeedView)
     RecyclerView languageFeedView;
     Map<Integer,String> languageAndId = new HashMap<>();
-    PrefUtils prefUtils;
+
     CineApplication app =  CineApplication.getInstance();
     User info;
-    public Language() {
-        // Required empty public constructor
-    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_language,
-                container, false);
-        ButterKnife.bind(this,rootView);
-        //apiCall();
+        setContentView(R.layout.fragment_language);
+        ButterKnife.bind(this);
         init();
-        return rootView;
     }
 
     private void init() {
@@ -85,13 +76,12 @@ public class Language extends Fragment implements ICallBack<String> {
 
         params.addParam("cg_api_req_name","getposts");
         params.addParam("cg_username", info.getCg_info().getCgusername());
-        WebServiceWrapper.getInstance().callService(getContext(), WebService.FEEDS_URL,params,this);
+        WebServiceWrapper.getInstance().callService(this, WebService.FEEDS_URL,params,this);
     }
-
 
     public void spinnerSetup(AppCompatSpinner spinner,String[] values,String hint){
         int lanugaugeId = Integer.parseInt(info.getCg_info().getUser_languageid());
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -119,12 +109,12 @@ public class Language extends Fragment implements ICallBack<String> {
 
     }
 
+
     @Override
     public void onSuccess(String response) {
-        LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
+        LocalStorage.feedModel = new Gson().fromJson(response, FeedModel.class);
         setFeedAdapter();
         dismissLoader();
-
     }
 
     @Override
@@ -139,13 +129,13 @@ public class Language extends Fragment implements ICallBack<String> {
     }
 
     private void updateErrorUI(String errorMsg) {
-        ToastUtil.showErrorUpdate(getContext(), errorMsg);
+        ToastUtil.showErrorUpdate(this, errorMsg);
     }
 
     private void setFeedAdapter() {
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         languageFeedView.setLayoutManager(mLayoutManager);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(), false);
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),this, false);
         languageFeedView.setAdapter(adapter);
     }
 }

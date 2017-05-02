@@ -142,6 +142,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                         String status =holder.statusEditText.getText().toString();
                         if(status!=null & !status.isEmpty()||(imageBitMap!=null&&!imageBitMap.isEmpty()) || (videoUrl!=null&&!videoUrl.isEmpty())) {
                             sendStatusApi(status);
+                            holder.statusEditText.setText("");
                         }else {
                    updateUserToast("Enter the status to post ");
                         }
