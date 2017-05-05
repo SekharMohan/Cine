@@ -13,6 +13,8 @@ public class FeedModel {
 
     private Categories[] Categories;
 
+    private User_datas[] user_datas;
+
     public Commonwall_posts[] getCommonwall_posts ()
     {
         return commonwall_posts;
@@ -43,10 +45,125 @@ public class FeedModel {
         this.Categories = Categories;
     }
 
+    public User_datas[] getUser_datas() {
+        return user_datas;
+    }
+
+    public void setUser_datas(User_datas[] user_datas) {
+        this.user_datas = user_datas;
+    }
+
     @Override
     public String toString()
     {
-        return "ClassPojo [commonwall_posts = "+commonwall_posts+", admin_event = "+admin_event+", Categories = "+Categories+"]";
+        return "ClassPojo [commonwall_posts = "+commonwall_posts+", admin_event = "+admin_event+", Categories = "+Categories+", User_datas = "+user_datas+"]";
+    }
+
+
+
+    public class User_datas{
+
+        private String user_profile;
+
+        private String first_name;
+
+        private String email;
+
+        private String subcategory;
+
+        private String userlang_id;
+
+        private String last_name;
+
+        private String maincategory;
+
+        private String full_name;
+
+        public String getUser_profile ()
+        {
+            return user_profile;
+        }
+
+        public void setUser_profile (String user_profile)
+        {
+            this.user_profile = user_profile;
+        }
+
+        public String getFirst_name ()
+        {
+            return first_name;
+        }
+
+        public void setFirst_name (String first_name)
+        {
+            this.first_name = first_name;
+        }
+
+        public String getEmail ()
+        {
+            return email;
+        }
+
+        public void setEmail (String email)
+        {
+            this.email = email;
+        }
+
+        public String getSubcategory ()
+        {
+            return subcategory;
+        }
+
+        public void setSubcategory (String subcategory)
+        {
+            this.subcategory = subcategory;
+        }
+
+        public String getUserlang_id ()
+        {
+            return userlang_id;
+        }
+
+        public void setUserlang_id (String userlang_id)
+        {
+            this.userlang_id = userlang_id;
+        }
+
+        public String getLast_name ()
+        {
+            return last_name;
+        }
+
+        public void setLast_name (String last_name)
+        {
+            this.last_name = last_name;
+        }
+
+        public String getMaincategory ()
+        {
+            return maincategory;
+        }
+
+        public void setMaincategory (String maincategory)
+        {
+            this.maincategory = maincategory;
+        }
+
+        public String getFull_name ()
+        {
+            return full_name;
+        }
+
+        public void setFull_name (String full_name)
+        {
+            this.full_name = full_name;
+        }
+
+        @Override
+        public String toString()
+        {
+            return "ClassPojo [user_profile = "+user_profile+", first_name = "+first_name+", email = "+email+", subcategory = "+subcategory+", userlang_id = "+userlang_id+", last_name = "+last_name+", maincategory = "+maincategory+", full_name = "+full_name+"]";
+        }
     }
 
     public class Commonwall_posts

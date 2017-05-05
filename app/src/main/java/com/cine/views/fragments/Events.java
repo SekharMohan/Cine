@@ -47,8 +47,14 @@ public class Events extends Fragment implements ICallBack<String> {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_event, container, false);
         ButterKnife.bind(this,view);
-        apiCall();
+        //apiCall();
         return  view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        apiCall();
     }
 
     private void apiCall() {
@@ -62,9 +68,14 @@ public class Events extends Fragment implements ICallBack<String> {
 
     @Override
     public void onSuccess(String response) {
-        ArrayList<EventsModel> eventsList = new Gson().fromJson(response,new TypeToken<ArrayList<EventsModel>>(){}.getType());
-        setFeedAdapter(eventsList);
         dismissLoader();
+        ArrayList<EventsModel> eventsList = new Gson().fromJson(response,new TypeToken<ArrayList<EventsModel>>(){}.getType());
+        if(eventsList!=null) {
+            setFeedAdapter(eventsList);
+
+        }else{
+            ToastUtil.showErrorUpdate(getContext(), "No events found");
+        }
     }
 
     private void setFeedAdapter(ArrayList<EventsModel> eventsList) {

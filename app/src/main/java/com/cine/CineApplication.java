@@ -3,6 +3,7 @@ package com.cine;
 import android.app.Application;
 import android.os.Handler;
 
+import com.cine.service.model.Alerts;
 import com.cine.service.model.userinfo.User;
 import com.cine.service.model.userinfo.UserPersonal;
 
@@ -17,7 +18,7 @@ public class CineApplication extends Application {
     private static CineApplication mCineApplication;
     private static User info;
     private static List<UserPersonal> userPersonal;
-
+    private static List<Alerts> alertsList;
     private static Handler mApplicationHandler;
 
     public static CineApplication getInstance() {
@@ -30,6 +31,7 @@ public class CineApplication extends Application {
     public static Handler getApplicationHandler() {
         return mApplicationHandler;
     }
+
 
     @Override
     public void onCreate() {
@@ -57,5 +59,13 @@ public void setUserPersonal(List<UserPersonal> personal){
 public List<UserPersonal> getUserPersonal(){
     return userPersonal;
 }
+
+    public List<Alerts> getAlertsList() {
+        return alertsList;
+    }
+
+    public void setAlertsList(List<Alerts> alerts) {
+        alertsList = alerts;
+    }
 
 }

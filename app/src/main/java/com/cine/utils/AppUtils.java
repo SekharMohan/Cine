@@ -58,4 +58,31 @@ public class AppUtils {
         }
         return text.toString();
     }
+
+    public static String getLanguage(String languageID){
+        String language = "";
+        switch (Integer.parseInt(languageID)){
+
+                case 1:
+                    language = "Hindi";
+                    break;
+                case 2:
+                    language = "Kannada";
+                    break;
+                case 3:
+                    language = "Malayalam";
+                    break;
+                case 4:
+                    language = "Tamil";
+                    break;
+
+                case 5:
+                    language = "Telugu";
+                    break;
+
+            }
+            return language;
+
+
+    }
 }

@@ -8,4 +8,5 @@ public class AppConstants {
 
     public static final String BASE_TAG = "CineGate";
 
+    public static int languageId;
 }

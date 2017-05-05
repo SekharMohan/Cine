@@ -21,6 +21,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.google.android.youtube.player.YouTubeThumbnailLoader;
 import com.google.android.youtube.player.YouTubeThumbnailView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -55,6 +56,16 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.MyViewHold
         holder.evDate.setText(!TextUtils.isEmpty(eventsModel.getEvent_date()) ? eventsModel.getEvent_date() : "");
         holder.evTitle.setText(!TextUtils.isEmpty(eventsModel.getEvent_title()) ? eventsModel.getEvent_title() : "");
         holder.evDescription.setText(!TextUtils.isEmpty(eventsModel.getEvent_description()) ? eventsModel.getEvent_description() : "");
+        if(eventsModel.getEvent_image()!=null){
+            if(eventsModel.getEvent_image().equals("Not Available")){
+                holder.evImage.setVisibility(View.GONE);
+            }else{
+                holder.evImage.setVisibility(View.VISIBLE);
+                Picasso.with(mContext).load("http://buyarecaplates.com/Admin/cg_events/" + eventsModel.getEvent_image()).into(holder.evImage);
+            }
+        }else{
+            holder.evImage.setVisibility(View.GONE);
+        }
         if(eventsModel.getEvent_video()!=null) {
             if(eventsModel.getEvent_video().equals("Not Available")){
                 holder.evVideo.setVisibility(View.GONE);

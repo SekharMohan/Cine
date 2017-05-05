@@ -6,25 +6,34 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.cine.CineApplication;
 import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
+import com.cine.service.model.Alerts;
 import com.cine.service.model.FeedModel;
 import com.cine.service.model.userinfo.User;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
+import com.cine.views.activity.MainActivity;
 import com.cine.views.widgets.HomeFeedAdapter;
 import com.cine.views.widgets.Loader;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,14 +53,21 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     @BindView(R.id.pickVideo)
     public Button pickVideo;
 */
-
+    @BindView(R.id.alertRelLayout)
+    RelativeLayout alertsRelativeLayout;
+    @BindView(R.id.alertImage)
+    ImageView alertsImage;
+    @BindView(R.id.alertDescription)
+    AppCompatTextView alertsDescription;
+    @BindView(R.id.alertsTitle)
+    AppCompatTextView alertsTitle;
     @BindView(R.id.pull_to_refresh)
     SwipeRefreshLayout pullToRefresh;
 
     private static final int SELECT_PICTURE = 100;
     CineApplication app =  CineApplication.getInstance();
     User info;
-
+    int languageId;
 
     public Home() {
         // Required empty public constructor
@@ -70,16 +86,55 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
                 container, false);
         ButterKnife.bind(this,rootView);
         init();
-
-
+        //setAlertsValue();
+        alertsApiCall();
         return rootView;
     }
 
-    private void init() {
-        if(app.getUserInfo()!=null){
-            info = app.getUserInfo();
-            apiCall();
+    private void setAlertsValue(List<Alerts> alertsList) {
+        ToastUtil.showErrorUpdate(getContext(), alertsList.get(0).getAlert_title());
+        alertsTitle.setText(alertsList.get(0).getAlert_title());
+        alertsDescription.setText(alertsList.get(0).getAlert_description());
+        if(alertsList.get(0).getAlert_picture()!=null){
+            alertsImage.setVisibility(View.VISIBLE);
+        }else {
+            alertsImage.setVisibility(View.GONE);
         }
+    }
+
+    private void alertsApiCall(){
+        Loader.showProgressBar(getContext());
+        Params query = new Params();
+
+
+        query.addParam("cg_api_req_name", "getpagealerts");
+        query.addParam("cg_user_name", app.getUserInfo().getCg_info().getCgusername());
+        WebServiceWrapper.getInstance().callService(getContext(), WebService.ALERTS_URL, query, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                dismissLoader();
+                try {
+                    //app.setAlertsList((List<Alerts>) new Gson().fromJson(response,new TypeToken<ArrayList<Alerts>>(){}.getType()));
+                    ArrayList<Alerts> eventsList = new Gson().fromJson(response,new TypeToken<ArrayList<Alerts>>(){}.getType());
+                    app.setAlertsList(eventsList);
+                    setAlertsValue(eventsList);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(String response) {
+                updateErrorUI(response);
+                dismissLoader();
+            }
+        });
+    }
+
+
+    private void init() {
+
         pullToRefresh.setOnRefreshListener(this);
         pullToRefresh.setColorSchemeColors(ContextCompat.getColor(getContext(),R.color.colorErro),ContextCompat.getColor(getContext(),R.color.color_app),ContextCompat.getColor(getContext(),R.color.material_teal));
     }
@@ -95,7 +150,11 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
-
+       // ToastUtil.showErrorUpdate(getContext(), "onResume of HomeFragment");
+        if(app.getUserInfo()!=null){
+            info = app.getUserInfo();
+            apiCall();
+        }
     }
 
     private void setFeedAdapter() {

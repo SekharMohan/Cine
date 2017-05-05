@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -24,7 +25,11 @@ import com.cine.utils.ToastUtil;
 import com.cine.views.widgets.HomeFeedAdapter;
 import com.cine.views.widgets.Loader;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,6 +53,7 @@ public class LanguageActivity extends AppCompatActivity implements ICallBack<Str
 
     CineApplication app =  CineApplication.getInstance();
     User info;
+    int check = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +74,58 @@ public class LanguageActivity extends AppCompatActivity implements ICallBack<Str
         }
 
         spinnerSetup(spiLanguage, arrLanguage, getString(R.string.language_hint));
+        spiLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if(++check > 1) {
+                    int selectedLanguageId = position + 1;
+                    updateLanguage(String.valueOf(selectedLanguageId));
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private void updateLanguage(String languageId){
+
+        Params params = new Params();
+
+        params.addParam("cg_api_req_name", "change_current_state");
+        //params.addParam("cg_user_name", app.getUserInfo().getCg_info().getCgusername());
+        params.addParam("cg_ur_name", info.getCg_info().getCgusername());
+        params.addParam("cg_state_id", languageId);
+
+        WebServiceWrapper.getInstance().callService(this, WebService.FEEDS_URL, params, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                dismissLoader();
+                try {
+
+                    JSONObject json = new JSONObject(response);
+                    if(json.getString("cg_state_change_msg").equals("Language Changed Successfully")) {
+                        updateErrorUI("Language Changed Successfully");
+                        apiCall();
+                    }else {
+                        updateErrorUI("Language update failed");
+                    }
+
+                }catch (Exception e){
+                    updateErrorUI("Language update failed");
+
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(String response) {
+                dismissLoader();
+                updateErrorUI(response);
+            }
+        });
     }
 
     private void apiCall() {

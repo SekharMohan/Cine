@@ -103,7 +103,7 @@ private CineApplication app = CineApplication.getInstance();
         radioGroup = (RadioGroup)view.findViewById(R.id.radio_group);
         wallRadioButton = (RadioButton)view.findViewById(R.id.radioWall);
         ButterKnife.bind(this,view);
-        apiCall();
+//        apiCall();
         init();
         return  view;
     }
@@ -344,6 +344,7 @@ private CineApplication app = CineApplication.getInstance();
         }
     }
 
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -356,7 +357,7 @@ private CineApplication app = CineApplication.getInstance();
     @Override
     public void onResume() {
         super.onResume();
-
+        apiCall();
     }
 
     private void setUp() {

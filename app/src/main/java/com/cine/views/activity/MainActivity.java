@@ -37,6 +37,7 @@
     import com.cine.R;
     import com.cine.service.WebService;
     import com.cine.service.WebServiceWrapper;
+    import com.cine.service.model.Alerts;
     import com.cine.service.model.FeedModel;
     import com.cine.service.network.Params;
     import com.cine.service.network.callback.ICallBack;
@@ -51,6 +52,7 @@
     import com.cine.views.fragments.Language;
     import com.cine.views.widgets.Loader;
     import com.google.gson.Gson;
+    import com.google.gson.reflect.TypeToken;
 
     import org.json.JSONObject;
 
@@ -119,6 +121,7 @@
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             //createSupportedToolbar(false);
             setTitle("");
+//            alertsApiCall();
         }
 
         public void createSupportedToolbar(boolean value) {
@@ -245,6 +248,7 @@ if(newPassword.getText().toString().equals(verifyNewPassword.getText().toString(
                 }
             });
         }
+
 
 
         @Override

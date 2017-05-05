@@ -99,7 +99,7 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fans, container, false);
         ButterKnife.bind(this,view);
-        apiCall();
+//        apiCall();
         init();
         return  view;
     }
@@ -118,7 +118,7 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
     @Override
     public void onResume() {
         super.onResume();
-
+        apiCall();
     }
 
 

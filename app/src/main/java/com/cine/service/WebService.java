@@ -17,6 +17,7 @@ public class WebService {
     private static final String EVENTS_ENDPOINT = "mevents";
     private static final String PROFILE = "mprofile";
     private static final String FANS = "mfans";
+    private static final String ALERTS = "malerts";
 
     /*get signin url*/
     public  static final String SIGNIN_URL=BASE_URL+SIGNIN_ENDPOINT;
@@ -33,4 +34,5 @@ public class WebService {
     public static final String EVENTSURL = BASE_URL+EVENTS_ENDPOINT;
     public static final String USER_PROFILE_URL = BASE_URL+PROFILE;
     public static final String FANS_URL = BASE_URL+FANS;
+    public static final String ALERTS_URL = BASE_URL+ALERTS;
 }

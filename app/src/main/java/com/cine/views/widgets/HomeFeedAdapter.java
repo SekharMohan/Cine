@@ -52,6 +52,7 @@ import org.json.JSONObject;
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyViewHolder> {
 
     private FeedModel.Commonwall_posts[] commonwall_posts;
+
     Context mContext;
     private boolean isFromHome;
     public CineApplication app = CineApplication.getInstance();
@@ -99,7 +100,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                 "post_comments": "43-Hi,44-Check",
                 "post_comment_replies": "",
                 "post_likes": ""*/
-
+        holder.languageView.setText(AppUtils.getLanguage(post.getPost_langid()));
         if(isFromHome){
             if(holder.getAdapterPosition() == 0){
                 holder.relativeLayoutStatusUpdate.setVisibility(View.VISIBLE);
@@ -162,7 +163,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
         }else{
             holder.nameOfLikedPersonsTextView.setVisibility(View.GONE);
         }
-        holder.hoursView.setText(AppUtils.getDateFromMilliSeconds(post.getPost_date()));
+        holder.hoursView.setText(AppUtils.getDateFromMilliSeconds(post.getPost_date()) + ", ");
        holder.nameView.setText(post.getPost_user_fullname());
         Picasso.with(mContext).load("http://www.buyarecaplates.com/" + post.getPost_user_image()).into(holder.userProfilePic);
        holder.professionView.setText((!TextUtils.isEmpty(post.getPost_uscat())) ? ", " + post.getPost_uscat() : "");
@@ -191,6 +192,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                    holder.feedVideoView.setVisibility(View.GONE);
                    holder.youTubeThump.setVisibility(View.VISIBLE);
 
+                   String youTubeUrl= post.getPost_video_url();
+                   final String videoId = youTubeUrl.substring(youTubeUrl.indexOf('=')+1, youTubeUrl.length());
                    final YouTubeThumbnailLoader.OnThumbnailLoadedListener onThumbnailLoadedListener = new YouTubeThumbnailLoader.OnThumbnailLoadedListener() {
                        @Override
                        public void onThumbnailError(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader.ErrorReason errorReason) {
@@ -207,7 +210,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                    holder.youTubeThump.setOnClickListener(new View.OnClickListener() {
                        @Override
                        public void onClick(View v) {
-                           Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) mContext, KEY, "E32hIYzARVY", 0, true, true);
+                           Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) mContext, KEY, videoId , 0, true, true);
                            mContext.startActivity(intent);
                        }
                    });
@@ -215,7 +218,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                        @Override
                        public void onInitializationSuccess(YouTubeThumbnailView youTubeThumbnailView, YouTubeThumbnailLoader youTubeThumbnailLoader) {
 
-                           youTubeThumbnailLoader.setVideo("E32hIYzARVY");
+                           youTubeThumbnailLoader.setVideo(videoId);
                            youTubeThumbnailLoader.setOnThumbnailLoadedListener(onThumbnailLoadedListener);
                        }
 
@@ -390,7 +393,7 @@ cg_user_post = (pass user entered status text value)
                 query.addParam("tmp_name",imageBitMap);
             }else{
                 if(videoUrl !=null){
-                    query.addParam("cg_post_video","https://www.youtube.com/watch?v=EAvwxWEFoBc");
+                    query.addParam("cg_post_video",videoUrl);
                 }
             }
 

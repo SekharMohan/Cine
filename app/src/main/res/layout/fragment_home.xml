@@ -8,12 +8,35 @@
     android:padding="5dp"
     tools:context=".views.fragments.Home"
     android:background="#E4E6E8">
-
+<RelativeLayout
+    android:id="@+id/alertRelLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alertsTitle"
+        />
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_toRightOf="@+id/alertsTitle"
+        android:layout_marginLeft="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/alertDescription"/>
+    <ImageView
+        android:layout_centerHorizontal="true"
+        android:id="@+id/alertImage"
+        android:layout_below="@+id/alertsTitle"
+        android:layout_marginTop="3dp"
+        android:layout_width="130dp"
+        android:layout_height="100dp" />
+</RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/feedView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/card_view"
+        android:layout_below="@+id/alertRelLayout"
         android:layout_marginTop="3dp">
     </android.support.v7.widget.RecyclerView>
 </android.support.v4.widget.SwipeRefreshLayout>
