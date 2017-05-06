@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.cine.R;
+import com.cine.utils.AppConstants;
 import com.cine.views.widgets.ExtendedViewPager;
 import com.cine.views.widgets.TouchImageView;
 import com.squareup.picasso.Picasso;
@@ -43,7 +44,7 @@ public class ImageViewer extends AppCompatActivity{
 //        ArrayList<String> list=getIntent().getExtras().getStringArrayList("docimage");
         downloadUrl = getIntent().getStringExtra("downloadurl");
         imageName = getIntent().getStringExtra("postimage");
-
+        AppConstants.isFromLanguage = false;
         adapter = new ViewPagerAdapter(this, downloadUrl , imageName);
         //adapter = new ViewPagerAdapter(ImageViewer.this, bitmapArray);
         // Binds the Adapter to the ViewPager

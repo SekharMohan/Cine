@@ -1,6 +1,7 @@
 package com.cine.views.widgets;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 
 import com.cine.R;
 import com.cine.service.model.UserWallModel;
+import com.cine.views.activity.MyWallActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -39,12 +41,20 @@ public class UserWallAdapter extends RecyclerView.Adapter<UserWallAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(UserWallAdapter.MyViewHolder holder, int position) {
-        UserWallModel userWallModel = usersWallList.get(position);
+    public void onBindViewHolder(UserWallAdapter.MyViewHolder holder, final int position) {
+        final UserWallModel userWallModel = usersWallList.get(position);
         holder.uwUserName.setText(!TextUtils.isEmpty(userWallModel.getUserfullname()) ? userWallModel.getUserfullname() : "");
         holder.uwMainCategory.setText(!TextUtils.isEmpty(userWallModel.getUsermaincat()) ? userWallModel.getUsermaincat() : "");
         holder.uwSubCategory.setText(!TextUtils.isEmpty(userWallModel.getUsersubcat()) ? userWallModel.getUsersubcat() : "");
         Picasso.with(mContext).load("http://www.buyarecaplates.com/" + userWallModel.getUserprofilepic()).into(holder.uwImage);
+        holder.uwUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent wallIntent = new Intent(mContext, MyWallActivity.class);
+                wallIntent.putExtra("username", usersWallList.get(position).getUsername());
+                mContext.startActivity(wallIntent);
+            }
+        });
     }
 
     @Override

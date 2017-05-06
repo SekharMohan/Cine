@@ -20,4 +20,18 @@
         <item>Single</item>
         <item>Married</item>
     </string-array>
+    <string-array name="birthday_privacy">
+        <item>Show my complete date of birth</item>
+        <item>Show only day and month</item>
+    </string-array>
+    <string-array name="country">
+        <item>India</item>
+        <item>Australia</item>
+        <item>Bangladesh</item>
+        <item>Canada</item>
+        <item>Egypt</item>
+        <item>France</item>
+        <item>United Kingdom</item>
+        <item>United States</item>
+    </string-array>
     </resources>

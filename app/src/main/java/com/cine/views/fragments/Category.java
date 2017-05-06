@@ -1,5 +1,7 @@
 package com.cine.views.fragments;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -29,6 +32,8 @@ import com.cine.service.model.FeedModel;
 import com.cine.service.model.UserWallModel;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
+import com.cine.utils.AppConstants;
+import com.cine.utils.AppUtils;
 import com.cine.utils.ItemClickListener;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
@@ -69,6 +74,14 @@ public class Category extends Fragment implements ICallBack<String>,ItemClickLis
     RadioButton wallRadioButton;
     @BindView(R.id.radioUser)
     RadioButton userRadioButton;
+    @BindView(R.id.catalertRelLayout)
+    RelativeLayout alertsRelativeLayout;
+    @BindView(R.id.catalertImage)
+    ImageView alertsImage;
+    @BindView(R.id.catalertDescription)
+    AppCompatTextView alertsDescription;
+    @BindView(R.id.catalertsTitle)
+    AppCompatTextView alertsTitle;
 
 
     private Map<String ,String> category;
@@ -105,6 +118,7 @@ private CineApplication app = CineApplication.getInstance();
         ButterKnife.bind(this,view);
 //        apiCall();
         init();
+
         return  view;
     }
 
@@ -193,6 +207,25 @@ private CineApplication app = CineApplication.getInstance();
 
     }
 
+    @SuppressLint("NewApi")
+    private void setAlertsValue() {
+        if(app.getAlertsList()!=null) {
+            //ToastUtil.showErrorUpdate(getContext(), app.getAlertsList().get(0).getAlert_title());
+            alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertinfo));
+            String textColor = AppUtils.getAlertTextColor(app.getAlertsList().get(0).getAlert_tyoe());
+            alertsTitle.setText(app.getAlertsList().get(0).getAlert_title());
+            alertsTitle.setTextColor(Color.parseColor(textColor));
+            alertsDescription.setText(app.getAlertsList().get(0).getAlert_description());
+            alertsDescription.setTextColor(Color.parseColor(textColor));
+            if (app.getAlertsList().get(0).getAlert_picture() != null) {
+                alertsImage.setVisibility(View.VISIBLE);
+            } else {
+                alertsImage.setVisibility(View.GONE);
+            }
+        }
+    }
+
+
     private void callUserPostApi(String selectedSub, String selectedCategory) {
         Loader.showProgressBar(getContext());
         Params params = new Params();
@@ -269,7 +302,7 @@ private CineApplication app = CineApplication.getInstance();
     private void setFeedAdapter() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         categoryFeed.setLayoutManager(mLayoutManager);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(), false);
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(), false, LocalStorage.feedModel.getUser_datas());
         categoryFeed.setAdapter(adapter);
     }
     private void categoryFeedApi(String category){
@@ -357,7 +390,11 @@ private CineApplication app = CineApplication.getInstance();
     @Override
     public void onResume() {
         super.onResume();
-        apiCall();
+        if(AppConstants.isFromLanguage) {
+            apiCall();
+        }else{
+            AppConstants.isFromLanguage = true;
+        }
     }
 
     private void setUp() {
@@ -471,6 +508,7 @@ private CineApplication app = CineApplication.getInstance();
     public void onSuccess(String response) {
         LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
         setFeedAdapter();
+        setAlertsValue();
         setUp();
         dismissLoader();
     }

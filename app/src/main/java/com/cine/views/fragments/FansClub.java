@@ -1,5 +1,7 @@
 package com.cine.views.fragments;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -29,6 +32,8 @@ import com.cine.service.model.UserWallModel;
 import com.cine.service.model.subcategory.fans.FansSubCategory;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
+import com.cine.utils.AppConstants;
+import com.cine.utils.AppUtils;
 import com.cine.utils.ItemClickListener;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
@@ -70,6 +75,14 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
     RadioButton wallRadioButton;
     @BindView(R.id.fansRadioUser)
     RadioButton userRadioButton;
+    @BindView(R.id.fansalertRelLayout)
+    RelativeLayout alertsRelativeLayout;
+    @BindView(R.id.fansalertImage)
+    ImageView alertsImage;
+    @BindView(R.id.fansalertDescription)
+    AppCompatTextView alertsDescription;
+    @BindView(R.id.fansalertsTitle)
+    AppCompatTextView alertsTitle;
 
     private UserInteraction userActive;
     private CineApplication app = CineApplication.getInstance();
@@ -77,7 +90,7 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
     private List<String> subCategoryList;
     private String selectedFansCategory;
     private String selectedFansSubCategory;
-
+    private int spinnerSelection;
     public FansClub() {
         // Required empty public constructor
     }
@@ -101,6 +114,7 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
         ButterKnife.bind(this,view);
 //        apiCall();
         init();
+
         return  view;
     }
 
@@ -109,7 +123,7 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
         super.onViewCreated(view, savedInstanceState);
 
             spinnerSetup(fansSelectionSpinner, fansCategory, getString(R.string.category_hint));
-
+            spinnerSelection = 0;
         /*if(LocalStorage.feedModel!=null && LocalStorage.feedModel.getCategories()!=null) {
             setUp();
         }*/
@@ -118,7 +132,28 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
     @Override
     public void onResume() {
         super.onResume();
-        apiCall();
+        //if(AppConstants.isFromLanguage) {
+            apiCall();
+            setAlertsValue();
+        //}
+    }
+
+    @SuppressLint("NewApi")
+    private void setAlertsValue() {
+        if(app.getAlertsList()!=null) {
+           // ToastUtil.showErrorUpdate(getContext(), app.getAlertsList().get(0).getAlert_title());
+            alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertinfo));
+            String textColor = AppUtils.getAlertTextColor(app.getAlertsList().get(0).getAlert_tyoe());
+            alertsTitle.setText(app.getAlertsList().get(0).getAlert_title());
+            alertsTitle.setTextColor(Color.parseColor(textColor));
+            alertsDescription.setText(app.getAlertsList().get(0).getAlert_description());
+            alertsDescription.setTextColor(Color.parseColor(textColor));
+            if (app.getAlertsList().get(0).getAlert_picture() != null) {
+                alertsImage.setVisibility(View.VISIBLE);
+            } else {
+                alertsImage.setVisibility(View.GONE);
+            }
+        }
     }
 
 
@@ -166,7 +201,7 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
 
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (userActive.isUserActive()) {
+                if (++spinnerSelection > 1) {
                     try {
                         userActive.setUserAction();
                         selectedFansCategory = fansCategory[position];
@@ -362,7 +397,7 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
         adapter.addAll(values);
         adapter.add(hint);
         spinner.setAdapter(adapter);
-        spinner.setSelection(adapter.getCount());
+        spinner.setSelection(adapter.getCount(), false);
     }
 
     @Override
@@ -429,7 +464,7 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
         dismissLoader();
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         fansFeedView.setLayoutManager(mLayoutManager);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(), false);
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(), false, LocalStorage.feedModel.getUser_datas());
         fansFeedView.setAdapter(adapter);
     }
 

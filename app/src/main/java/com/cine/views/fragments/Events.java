@@ -1,19 +1,27 @@
 package com.cine.views.fragments;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
+import com.cine.CineApplication;
 import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
 import com.cine.service.model.EventsModel;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
+import com.cine.utils.AppConstants;
+import com.cine.utils.AppUtils;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
 import com.cine.views.widgets.EventsAdapter;
@@ -31,6 +39,15 @@ public class Events extends Fragment implements ICallBack<String> {
 
     @BindView(R.id.evRecyclerView)
     RecyclerView evRecyclerView;
+    @BindView(R.id.evalertRelLayout)
+    RelativeLayout alertsRelativeLayout;
+    @BindView(R.id.evalertImage)
+    ImageView alertsImage;
+    @BindView(R.id.evalertDescription)
+    AppCompatTextView alertsDescription;
+    @BindView(R.id.evalertsTitle)
+    AppCompatTextView alertsTitle;
+    private CineApplication app = CineApplication.getInstance();
 
     public Events() {
         // Required empty public constructor
@@ -48,13 +65,34 @@ public class Events extends Fragment implements ICallBack<String> {
         View view = inflater.inflate(R.layout.fragment_event, container, false);
         ButterKnife.bind(this,view);
         //apiCall();
+        setAlertsValue();
         return  view;
+    }
+
+    @SuppressLint("NewApi")
+    private void setAlertsValue() {
+        if(app.getAlertsList()!=null) {
+            //ToastUtil.showErrorUpdate(getContext(), app.getAlertsList().get(0).getAlert_title());
+            alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertinfo));
+            String textColor = AppUtils.getAlertTextColor(app.getAlertsList().get(0).getAlert_tyoe());
+            alertsTitle.setText(app.getAlertsList().get(0).getAlert_title());
+            alertsTitle.setTextColor(Color.parseColor(textColor));
+            alertsDescription.setText(app.getAlertsList().get(0).getAlert_description());
+            alertsDescription.setTextColor(Color.parseColor(textColor));
+            if (app.getAlertsList().get(0).getAlert_picture() != null) {
+                alertsImage.setVisibility(View.VISIBLE);
+            } else {
+                alertsImage.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        apiCall();
+        if(AppConstants.isFromLanguage) {
+            apiCall();
+        }
     }
 
     private void apiCall() {

@@ -6,12 +6,40 @@
     android:padding="5dp"
     tools:context=".views.fragments.FansClub"
     android:background="#F0F0F0">
+    <RelativeLayout
+        android:id="@+id/fansalertRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_marginTop="3dp">
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fansalertsTitle"
+            android:textStyle="bold"
+            />
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_toRightOf="@+id/fansalertsTitle"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fansalertDescription"/>
+        <ImageView
+            android:layout_centerHorizontal="true"
+            android:id="@+id/fansalertImage"
+            android:layout_below="@+id/fansalertsTitle"
+            android:layout_marginTop="3dp"
+            android:layout_width="130dp"
+            android:layout_height="100dp" />
+    </RelativeLayout>
+
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-
+android:layout_below="@+id/fansalertRelLayout"
+        android:layout_marginTop="5dp"
         card_view:cardCornerRadius="2dp"
         card_view:contentPadding="8dp">
         <android.support.v7.widget.AppCompatSpinner

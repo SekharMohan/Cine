@@ -34,6 +34,7 @@ import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
 import com.cine.views.activity.ImageViewer;
 import com.cine.views.activity.MainActivity;
+import com.cine.views.activity.MyWallActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
@@ -52,7 +53,7 @@ import org.json.JSONObject;
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyViewHolder> {
 
     private FeedModel.Commonwall_posts[] commonwall_posts;
-
+    private FeedModel.User_datas[] user_datas;
     Context mContext;
     private boolean isFromHome;
     public CineApplication app = CineApplication.getInstance();
@@ -62,12 +63,12 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
     String imageBitMap;
 
 
-    public HomeFeedAdapter(FeedModel.Commonwall_posts[] commonwall_posts, Context mcontext, boolean isFromHome) {
+    public HomeFeedAdapter(FeedModel.Commonwall_posts[] commonwall_posts, Context mcontext, boolean isFromHome, FeedModel.User_datas[] user_datas) {
 
         this.commonwall_posts = commonwall_posts;
         this.mContext = mcontext;
         this.isFromHome = isFromHome;
-
+        this.user_datas = user_datas;
 
     }
 
@@ -99,10 +100,26 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                 "post_video_url": null,
                 "post_comments": "43-Hi,44-Check",
                 "post_comment_replies": "",
-                "post_likes": ""*/
-        holder.languageView.setText(AppUtils.getLanguage(post.getPost_langid()));
+                "post_likes": ""
+                "User_datas": [
+                  {
+                "full_name": "Prabu Vaiyapuri",
+                "first_name": "Prabu",
+                "last_name": "Vaiyapuri",
+                "user_profile": "photos/1493663400272331991.jpg",
+                "email": "prabu.conqer@gmail.com",
+                "maincategory": "Casting",
+                "subcategory": "Hero",
+                "userlang_id": "4"
+                }*/
+        if(post.getPost_user_language()!=null) {
+            holder.languageView.setText(AppUtils.getLanguage(post.getPost_user_language()));
+        }else{
+            holder.languageView.setText(AppUtils.getLanguage(post.getPost_langid()));
+        }
         if(isFromHome){
             if(holder.getAdapterPosition() == 0){
+                Picasso.with(mContext).load("http://www.buyarecaplates.com/" + user_datas[0].getUser_profile()).into(holder.statusProfilePic);
                 holder.relativeLayoutStatusUpdate.setVisibility(View.VISIBLE);
                     holder.cardViewForStatus.setVisibility(View.VISIBLE);
                 holder.pickPhoto.setOnClickListener(new View.OnClickListener() {
@@ -163,6 +180,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
         }else{
             holder.nameOfLikedPersonsTextView.setVisibility(View.GONE);
         }
+        Picasso.with(mContext).load("http://www.buyarecaplates.com/" + user_datas[0].getUser_profile()).into(holder.feedCommentUserProfilePic);
         holder.hoursView.setText(AppUtils.getDateFromMilliSeconds(post.getPost_date()) + ", ");
        holder.nameView.setText(post.getPost_user_fullname());
         Picasso.with(mContext).load("http://www.buyarecaplates.com/" + post.getPost_user_image()).into(holder.userProfilePic);
@@ -271,6 +289,14 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                holder.feedImageView.setVisibility(View.GONE);
            }
        }
+        holder.nameView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent wallIntent = new Intent(mContext, MyWallActivity.class);
+                wallIntent.putExtra("username", post.getPost_username());
+                mContext.startActivity(wallIntent);
+            }
+        });
 
         holder.likeButton.setOnClickListener(new View.OnClickListener(){
 
@@ -315,7 +341,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public CircularImageView userProfilePic;
+        public CircularImageView userProfilePic, statusProfilePic, feedCommentUserProfilePic;
         public AppCompatTextView hoursView, nameView, professionView, languageView, userNameCommented, commmentedText, postTextView, nameOfLikedPersonsTextView;
         public AppCompatImageView feedImageView;
         public VideoView feedVideoView;
@@ -338,6 +364,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
             relVideoYouTubeView  = (RelativeLayout)view.findViewById(R.id.relVideoYouTubeView);
             cardViewForStatus = (CardView)view.findViewById(R.id.card_view_status);
             userProfilePic = (CircularImageView) view.findViewById(R.id.feedUserProfilePic);
+            statusProfilePic = (CircularImageView) view.findViewById(R.id.userProfilePic);
+            feedCommentUserProfilePic = (CircularImageView) view.findViewById(R.id.feedCommentUserProfilePic);
             hoursView = (AppCompatTextView) view.findViewById(R.id.hoursView);
             nameView = (AppCompatTextView) view.findViewById(R.id.nameView);
             professionView = (AppCompatTextView) view.findViewById(R.id.professionView);

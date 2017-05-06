@@ -19,6 +19,7 @@
     import android.support.v4.view.ViewPager;
     import android.support.v7.app.AlertDialog;
     import android.support.v7.app.AppCompatActivity;
+    import android.support.v7.widget.AppCompatSpinner;
     import android.support.v7.widget.AppCompatTextView;
     import android.support.v7.widget.Toolbar;
     import android.text.TextUtils;
@@ -28,7 +29,10 @@
     import android.view.Menu;
     import android.view.MenuItem;
     import android.view.View;
+    import android.view.ViewGroup;
     import android.view.WindowManager;
+    import android.widget.AdapterView;
+    import android.widget.ArrayAdapter;
     import android.widget.Button;
     import android.widget.EditText;
     import android.widget.TextView;
@@ -89,6 +93,7 @@
         CineApplication app = CineApplication.getInstance();
         private Permission permission;
         ICallBack<String> statusListener;
+        private int spinnerSelectionCheck = 0;
 
         public static Intent getStartIntent(Context context) {
             return new Intent(context, MainActivity.class);
@@ -156,10 +161,123 @@
                     invokeDialog(R.layout.reset_password, "Update Password");
                     break;
                case R.id.action_language:
-                    startActivity(new Intent(this,LanguageActivity.class));
+                    //startActivity(new Intent(this,LanguageActivity.class));
+                 //  invokeLanguageDialog(R.layout.dialogue_language, "Choose language");
+                   startActivity(new Intent(this,LanguageDialogActivity.class));
                     break;
             }
             return super.onOptionsItemSelected(item);
+        }
+
+        private void invokeLanguageDialog(int resId, String title) {
+
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            LayoutInflater inflater = this.getLayoutInflater();
+            View dialogView = inflater.inflate(resId, null);
+            dialogBuilder.setView(dialogView);
+            dialogBuilder.setTitle(title);
+            dialogBuilder.setIcon(R.mipmap.ic_launcher);
+            final AppCompatSpinner languageSpinner = (AppCompatSpinner) dialogView.findViewById(R.id.languageDialogSpinner);
+
+            Params params=new Params();
+
+            params.addParam("cg_api_req_name","getposts");
+            params.addParam("cg_username", app.getUserInfo().getCg_info().getCgusername());
+            WebServiceWrapper.getInstance().callService(this, WebService.FEEDS_URL,params,new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+                    dismissLoader();
+                    LocalStorage.feedModel = new Gson().fromJson(response, FeedModel.class);
+                    String[] arrLanguage = getResources().getStringArray(R.array.language);
+                    String hint = getString(R.string.language_hint);
+                    int lanugaugeId = Integer.parseInt(LocalStorage.feedModel.getCommonwall_posts()[0].getPost_langid());
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item) {
+
+                        @Override
+                        public View getView(int position, View convertView, ViewGroup parent) {
+
+                            View v = super.getView(position, convertView, parent);
+                            if (position == getCount()) {
+                                ((TextView)v.findViewById(android.R.id.text1)).setText("");
+                                ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(getCount())); //"Hint to be displayed"
+                            }
+
+                            return v;
+                        }
+
+                        @Override
+                        public int getCount() {
+                            return super.getCount()-1; // you dont display last item. It is used as hint.
+                        }
+
+                    };
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    adapter.addAll(arrLanguage);
+                    adapter.add(hint);
+                    languageSpinner.setAdapter(adapter);
+                    languageSpinner.setSelection(lanugaugeId-1, false);
+
+                }
+
+                @Override
+                public void onFailure(String response) {
+                    updateErrorUI(response);
+                    dismissLoader();
+                }
+            });
+            spinnerSelectionCheck= 0;
+            final AlertDialog alertDialog = dialogBuilder.create();
+            alertDialog.show();
+            alertDialog.setCanceledOnTouchOutside(false);
+            languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                    if(++spinnerSelectionCheck>1) {
+                        int selectedLanguageId = position + 1;
+                        Params params = new Params();
+
+                        params.addParam("cg_api_req_name", "change_current_state");
+                        //params.addParam("cg_user_name", app.getUserInfo().getCg_info().getCgusername());
+                        params.addParam("cg_ur_name", app.getUserInfo().getCg_info().getCgusername());
+                        params.addParam("cg_state_id", selectedLanguageId);
+
+                        WebServiceWrapper.getInstance().callService(MainActivity.this, WebService.FEEDS_URL, params, new ICallBack<String>() {
+                            @Override
+                            public void onSuccess(String response) {
+                                dismissLoader();
+                                try {
+
+                                    JSONObject json = new JSONObject(response);
+                                    if (json.getString("cg_state_change_msg").equals("Language Changed Successfully")) {
+                                        updateErrorUI("Language Changed Successfully");
+                                        alertDialog.dismiss();
+                                    } else {
+                                        updateErrorUI("Language update failed");
+                                    }
+
+                                } catch (Exception e) {
+                                    updateErrorUI("Language update failed");
+
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(String response) {
+                                dismissLoader();
+                                updateErrorUI(response);
+                            }
+                        });
+
+
+                    }
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+
         }
 
 
@@ -375,6 +493,7 @@ private void callWallPostApi(){
             adapter.addFrag(new Events(),events);
 
             viewPager.setAdapter(adapter);
+            viewPager.setOffscreenPageLimit(1);
         }
 
 

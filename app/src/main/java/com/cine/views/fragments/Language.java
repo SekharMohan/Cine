@@ -145,7 +145,7 @@ public class Language extends Fragment implements ICallBack<String> {
     private void setFeedAdapter() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         languageFeedView.setLayoutManager(mLayoutManager);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(), false);
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(), false, LocalStorage.feedModel.getUser_datas());
         languageFeedView.setAdapter(adapter);
     }
 }

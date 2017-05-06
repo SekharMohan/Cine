@@ -57,6 +57,8 @@ public class UserPersonal {
 
     private String full_name;
 
+    private String last_visited;
+
     public String getSkills ()
     {
         return skills;
@@ -317,4 +319,11 @@ public class UserPersonal {
         this.full_name = full_name;
     }
 
+    public String getLast_visited() {
+        return last_visited;
+    }
+
+    public void setLast_visited(String last_visited) {
+        this.last_visited = last_visited;
+    }
 }

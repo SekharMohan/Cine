@@ -85,4 +85,24 @@ public class AppUtils {
 
 
     }
+
+    public static String getAlertTextColor(String alertType){
+        String textColor = "";
+        switch (alertType){
+            case "information":
+                textColor = "#379BB8";
+                break;
+            case "warning":
+                textColor = "#379BB8";
+                break;
+            case "success":
+                textColor = "#379BB8";
+                break;
+            case "danger":
+                textColor = "#379BB8";
+                break;
+
+        }
+        return textColor;
+    }
 }

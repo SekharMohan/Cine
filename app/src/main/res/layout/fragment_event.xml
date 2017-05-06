@@ -4,10 +4,37 @@
     android:layout_height="match_parent"
     tools:context=".views.fragments.Events"
     android:padding="5dp">
+    <RelativeLayout
+        android:id="@+id/evalertRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:padding="5dp">
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/evalertsTitle"
+            android:textStyle="bold"
+            />
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_toRightOf="@+id/evalertsTitle"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/evalertDescription"/>
+        <ImageView
+            android:layout_centerHorizontal="true"
+            android:id="@+id/evalertImage"
+            android:layout_below="@+id/evalertsTitle"
+            android:layout_marginTop="3dp"
+            android:layout_width="130dp"
+            android:layout_height="100dp" />
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:layout_marginTop="5dp"
         android:id="@+id/evRecyclerView"
+        android:layout_below="@+id/evalertRelLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

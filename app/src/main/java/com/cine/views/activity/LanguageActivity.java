@@ -1,14 +1,19 @@
 package com.cine.views.activity;
 
+import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cine.CineApplication;
@@ -19,6 +24,7 @@ import com.cine.service.model.FeedModel;
 import com.cine.service.model.userinfo.User;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
+import com.cine.utils.AppUtils;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.PrefUtils;
 import com.cine.utils.ToastUtil;
@@ -49,11 +55,22 @@ public class LanguageActivity extends AppCompatActivity implements ICallBack<Str
     AppCompatSpinner spiLanguage;
     @BindView(R.id.languageFeedView)
     RecyclerView languageFeedView;
+    @BindView(R.id.langalertRelLayout)
+    RelativeLayout alertsRelativeLayout;
+    @BindView(R.id.langalertImage)
+    ImageView alertsImage;
+    @BindView(R.id.langalertDescription)
+    AppCompatTextView alertsDescription;
+    @BindView(R.id.langalertsTitle)
+    AppCompatTextView alertsTitle;
+
+
     Map<Integer,String> languageAndId = new HashMap<>();
 
     CineApplication app =  CineApplication.getInstance();
     User info;
     int check = 0;
+    private boolean userIsInteracting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +78,31 @@ public class LanguageActivity extends AppCompatActivity implements ICallBack<Str
         setContentView(R.layout.fragment_language);
         ButterKnife.bind(this);
         init();
+        setAlertsValue();
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        userIsInteracting = true;
+    }
+
+    @SuppressLint("NewApi")
+    private void setAlertsValue() {
+        if(app.getAlertsList()!=null) {
+            //ToastUtil.showErrorUpdate(this, app.getAlertsList().get(0).getAlert_title());
+            alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertinfo));
+            String textColor = AppUtils.getAlertTextColor(app.getAlertsList().get(0).getAlert_tyoe());
+            alertsTitle.setText(app.getAlertsList().get(0).getAlert_title());
+            alertsTitle.setTextColor(Color.parseColor(textColor));
+            alertsDescription.setText(app.getAlertsList().get(0).getAlert_description());
+            alertsDescription.setTextColor(Color.parseColor(textColor));
+            if (app.getAlertsList().get(0).getAlert_picture() != null) {
+                alertsImage.setVisibility(View.VISIBLE);
+            } else {
+                alertsImage.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void init() {
@@ -73,11 +115,12 @@ public class LanguageActivity extends AppCompatActivity implements ICallBack<Str
             languageAndId.put((i+1), arrLanguage[i]);
         }
 
-        spinnerSetup(spiLanguage, arrLanguage, getString(R.string.language_hint));
+
         spiLanguage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if(++check > 1) {
+                if (userIsInteracting) {
+
                     int selectedLanguageId = position + 1;
                     updateLanguage(String.valueOf(selectedLanguageId));
                 }
@@ -136,8 +179,8 @@ public class LanguageActivity extends AppCompatActivity implements ICallBack<Str
         WebServiceWrapper.getInstance().callService(this, WebService.FEEDS_URL,params,this);
     }
 
-    public void spinnerSetup(AppCompatSpinner spinner,String[] values,String hint){
-        int lanugaugeId = Integer.parseInt(info.getCg_info().getUser_languageid());
+    public void spinnerSetup(AppCompatSpinner spinner,String[] values,String hint,String languageID){
+        int lanugaugeId = Integer.parseInt(languageID);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
 
             @Override
@@ -162,7 +205,7 @@ public class LanguageActivity extends AppCompatActivity implements ICallBack<Str
         adapter.addAll(values);
         adapter.add(hint);
         spinner.setAdapter(adapter);
-        spinner.setSelection(lanugaugeId-1);
+        spinner.setSelection(lanugaugeId-1, false);
 
     }
 
@@ -170,6 +213,8 @@ public class LanguageActivity extends AppCompatActivity implements ICallBack<Str
     @Override
     public void onSuccess(String response) {
         LocalStorage.feedModel = new Gson().fromJson(response, FeedModel.class);
+        spinnerSetup(spiLanguage, arrLanguage, getString(R.string.language_hint), LocalStorage.feedModel.getCommonwall_posts()[0].getPost_langid());
+
         setFeedAdapter();
         dismissLoader();
     }
@@ -192,7 +237,7 @@ public class LanguageActivity extends AppCompatActivity implements ICallBack<Str
     private void setFeedAdapter() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         languageFeedView.setLayoutManager(mLayoutManager);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),this, false);
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),this, false, LocalStorage.feedModel.getUser_datas());
         languageFeedView.setAdapter(adapter);
     }
 }

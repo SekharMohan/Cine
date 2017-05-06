@@ -10,18 +10,49 @@
         layout="@layout/custom_action_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:layout_below="@+id/custom_action_bar_view"
-    android:id="@+id/langRelativeLayout">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:layout_below="@+id/custom_action_bar_view"
+        android:id="@+id/langRelativeLayout">
+    <RelativeLayout
+
+
+        android:id="@+id/langalertRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:padding="5dp">
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/langalertsTitle"
+            android:textStyle="bold"
+            />
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_toRightOf="@+id/langalertsTitle"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/langalertDescription"/>
+        <ImageView
+            android:layout_centerHorizontal="true"
+            android:id="@+id/langalertImage"
+            android:layout_below="@+id/langalertsTitle"
+            android:layout_marginTop="3dp"
+            android:layout_width="130dp"
+            android:layout_height="100dp" />
+    </RelativeLayout>
+
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-
+android:layout_below="@+id/langalertRelLayout"
         android:layout_marginTop="3dp"
         card_view:cardCornerRadius="2dp"
         card_view:contentPadding="8dp"

@@ -10,6 +10,7 @@ import com.cine.CineApplication;
 import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
+import com.cine.service.model.Alerts;
 import com.cine.service.model.userinfo.User;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
@@ -17,8 +18,12 @@ import com.cine.utils.ToastUtil;
 import com.cine.utils.ValidationUtil;
 import com.cine.views.widgets.Loader;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +37,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public EditText edtPassword;
     @BindView(R.id.loginUserName)
     public EditText edtUserName;
+    String userName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +74,42 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private void alertsApiCall(){
+        //Loader.showProgressBar(getContext());
+        Params query = new Params();
+
+        final CineApplication app =  CineApplication.getInstance();
+        query.addParam("cg_api_req_name", "getpagealerts");
+        query.addParam("cg_user_name", userName);
+        WebServiceWrapper.getInstance().callService(this, WebService.ALERTS_URL, query, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                dismissLoader();
+                try {
+                    app.setAlertsList((List<Alerts>) new Gson().fromJson(response,new TypeToken<ArrayList<Alerts>>(){}.getType()));
+
+                    // ArrayList<Alerts> eventsList = new Gson().fromJson(response,new TypeToken<ArrayList<Alerts>>(){}.getType());
+                    //app.setAlertsList(eventsList);
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(String response) {
+                updateErrorUI(response);
+                dismissLoader();
+            }
+        });
+    }
+
+
+
     public void loginApi() {
 
-        String userName = edtUserName.getText().toString();
+        userName = edtUserName.getText().toString();
         String psw = edtPassword.getText().toString();
 
         if (!ValidationUtil.checkEmptyFields(userName, psw)) {
@@ -94,7 +133,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(json.getString("cg_log_status").equals("1")) {
                CineApplication app =  CineApplication.getInstance();
                 app.setUserInfo(new Gson().fromJson(response, User.class));
-
+                alertsApiCall();
                 goToDashBoard();
                 finish();
             }else {

@@ -1,6 +1,8 @@
 package com.cine.views.fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +26,8 @@ import com.cine.service.model.FeedModel;
 import com.cine.service.model.userinfo.User;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
+import com.cine.utils.AppConstants;
+import com.cine.utils.AppUtils;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
 import com.cine.views.activity.MainActivity;
@@ -86,50 +90,28 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
                 container, false);
         ButterKnife.bind(this,rootView);
         init();
-        //setAlertsValue();
-        alertsApiCall();
+
+
         return rootView;
     }
 
-    private void setAlertsValue(List<Alerts> alertsList) {
-        ToastUtil.showErrorUpdate(getContext(), alertsList.get(0).getAlert_title());
-        alertsTitle.setText(alertsList.get(0).getAlert_title());
-        alertsDescription.setText(alertsList.get(0).getAlert_description());
-        if(alertsList.get(0).getAlert_picture()!=null){
-            alertsImage.setVisibility(View.VISIBLE);
-        }else {
-            alertsImage.setVisibility(View.GONE);
+
+    @SuppressLint("NewApi")
+    private void setAlertsValue() {
+        if(app.getAlertsList()!=null) {
+            //ToastUtil.showErrorUpdate(getContext(), app.getAlertsList().get(0).getAlert_title());
+            alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertinfo));
+            String textColor = AppUtils.getAlertTextColor(app.getAlertsList().get(0).getAlert_tyoe());
+            alertsTitle.setText(app.getAlertsList().get(0).getAlert_title());
+            alertsTitle.setTextColor(Color.parseColor(textColor));
+            alertsDescription.setText(app.getAlertsList().get(0).getAlert_description());
+            alertsDescription.setTextColor(Color.parseColor(textColor));
+            if (app.getAlertsList().get(0).getAlert_picture() != null) {
+                alertsImage.setVisibility(View.VISIBLE);
+            } else {
+                alertsImage.setVisibility(View.GONE);
+            }
         }
-    }
-
-    private void alertsApiCall(){
-        Loader.showProgressBar(getContext());
-        Params query = new Params();
-
-
-        query.addParam("cg_api_req_name", "getpagealerts");
-        query.addParam("cg_user_name", app.getUserInfo().getCg_info().getCgusername());
-        WebServiceWrapper.getInstance().callService(getContext(), WebService.ALERTS_URL, query, new ICallBack<String>() {
-            @Override
-            public void onSuccess(String response) {
-                dismissLoader();
-                try {
-                    //app.setAlertsList((List<Alerts>) new Gson().fromJson(response,new TypeToken<ArrayList<Alerts>>(){}.getType()));
-                    ArrayList<Alerts> eventsList = new Gson().fromJson(response,new TypeToken<ArrayList<Alerts>>(){}.getType());
-                    app.setAlertsList(eventsList);
-                    setAlertsValue(eventsList);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onFailure(String response) {
-                updateErrorUI(response);
-                dismissLoader();
-            }
-        });
     }
 
 
@@ -151,16 +133,21 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     public void onResume() {
         super.onResume();
        // ToastUtil.showErrorUpdate(getContext(), "onResume of HomeFragment");
-        if(app.getUserInfo()!=null){
-            info = app.getUserInfo();
-            apiCall();
+        if(AppConstants.isFromLanguage) {
+            if (app.getUserInfo() != null) {
+                info = app.getUserInfo();
+                apiCall();
+
+            }
+        }else{
+            AppConstants.isFromLanguage = true;
         }
     }
 
     private void setFeedAdapter() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         homeFeedView.setLayoutManager(mLayoutManager);
-        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(), true);
+        HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(),getContext(), true, LocalStorage.feedModel.getUser_datas());
         homeFeedView.setAdapter(adapter);
     }
 
@@ -168,6 +155,7 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     public void onSuccess(String response) {
         LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
         setFeedAdapter();
+        setAlertsValue();
         dimissSwipeLayout();
         dismissLoader();
     }

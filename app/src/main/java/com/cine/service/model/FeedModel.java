@@ -9,11 +9,12 @@ public class FeedModel {
 
     private Commonwall_posts[] commonwall_posts;
 
-    private Admin_event[] admin_event;
+
 
     private Categories[] Categories;
 
-    private User_datas[] user_datas;
+    private User_datas[] User_datas;
+
 
     public Commonwall_posts[] getCommonwall_posts ()
     {
@@ -25,15 +26,7 @@ public class FeedModel {
         this.commonwall_posts = commonwall_posts;
     }
 
-    public Admin_event[] getAdmin_event ()
-    {
-        return admin_event;
-    }
 
-    public void setAdmin_event (Admin_event[] admin_event)
-    {
-        this.admin_event = admin_event;
-    }
 
     public Categories[] getCategories ()
     {
@@ -45,24 +38,26 @@ public class FeedModel {
         this.Categories = Categories;
     }
 
-    public User_datas[] getUser_datas() {
-        return user_datas;
+    public User_datas[] getUser_datas ()
+    {
+        return User_datas;
     }
 
-    public void setUser_datas(User_datas[] user_datas) {
-        this.user_datas = user_datas;
+    public void setUser_datas (User_datas[] User_datas)
+    {
+        this.User_datas = User_datas;
     }
 
     @Override
     public String toString()
     {
-        return "ClassPojo [commonwall_posts = "+commonwall_posts+", admin_event = "+admin_event+", Categories = "+Categories+", User_datas = "+user_datas+"]";
+        return "ClassPojo [commonwall_posts = "+commonwall_posts+", User_datas = "+User_datas+", Categories = "+Categories+"]";
     }
 
 
 
-    public class User_datas{
-
+    public class User_datas
+    {
         private String user_profile;
 
         private String first_name;
@@ -166,6 +161,7 @@ public class FeedModel {
         }
     }
 
+
     public class Commonwall_posts
     {
         private String post_user_fullname;
@@ -195,6 +191,8 @@ public class FeedModel {
         private String post_date;
 
         private String post_langid;
+
+        private String post_user_language;
 
         public String getPost_uscat ()
         {
@@ -319,7 +317,7 @@ public class FeedModel {
         @Override
         public String toString()
         {
-            return "ClassPojo [post_user_fullname = "+post_user_fullname+", post_user_image = "+post_user_image+", post_uscat = "+post_uscat+", post_comments = "+post_comments+", post_photos = "+post_photos+", post_text = "+post_text+", post_video_url = "+post_video_url+", post_likes = "+post_likes+", post_comment_replies = "+post_comment_replies+", post_ucat = "+post_ucat+", post_id = "+post_id+", post_username = "+post_username+", post_date = "+post_date+", post_langid = "+post_langid+"]";
+            return "ClassPojo [post_user_fullname = "+post_user_fullname+", post_user_image = "+post_user_image+", post_uscat = "+post_uscat+", post_comments = "+post_comments+", post_photos = "+post_photos+", post_text = "+post_text+", post_video_url = "+post_video_url+", post_likes = "+post_likes+", post_comment_replies = "+post_comment_replies+", post_ucat = "+post_ucat+", post_id = "+post_id+", post_username = "+post_username+", post_date = "+post_date+", post_langid = "+post_langid+", post_user_language = " + post_user_language+"]";
         }
 
         public String getPost_user_fullname() {
@@ -336,6 +334,14 @@ public class FeedModel {
 
         public void setPost_user_image(String post_user_image) {
             this.post_user_image = post_user_image;
+        }
+
+        public String getPost_user_language() {
+            return post_user_language;
+        }
+
+        public void setPost_user_language(String post_user_language) {
+            this.post_user_language = post_user_language;
         }
     }
 
