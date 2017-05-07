@@ -13,21 +13,32 @@ public class PrefUtils {
 
     private static final String APP_PREF_FILE_NAME = "cine_gate_application";
 
-    private final static String KEY_LANGUAGE_ID = "cine_gate_application_lang_id";
+    private final static String KEY_LOGIN_UESRNAME = "cine_gate_application_user_name";
+    private final static String KEY_LOGIN_PASSWORD = "cine_gate_application_user_password";
 
     private static SharedPreferences mApplicationSharedPreference;
 
-    static {
-        mApplicationSharedPreference = CineApplication.getInstance().getSharedPreferences(APP_PREF_FILE_NAME, Context.MODE_PRIVATE);
+    public PrefUtils(Context context) {
+        mApplicationSharedPreference = context.getSharedPreferences(APP_PREF_FILE_NAME, Context.MODE_PRIVATE);
     }
 
-    public static int getLanguageValue() {
-        return mApplicationSharedPreference.getInt(KEY_LANGUAGE_ID, -1);
+    public String getUserName() {
+        return mApplicationSharedPreference.getString(KEY_LOGIN_UESRNAME, "");
     }
 
-    public static void setLanguageValue(int languageValue) {
+    public void setUserName(String userNameValue) {
         SharedPreferences.Editor editor = mApplicationSharedPreference.edit();
-        editor.putInt(KEY_LANGUAGE_ID, languageValue);
+        editor.putString(KEY_LOGIN_UESRNAME, userNameValue);
+        editor.apply();
+    }
+
+    public String getPassword() {
+        return mApplicationSharedPreference.getString(KEY_LOGIN_PASSWORD, "");
+    }
+
+    public void setpassword(String passwordValue) {
+        SharedPreferences.Editor editor = mApplicationSharedPreference.edit();
+        editor.putString(KEY_LOGIN_PASSWORD, passwordValue);
         editor.apply();
     }
 }

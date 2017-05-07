@@ -11,4 +11,6 @@ public class AppConstants {
     public static int languageId;
 
     public static boolean isFromLanguage = true;
+
+    public static String statusUpdateComments;
 }

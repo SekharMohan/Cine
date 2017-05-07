@@ -92,6 +92,7 @@ public class Category extends Fragment implements ICallBack<String>,ItemClickLis
     private SubCategoryAdapter subCategoryAdapter;
     private String selectedSub;
     private String selectedCategory;
+    private int catSpinnerCheck;
 private CineApplication app = CineApplication.getInstance();
     public Category() {
         // Required empty public constructor
@@ -155,7 +156,8 @@ private CineApplication app = CineApplication.getInstance();
         spCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if(userActive.isUserActive()){
+                //if(userActive.isUserActive()){
+                if(++catSpinnerCheck > 1){
                     try {
                         userActive.setUserAction();
                         selectedCategory = categoryArr.get(position);
@@ -227,7 +229,7 @@ private CineApplication app = CineApplication.getInstance();
 
 
     private void callUserPostApi(String selectedSub, String selectedCategory) {
-        Loader.showProgressBar(getContext());
+       // Loader.showProgressBar(getContext());
         Params params = new Params();
 
         params.addParam("cg_api_req_name", "getusers");
@@ -308,7 +310,7 @@ private CineApplication app = CineApplication.getInstance();
     private void categoryFeedApi(String category){
         if(app.getUserInfo()!=null) {
 
-            Loader.showProgressBar(getContext());
+           // Loader.showProgressBar(getContext());
             Params params = new Params();
 
             params.addParam("cg_api_req_name", "getposts");
@@ -337,7 +339,7 @@ private CineApplication app = CineApplication.getInstance();
     private void callWallPostSubCategoryApi(String subcategory){
         if(app.getUserInfo()!=null) {
 
-            Loader.showProgressBar(getContext());
+          //  Loader.showProgressBar(getContext());
             Params params = new Params();
 
             params.addParam("cg_api_req_name", "getposts");
@@ -502,6 +504,7 @@ private CineApplication app = CineApplication.getInstance();
         adapter.add(hint);
         spinner.setAdapter(adapter);
         spinner.setSelection(adapter.getCount());
+        catSpinnerCheck = 0;
     }
 
     @Override

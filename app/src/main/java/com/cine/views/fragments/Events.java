@@ -18,6 +18,7 @@ import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
 import com.cine.service.model.EventsModel;
+import com.cine.service.model.userinfo.User;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
 import com.cine.utils.AppConstants;
@@ -48,6 +49,7 @@ public class Events extends Fragment implements ICallBack<String> {
     @BindView(R.id.evalertsTitle)
     AppCompatTextView alertsTitle;
     private CineApplication app = CineApplication.getInstance();
+    User info;
 
     public Events() {
         // Required empty public constructor
@@ -91,7 +93,12 @@ public class Events extends Fragment implements ICallBack<String> {
     public void onResume() {
         super.onResume();
         if(AppConstants.isFromLanguage) {
-            apiCall();
+            if (app.getUserInfo() != null) {
+                info = app.getUserInfo();
+                apiCall();
+            }
+        }else{
+            AppConstants.isFromLanguage = true;
         }
     }
 
@@ -100,7 +107,7 @@ public class Events extends Fragment implements ICallBack<String> {
         Params params=new Params();
 
         params.addParam("cg_api_req_name","getevents");
-        params.addParam("cg_user_name","prabu944");
+        params.addParam("cg_user_name",info.getCg_info().getCgusername());
         WebServiceWrapper.getInstance().callService(getContext(), WebService.EVENTSURL,params,this);
     }
 
@@ -109,10 +116,12 @@ public class Events extends Fragment implements ICallBack<String> {
         dismissLoader();
         ArrayList<EventsModel> eventsList = new Gson().fromJson(response,new TypeToken<ArrayList<EventsModel>>(){}.getType());
         if(eventsList!=null) {
+            evRecyclerView.setVisibility(View.VISIBLE);
             setFeedAdapter(eventsList);
 
         }else{
             ToastUtil.showErrorUpdate(getContext(), "No events found");
+            evRecyclerView.setVisibility(View.GONE);
         }
     }
 

@@ -16,13 +16,19 @@
     import android.support.v4.app.Fragment;
     import android.support.v4.app.FragmentManager;
     import android.support.v4.app.FragmentPagerAdapter;
+    import android.support.v4.view.MenuItemCompat;
     import android.support.v4.view.ViewPager;
     import android.support.v7.app.AlertDialog;
     import android.support.v7.app.AppCompatActivity;
     import android.support.v7.widget.AppCompatSpinner;
     import android.support.v7.widget.AppCompatTextView;
+
+    import android.support.v7.widget.RecyclerView;
+    import android.support.v7.widget.SearchView;
     import android.support.v7.widget.Toolbar;
+    import android.text.Editable;
     import android.text.TextUtils;
+    import android.text.TextWatcher;
     import android.util.Base64;
     import android.view.Gravity;
     import android.view.LayoutInflater;
@@ -30,12 +36,17 @@
     import android.view.MenuItem;
     import android.view.View;
     import android.view.ViewGroup;
+    import android.view.Window;
     import android.view.WindowManager;
     import android.widget.AdapterView;
     import android.widget.ArrayAdapter;
     import android.widget.Button;
     import android.widget.EditText;
+    import android.widget.ImageView;
+
     import android.widget.TextView;
+
+
 
     import com.cine.CineApplication;
     import com.cine.R;
@@ -45,6 +56,7 @@
     import com.cine.service.model.FeedModel;
     import com.cine.service.network.Params;
     import com.cine.service.network.callback.ICallBack;
+    import com.cine.utils.AppConstants;
     import com.cine.utils.LocalStorage;
     import com.cine.utils.ToastUtil;
     import com.cine.utils.permission.Permission;
@@ -54,6 +66,7 @@
     import com.cine.views.fragments.FansClub;
     import com.cine.views.fragments.Home;
     import com.cine.views.fragments.Language;
+    import com.cine.views.widgets.CircularImageView;
     import com.cine.views.widgets.Loader;
     import com.google.gson.Gson;
     import com.google.gson.reflect.TypeToken;
@@ -68,7 +81,7 @@
     import butterknife.BindView;
     import butterknife.ButterKnife;
 
-    public class MainActivity extends AppCompatActivity implements Category.UserInteraction,FansClub.UserInteraction{
+    public class MainActivity extends AppCompatActivity implements Category.UserInteraction,FansClub.UserInteraction {
     @BindString(R.string.about)
   public   String about;
         @BindString(R.string.home)
@@ -148,6 +161,10 @@
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()) {
+                case R.id.action_search:
+                    ToastUtil.showErrorUpdate(this, "Clicked Search");
+                    startActivity(new Intent(this,SearchUsersActivity.class));
+                    break;
                 case R.id.action_edit_profile:
                     startActivity(new Intent(this,EditProfile.class));
                     break;
@@ -511,6 +528,8 @@ private void callWallPostApi(){
             return listenrEnabler;
         }
 
+
+
         class ViewPagerAdapter extends FragmentPagerAdapter {
             private final List<Fragment> mFragmentList = new ArrayList<>();
             private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -646,13 +665,38 @@ private void callWallPostApi(){
 
                 }
          if(bitmap !=null){
-             statusListener.onSuccess(getStringImage(bitmap));
+             showImagePopUp(bitmap);
+             //statusListener.onSuccess(getStringImage(bitmap));
          }
 
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
+
+        private void showImagePopUp(final Bitmap selectedImage) {
+            final Dialog d = new Dialog(this);
+            d.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            d.setContentView(R.layout.image_update_popup);
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(d.getWindow().getAttributes());
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            d.show();
+            d.getWindow().setAttributes(lp);
+            final ImageView imageView = (ImageView) d.findViewById(R.id.supImageView);
+            final EditText editTextCommets = (EditText) d.findViewById(R.id.imageUploadComments);
+            final Button btnPostImage = (Button) d.findViewById(R.id.postImage);
+            imageView.setImageBitmap(selectedImage);
+            btnPostImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AppConstants.statusUpdateComments = editTextCommets.getText().toString();
+                    statusListener.onSuccess(getStringImage(selectedImage));
+                }
+            });
+        }
+
         public String getStringImage(Bitmap bmp){
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -663,6 +707,7 @@ private void callWallPostApi(){
         public  void showVideoPopup(final ICallBack<String> listener){
             statusListener = listener;
             final Dialog d = new Dialog(this);
+            d.requestWindowFeature(Window.FEATURE_NO_TITLE);
             d.setContentView(R.layout.video_url_popup);
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
             lp.copyFrom(d.getWindow().getAttributes());
@@ -679,12 +724,14 @@ private void callWallPostApi(){
             });
             Button fetch = (Button) d.findViewById(R.id.fetch);
             final EditText editUrl = (EditText) d.findViewById(R.id.editTextVide);
+            final EditText editComments = (EditText) d.findViewById(R.id.editTextVideoComments);
             fetch.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
 if(!editUrl.getText().toString().isEmpty()){
     if(verifyVideoUrl(editUrl.getText().toString())){
         continueNext.setClickable(true);
         continueNext.setAlpha(1.0f);
+        AppConstants.statusUpdateComments = editComments.getText().toString();
         statusListener.onSuccess(editUrl.getText().toString());
 
     }else{
