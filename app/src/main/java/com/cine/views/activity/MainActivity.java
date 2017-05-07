@@ -8,6 +8,7 @@
     import android.content.pm.PackageManager;
     import android.graphics.Bitmap;
     import android.graphics.Color;
+    import android.graphics.Point;
     import android.net.Uri;
     import android.os.Bundle;
     import android.provider.MediaStore;
@@ -24,6 +25,8 @@
     import android.support.v7.widget.Toolbar;
     import android.text.TextUtils;
     import android.util.Base64;
+    import android.util.DisplayMetrics;
+    import android.view.Display;
     import android.view.Gravity;
     import android.view.LayoutInflater;
     import android.view.Menu;
@@ -35,13 +38,15 @@
     import android.widget.ArrayAdapter;
     import android.widget.Button;
     import android.widget.EditText;
+    import android.widget.LinearLayout;
+    import android.widget.ListView;
+    import android.widget.PopupWindow;
     import android.widget.TextView;
 
     import com.cine.CineApplication;
     import com.cine.R;
     import com.cine.service.WebService;
     import com.cine.service.WebServiceWrapper;
-    import com.cine.service.model.Alerts;
     import com.cine.service.model.FeedModel;
     import com.cine.service.network.Params;
     import com.cine.service.network.callback.ICallBack;
@@ -53,15 +58,14 @@
     import com.cine.views.fragments.Events;
     import com.cine.views.fragments.FansClub;
     import com.cine.views.fragments.Home;
-    import com.cine.views.fragments.Language;
     import com.cine.views.widgets.Loader;
     import com.google.gson.Gson;
-    import com.google.gson.reflect.TypeToken;
 
     import org.json.JSONObject;
 
     import java.io.ByteArrayOutputStream;
     import java.util.ArrayList;
+    import java.util.Calendar;
     import java.util.List;
 
     import butterknife.BindString;
@@ -94,6 +98,7 @@
         private Permission permission;
         ICallBack<String> statusListener;
         private int spinnerSelectionCheck = 0;
+        PopupWindow popWindow;
 
         public static Intent getStartIntent(Context context) {
             return new Intent(context, MainActivity.class);
@@ -703,4 +708,52 @@ if(verifyUrl.contains("youtube")||verifyUrl.contains("vimeo")||verifyUrl.contain
 }
 return  false;
 }
+
+        public void onShowPopup(View v){
+
+            LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            // inflate the custom popup layout
+        View    inflatedView = layoutInflater.inflate(R.layout.comment_xml, null,false);
+            // find the ListView in the popup layout
+            ListView listView = (ListView)inflatedView.findViewById(R.id.commentsListView);
+            LinearLayout headerView = (LinearLayout)inflatedView.findViewById(R.id.headerLayout);
+            // get device size
+            Display display = getWindowManager().getDefaultDisplay();
+            final Point size = new Point();
+            display.getSize(size);
+//        mDeviceHeight = size.y;
+            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+            int width = displayMetrics.widthPixels;
+            int height = displayMetrics.heightPixels;
+
+
+            // fill the data to the list items
+            setSimpleList(listView);
+
+
+            // set height depends on the device size
+            popWindow = new PopupWindow(inflatedView, width,height-50, true );
+            // set a background drawable with rounders corners
+            popWindow.setBackgroundDrawable(getResources().getDrawable(R.drawable.edittext_bg));
+
+            popWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+            popWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+
+            popWindow.setAnimationStyle(R.style.PopupAnimation);
+
+            // show the popup at bottom of the screen and set some margin at bottom ie,
+            popWindow.showAtLocation(v, Gravity.BOTTOM, 0,100);
+        }
+        void setSimpleList(ListView listView){
+
+            ArrayList<String> contactsList = new ArrayList<String>();
+
+            for (int index = 0; index < 10; index++) {
+                contactsList.add("I am @ index " + index + " today " + Calendar.getInstance().getTime().toString());
+            }
+
+           /* listView.setAdapter(new ArrayAdapter<String>(MainActivity.this,
+                    R.layout.popup_list_item, android.R.id.text1, contactsList));*/
+        }
     }
