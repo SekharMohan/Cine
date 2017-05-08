@@ -29,6 +29,7 @@ import com.cine.service.model.FeedModel;
 import com.cine.service.model.userinfo.Cg_info;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
+import com.cine.utils.AppConstants;
 import com.cine.utils.AppUtils;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
@@ -125,10 +126,13 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                 holder.pickPhoto.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         ((MainActivity) mContext).selectImage(new ICallBack<String>() {
                             @Override
                             public void onSuccess(String response) {
                                 imageBitMap =response;
+                                String status = AppConstants.statusUpdateComments;
+                                sendStatusApi(status);
                             }
 
                             @Override
@@ -145,6 +149,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                             @Override
                             public void onSuccess(String response) {
                                 videoUrl = response;
+                                String status = AppConstants.statusUpdateComments;
+                                sendStatusApi(status);
                             }
 
                             @Override
@@ -158,7 +164,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                     @Override
                     public void onClick(View v) {
                         String status =holder.statusEditText.getText().toString();
-                        if(status!=null & !status.isEmpty()||(imageBitMap!=null&&!imageBitMap.isEmpty()) || (videoUrl!=null&&!videoUrl.isEmpty())) {
+                        if(status!=null & !status.isEmpty()) {
                             sendStatusApi(status);
                             holder.statusEditText.setText("");
                         }else {
@@ -440,6 +446,7 @@ cg_user_post = (pass user entered status text value)
                         JSONObject json = new JSONObject(response);
                         imageBitMap = null;
                         videoUrl = null;
+                        AppConstants.statusUpdateComments = "";
 if(json.getString("status").equals("1")){
     apiCall();
 

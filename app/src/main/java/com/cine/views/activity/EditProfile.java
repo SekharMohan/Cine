@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -17,10 +18,14 @@ import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -30,9 +35,16 @@ import com.cine.CineApplication;
 import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
+import com.cine.service.model.FeedModel;
+import com.cine.service.model.category.Mincategories;
+import com.cine.service.model.category.ProfessionalCategoryModel;
+import com.cine.service.model.subcategory.ProfSubCategory;
+import com.cine.service.model.subcategory.Subcategories;
 import com.cine.service.model.userinfo.UserPersonal;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
+import com.cine.utils.LocalStorage;
+import com.cine.utils.LogUtils;
 import com.cine.utils.ToastUtil;
 import com.cine.utils.ValidationUtil;
 import com.cine.utils.permission.Permission;
@@ -47,7 +59,9 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -113,6 +127,8 @@ AppCompatEditText etDay;
     String[] birthDayPrivacy;
     @BindArray(R.array.country)
     String[] country;
+    @BindArray(R.array.category)
+    String[] fansarrCategory;
 
     @BindView(R.id.maleGender)
     RadioButton rbMale;
@@ -120,13 +136,41 @@ AppCompatEditText etDay;
     RadioButton rbFemale;
     @BindView(R.id.otherGender)
     RadioButton rbOthers;
+    @BindView(R.id.etSaveButton)
+    Button saveButton;
     CineApplication app = CineApplication.getInstance();
+    String[] arrProCat;
+    String[] arrSubProCat;
+    Map<String,String> profCategory = new HashMap<>();
+    private Map<String,String> subCategory;
+    private List<String> categoryArr;
+    private List<String> subCategoryArr;
+    RadioButton radioButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         ButterKnife.bind(this);
         init();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.edit_profile, menu);//Menu Resource, Menu
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.save:
+                updateEditProfileApi();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @OnClick({R.id.editProfileYearView,R.id.editProfileMonthView,R.id.editProfileDayView})
@@ -147,7 +191,7 @@ AppCompatEditText etDay;
         datePickerDialog.show();
 
     }
-    public void martialStatusSpinnerSetup(AppCompatSpinner spinner,String[] values,String hint){
+    public void spinnerSetup(AppCompatSpinner spinner,String[] values,String hint){
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
 
             @Override
@@ -175,67 +219,14 @@ AppCompatEditText etDay;
         spinner.setSelection(adapter.getCount());
     }
 
-    public void birthDayPrivacySpinnerSetup(AppCompatSpinner spinner,String[] values,String hint){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-
-                View v = super.getView(position, convertView, parent);
-                if (position == getCount()) {
-                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
-                    ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(getCount())); //"Hint to be displayed"
-                }
-
-                return v;
-            }
-
-            @Override
-            public int getCount() {
-                return super.getCount()-1; // you dont display last item. It is used as hint.
-            }
-
-        };
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adapter.addAll(values);
-        adapter.add(hint);
-        spinner.setAdapter(adapter);
-        spinner.setSelection(adapter.getCount());
-    }
-
-    public void setCountrySelectionSpinner(AppCompatSpinner spinner,String[] values,String hint){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-
-                View v = super.getView(position, convertView, parent);
-                if (position == getCount()) {
-                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
-                    ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(getCount())); //"Hint to be displayed"
-                }
-
-                return v;
-            }
-
-            @Override
-            public int getCount() {
-                return super.getCount()-1; // you dont display last item. It is used as hint.
-            }
-
-        };
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adapter.addAll(values);
-        adapter.add(hint);
-        spinner.setAdapter(adapter);
-        spinner.setSelection(adapter.getCount());
-    }
 
     private void init() {
-        martialStatusSpinnerSetup(spMaritalStatus,maritalStatus,"Select Marital status");
-        martialStatusSpinnerSetup(bdayPrivacySpinner, birthDayPrivacy, "Select privacy option");
-        martialStatusSpinnerSetup(countrySpinner, country, "Select Country");
+        spinnerSetup(spMaritalStatus,maritalStatus,"Select Marital status");
+        spinnerSetup(bdayPrivacySpinner, birthDayPrivacy, "Select privacy option");
+        spinnerSetup(countrySpinner, country, "Select Country");
+        apiCallProfessionalCategory();
         apiCallProfile();
+
         setUserProfilePic();
 
         permission =  new Permission(this);
@@ -245,6 +236,82 @@ AppCompatEditText etDay;
                 selectImage();
             }
         });
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateEditProfileApi();
+            }
+        });
+    }
+
+    private void apiCallProfessionalCategory() {
+        Params requestQuery = new Params();
+        requestQuery.addParam("REQUEST_METHOD","POST");
+        requestQuery.addParam("cg_usertype", "cineprofession");
+        WebServiceWrapper.getInstance().callService(this, WebService.SIGNUP_URL, requestQuery, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                ProfessionalCategoryModel model = new Gson().fromJson(response,ProfessionalCategoryModel.class);
+                if(model!=null){
+                    int length = model.getMincategories().length;
+                    arrProCat = new String[length];
+                    for(int i=0;i< length;i++)
+                    {
+                        Mincategories minCatObject = model.getMincategories()[i];
+                        String catItem = minCatObject.getMaincat_name();
+                        arrProCat[i] = catItem;
+                        profCategory.put(catItem,minCatObject.getMaincat_id());
+
+                    }
+                    spinnerSetup(spCategorySpinner,arrProCat,getString(R.string.category_hint));
+
+                }else{
+                    updateErrorUI("Oops! Something worng");
+                }
+                dismissLoader();
+            }
+
+            @Override
+            public void onFailure(String response) {
+                updateErrorUI(response);
+                dismissLoader();
+
+            }
+        });
+
+    }
+
+    public void spinnerSetSubCategory(AppCompatSpinner spinner, String[] values, String hint, String userSubCatValue){
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+
+                View v = super.getView(position, convertView, parent);
+                if (position == getCount()) {
+                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
+                    ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(getCount())); //"Hint to be displayed"
+                }
+
+                return v;
+            }
+
+            @Override
+            public int getCount() {
+                return super.getCount()-1; // you dont display last item. It is used as hint.
+            }
+
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.addAll(values);
+        adapter.add(hint);
+        spinner.setAdapter(adapter);
+        for(int i = 0;i < values.length; i++ ){
+            if(userSubCatValue.equals(values[i])) {
+                spinner.setSelection(i, false);
+            }
+        }
+
     }
 
     private void setUserProfilePic() {
@@ -407,6 +474,7 @@ AppCompatEditText etDay;
 
                                 }
                                 updateErrorUI(json.getString("cg_msg"));
+                                LogUtils.logRequestDetails("Prof pic", json.getString("cg_msg"));
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                             }
@@ -417,6 +485,7 @@ AppCompatEditText etDay;
                         public void onFailure(String response) {
                             dismissLoader();
                             updateErrorUI(response);
+                            LogUtils.logRequestDetails("Prof pic",response);
                         }
                     });
 //                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImage);
@@ -452,18 +521,105 @@ AppCompatEditText etDay;
     }
 
     void updateEditProfileApi(){
-        /*lcity=Salem Tamil&cg_statename=Tamilnadu Tamil&cg_country=India Tamil&cg_marriage=Single&cg_uerrcat=Casting&cg_uerscat=Hero&cg_gender=Male&cg_bday=12&cg_bmonth=12&cg_byear=2001&cg_bdysecure=Full&cg_aboutu=Hai&cg_rprjts=Hai&cg_cptpjts=Hai&cg_cawards=Hai&cg_eknwlanguages=Hai&cg_eknwskills=Hai&cg_eknwhobbies=Hai&cg_eknwlikes=Hai
+        /*lcity=Salem Tamil&cg_statename=Tamilnadu Tamil&cg_country=India Tamil&cg_marriage=Single&cg_uerrcat=Casting&cg_uerscat=Hero
+        &cg_gender=Male&cg_bday=12&cg_bmonth=12&cg_byear=2001&cg_bdysecure=Full&cg_aboutu=Hai&cg_rprjts=Hai
+        &cg_cptpjts=Hai&cg_cawards=Hai&cg_eknwlanguages=Hai&cg_eknwskills=Hai&cg_eknwhobbies=Hai&cg_eknwlikes=Hai
  */
+        String category = spCategorySpinner.getItemAtPosition(spCategorySpinner.getSelectedItemPosition()).toString();
+        String subCategory = spSubCategory.getItemAtPosition(spSubCategory.getSelectedItemPosition()).toString();
+        String martialStatus = spMaritalStatus.getItemAtPosition(spMaritalStatus.getSelectedItemPosition()).toString();
+        String country = countrySpinner.getItemAtPosition(countrySpinner.getSelectedItemPosition()).toString();
+        String bdayPrivacy = bdayPrivacySpinner.getItemAtPosition(bdayPrivacySpinner.getSelectedItemPosition()).toString();
+        int redioButtonID = rgGender.getCheckedRadioButtonId();
+
+        // find the radiobutton by returned id
+        radioButton = (RadioButton) findViewById(redioButtonID);
 
         Params query = new Params();
         query.addParam("cg_api_req_name","updatepageowner_details");
-        query.addParam("cg_user_name","");
-        query.addParam("cg_fullname","");
-        query.addParam("cg_email","");
-        query.addParam("cg_mobile","");
-        query.addParam("cg_address","");
-        query.addParam("cg_fcity","");
+        query.addParam("cg_user_name", app.getUserInfo().getCg_info().getCgusername());
+        query.addParam("cg_fullname",(!TextUtils.isEmpty(etName.getText().toString()) ? etName.getText().toString() : ""));
+        query.addParam("cg_email",(!TextUtils.isEmpty(etEmail.getText().toString()) ? etEmail.getText().toString() : ""));
+        query.addParam("cg_mobile",(!TextUtils.isEmpty(etMobile.getText().toString()) ? etMobile.getText().toString() : ""));
+        query.addParam("cg_address",(!TextUtils.isEmpty(etAddress.getText().toString()) ? etAddress.getText().toString() : ""));
+        query.addParam("cg_fcity",(!TextUtils.isEmpty(etCity.getText().toString()) ? etCity.getText().toString() : ""));
+        query.addParam("lcity",(!TextUtils.isEmpty(etCurrentCity.getText().toString()) ? etCurrentCity.getText().toString() : ""));
+        query.addParam("cg_statename",(!TextUtils.isEmpty(etState.getText().toString()) ? etState.getText().toString() : ""));
+        query.addParam("cg_country",country);
+        query.addParam("cg_marriage",martialStatus);
+        query.addParam("cg_uerrcat",category);
+        query.addParam("cg_uerscat",subCategory);
+        query.addParam("cg_gender", radioButton.getText());
+        query.addParam("cg_bday",(!TextUtils.isEmpty(etDay.getText().toString()) ? etDay.getText().toString() : ""));
+        query.addParam("cg_bmonth",(!TextUtils.isEmpty(etMonth.getText().toString()) ? etMonth.getText().toString() : ""));
+        query.addParam("cg_byear",(!TextUtils.isEmpty(etYear.getText().toString()) ? etYear.getText().toString() : ""));
+        query.addParam("cg_bdysecure",bdayPrivacy);
+        query.addParam("cg_aboutu",(!TextUtils.isEmpty(etWhoAreYou.getText().toString()) ? etWhoAreYou.getText().toString() : ""));
+        query.addParam("cg_rprjts",(!TextUtils.isEmpty(etRecentProjects.getText().toString()) ? etRecentProjects.getText().toString() : ""));
+        query.addParam("cg_cptpjts",(!TextUtils.isEmpty(etCompletedProjects.getText().toString()) ? etCompletedProjects.getText().toString() : ""));
+        query.addParam("cg_cawards",(!TextUtils.isEmpty(etAwards.getText().toString()) ? etAwards.getText().toString() : ""));
+        query.addParam("cg_eknwlanguages",(!TextUtils.isEmpty(etLanguagess.getText().toString()) ? etLanguagess.getText().toString() : ""));
+        query.addParam("cg_eknwskills",(!TextUtils.isEmpty(etSkills.getText().toString()) ? etSkills.getText().toString() : ""));
+        query.addParam("cg_eknwhobbies",(!TextUtils.isEmpty(etHobbies.getText().toString()) ? etHobbies.getText().toString() : ""));
+        query.addParam("cg_eknwlikes",(!TextUtils.isEmpty(etLikes.getText().toString()) ? etLikes.getText().toString() : ""));
+        WebServiceWrapper.getInstance().callService(this, WebService.USER_PROFILE_URL, query, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                try {
+                    JSONObject json = new JSONObject(response);
+                    if(json.getString("status").equals("1")){
+                        updateErrorUI("Profile Updated");
+                    }else {
+                        updateErrorUI("Oops! Something wrong");
+                    }
+                    dismissLoader();
+                }catch (Exception e){
+                    updateErrorUI("Please give valid details");
+
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFailure(String response) {
+                updateErrorUI(response);
+                dismissLoader();
+            }
+        });
     }
+
+    private void setSubCatSpinner(String subCat, final String userSubCatValue){
+        Params request = new Params();
+        request.addParam("REQUEST_METHOD","POST");
+        request.addParam("cg_usertype","cineprofession");
+        request.addParam("cg_user_maincatid",subCat);
+
+        WebServiceWrapper.getInstance().callService(this, WebService.SIGNUP_URL, request, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                ProfSubCategory proSubCategory = new Gson().fromJson(response,ProfSubCategory.class);
+                if(proSubCategory!=null){
+                    int length = proSubCategory.getSubcategories().length;
+                    arrSubProCat = new String[length];
+                    for(int i = 0;i < length;i++){
+                        Subcategories subCatObject = proSubCategory.getSubcategories()[i];
+                        arrSubProCat[i] = subCatObject.getSubcat_name();
+                    }
+                    //spinnerSetup(spSubCategory,arrSubProCat,getString(R.string.sub_category_hint));
+                    spinnerSetSubCategory(spSubCategory,arrSubProCat,getString(R.string.sub_category_hint), userSubCatValue);
+                }else {
+                    updateErrorUI("Oops! Something wrong");
+                }
+                dismissLoader();
+            }
+
+            @Override
+            public void onFailure(String response) {
+                updateErrorUI(response);
+                dismissLoader();
+            }
+        });
+    }
+
 
     private void setValuesToViews() {
 
@@ -507,6 +663,21 @@ etAddress.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getAddress()) 
                 rbOthers.setChecked(true);
             }
         }
+        if(!TextUtils.isEmpty(app.getUserPersonal().get(0).getMaincategory())) {
+            setSubCatSpinner(profCategory.get(app.getUserPersonal().get(0).getMaincategory()), app.getUserPersonal().get(0).getSubcategory());
+            int selectedPosition = Integer.parseInt(profCategory.get(app.getUserPersonal().get(0).getMaincategory()));
+            spCategorySpinner.setSelection(selectedPosition-1,false);
+        }
+        if(!TextUtils.isEmpty(app.getUserPersonal().get(0).getSubcategory())) {
+            LogUtils.logRequestDetails("SubCat", app.getUserPersonal().get(0).getSubcategory());
+            for(int i = 0; i < arrSubProCat.length ; i ++){
+                if(app.getUserPersonal().get(0).getSubcategory().equals(arrSubProCat[i])){
+                    spSubCategory.setSelection(i ,false );
+                    LogUtils.logRequestDetails("SubCat", arrSubProCat[i]);
+                }
+            }
+        }
+
     }/*   "full_name": "Prabu Vaiyapuri",
                 "first_name": "Prabu",
                 "last_name": "Vaiyapuri",

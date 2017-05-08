@@ -46,6 +46,9 @@
         <activity android:name=".views.activity.LanguageDialogActivity"
             android:label="Choose language"
             android:theme="@android:style/Theme.Holo.Light.Dialog"/>
+        <activity android:name=".views.activity.SearchUsersActivity"
+            android:label="Search Users"
+            android:theme="@android:style/Theme.Holo.Light.Dialog"/>
     </application>
 
 </manifest>

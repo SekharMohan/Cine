@@ -538,7 +538,17 @@
                     android:lines="3"
                     android:scrollHorizontally="false"
                     android:background="@drawable/edittext_bg"/>
-</android.support.v7.widget.LinearLayoutCompat>
+
+                <Button
+                    android:id="@+id/etSaveButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/button_bg"
+                    android:text="SAVE"
+                    android:textColor="@android:color/white" />
+
+            </android.support.v7.widget.LinearLayoutCompat>
         </RelativeLayout>
     </ScrollView>
 </android.support.v7.widget.LinearLayoutCompat>

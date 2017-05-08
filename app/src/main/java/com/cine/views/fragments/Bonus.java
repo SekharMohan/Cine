@@ -8,12 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cine.CineApplication;
 import com.cine.R;
 import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
 import com.cine.service.model.AdsModel;
+import com.cine.service.model.userinfo.User;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
+import com.cine.utils.AppConstants;
 import com.cine.utils.ToastUtil;
 import com.cine.views.widgets.AdsAdapter;
 import com.cine.views.widgets.Loader;
@@ -33,8 +36,8 @@ public class Bonus extends Fragment implements ICallBack<String> {
 
     @BindView(R.id.adRecyclerView)
     public RecyclerView adRecyclerView;
-
-
+    CineApplication app = CineApplication.getInstance();
+    User info;
     public Bonus() {
         // Required empty public constructor
     }
@@ -50,16 +53,31 @@ public class Bonus extends Fragment implements ICallBack<String> {
         View view = inflater.inflate(R.layout.activity_ads, container, false);
 
         ButterKnife.bind(this,view);
-        apiCall();
+        //apiCall();
         return  view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // ToastUtil.showErrorUpdate(getContext(), "onResume of HomeFragment");
+        if(AppConstants.isFromLanguage) {
+            if (app.getUserInfo() != null) {
+                info = app.getUserInfo();
+                apiCall();
+
+            }
+        }else{
+            AppConstants.isFromLanguage = true;
+        }
+    }
+
     private void apiCall() {
-        Loader.showProgressBar(getContext());
+        //Loader.showProgressBar(getContext());
         Params params=new Params();
 
         params.addParam("cg_api_req_name","getadminad");
-        params.addParam("cg_user_name","prabu944");
+        params.addParam("cg_user_name",info.getCg_info().getCgusername());
         WebServiceWrapper.getInstance().callService(getContext(), WebService.ADPOST,params,this);
     }
 

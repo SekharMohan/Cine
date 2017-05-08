@@ -6,6 +6,8 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import com.cine.CineApplication;
 import com.cine.R;
@@ -24,6 +26,9 @@ import com.cine.views.widgets.HomeFeedAdapter;
 import com.cine.views.widgets.Loader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +55,28 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
     public AppCompatTextView aboutMeView;
     @BindView(R.id.lastVisitedValueTextView)
     public AppCompatTextView lastVisitedView;
+    @BindView(R.id.mwAwardsDescriptionTextView)
+    public AppCompatTextView mwAwardsView;
+    @BindView(R.id.mwCompletedProjectsDescriptionTextView)
+    public AppCompatTextView mwCompletedProjView;
+    @BindView(R.id.mwHobbiesDescriptionTextView)
+    public AppCompatTextView mwHobbiesView;
+    @BindView(R.id.mwKLDescriptionTextView)
+    public AppCompatTextView mwKnownLangView;
+    @BindView(R.id.mwRecentProjectsDescriptionTextView)
+    public AppCompatTextView mwRecentProjView;
+    @BindView(R.id.mwSkillsDescriptionTextView)
+    public AppCompatTextView mwSkillsView;
     @BindView(R.id.center)
     public CircularImageView civProfileImage;
+    @BindView(R.id.contactReqLayout)
+    LinearLayout contactReqLayout;
+    @BindView(R.id.mwEmailReq)
+    ImageButton mwEmailReq;
+    @BindView(R.id.mwMobileNumReq)
+    ImageButton mwMobileNumReq;
+    @BindView(R.id.mwAddressReq)
+    ImageButton mwAddressReq;
     CineApplication app = CineApplication.getInstance();
     private String userName;
 
@@ -63,6 +88,7 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
         userName = getUserName();
         init();
         apiCallWallPost();
+        setUserProfilePic(userName);
         AppConstants.isFromLanguage = false;
     }
 
@@ -136,6 +162,12 @@ lastVisitedView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getLast_
 
         recentProjectsView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getRecent_projects()) ? app.getUserPersonal().get(0).getRecent_projects() : "");
         aboutMeView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getWho_are_you()) ? app.getUserPersonal().get(0).getWho_are_you() : "");
+        mwAwardsView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getAwards()) ? app.getUserPersonal().get(0).getAwards() : "");
+        mwCompletedProjView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getCompleted_projects()) ? app.getUserPersonal().get(0).getCompleted_projects() : "");
+        mwHobbiesView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getHobbies()) ? app.getUserPersonal().get(0).getHobbies() : "");
+        mwKnownLangView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getKnown_languages()) ? app.getUserPersonal().get(0).getKnown_languages() : "");
+        mwRecentProjView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getRecent_projects()) ? app.getUserPersonal().get(0).getRecent_projects() : "");
+        mwSkillsView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getSkills()) ? app.getUserPersonal().get(0).getSkills() : "");
     }
 
     private void dismissLoader() {
@@ -169,5 +201,37 @@ lastVisitedView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getLast_
         myWallFeedView.setAdapter(adapter);
     }
 
+    private void setUserProfilePic(String selectedUserName) {
+        //if(app.getUserInfo()!=null) {
+
+            Params params = new Params();
+/*		cg_api_req_name = getpageowner_details
+		user_name = (pass current username)*/
+            params.addParam("cg_api_req_name", "getuserdata");
+            params.addParam("cg_username", selectedUserName);
+            WebServiceWrapper.getInstance().callService(this, WebService.FEEDS_URL, params, new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+                    try{
+                        JSONObject json = new JSONObject(response);
+                        if(!json.getString("userimgurl").isEmpty()) {
+
+                            Picasso.with(MyWallActivity.this).load("http://www.buyarecaplates.com/" + json.getString("userimgurl")).into(civProfileImage);
+                        }else {
+                            updateErrorUI("Unable to fetch profile picture");
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(String response) {
+                    dismissLoader();
+
+                }
+            });
+//        }
+    }
 
 }
