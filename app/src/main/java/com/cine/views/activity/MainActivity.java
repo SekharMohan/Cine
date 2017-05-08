@@ -510,7 +510,7 @@ private void callWallPostApi(){
             adapter.addFrag(new Events(),events);
 
             viewPager.setAdapter(adapter);
-            viewPager.setOffscreenPageLimit(1);
+
         }
 
 
@@ -557,6 +557,8 @@ private void callWallPostApi(){
             public CharSequence getPageTitle(int position) {
                 return mFragmentTitleList.get(position);
             }
+
+
         }
         @Override
         public void setUserAction(){

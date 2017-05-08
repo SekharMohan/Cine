@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,12 +45,13 @@ public class ImageViewer extends AppCompatActivity{
 //        ArrayList<String> list=getIntent().getExtras().getStringArrayList("docimage");
         downloadUrl = getIntent().getStringExtra("downloadurl");
         imageName = getIntent().getStringExtra("postimage");
-        AppConstants.isFromLanguage = false;
+
         adapter = new ViewPagerAdapter(this, downloadUrl , imageName);
         //adapter = new ViewPagerAdapter(ImageViewer.this, bitmapArray);
         // Binds the Adapter to the ViewPager
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(mChildPosition);
+        AppConstants.isFromLanguage = false;
     }
 
 
@@ -88,7 +90,7 @@ public class ImageViewer extends AppCompatActivity{
                 feedEnlargeImageView = (TouchImageView) itemView.findViewById(R.id.feedEnlargeImageView);
                 //TextView txtImageName = (TextView) itemView.findViewById(R.id.population);
                 // Capture position and set to the ImageView
-                Picasso.with(context).load("http://www.buyarecaplates.com/vpb-wall-photos/" + imageName).resize(400, 400).into(feedEnlargeImageView);
+                Picasso.with(context).load(downloadUrl + imageName).noFade().into(feedEnlargeImageView);
                 /*if (list.get(position) != null) {
 
                     String URL = String.format(Locale.ENGLISH, TransactionConstants.DOWNLOAD_FILE,
@@ -111,7 +113,7 @@ public class ImageViewer extends AppCompatActivity{
 
                     }
                 }*/
-                feedEnlargeImageView.setScaleType(TouchImageView.ScaleType.FIT_CENTER);
+               // feedEnlargeImageView.setScaleType(TouchImageView.ScaleType.CENTER);
                 // Add viewpager_item.xml to ViewPager
                 ((ExtendedViewPager) container).addView(itemView);
 

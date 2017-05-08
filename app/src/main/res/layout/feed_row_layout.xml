@@ -240,7 +240,7 @@ android:id="@+id/relVideoYouTubeView"
 </RelativeLayout>
     <Button
         android:id="@+id/likeButton"
-        android:layout_width="55dp"
+        android:layout_width="60dp"
         android:layout_height="25dp"
         android:layout_below="@+id/feedImageVideoContainer"
         android:background="#FFFFFF"

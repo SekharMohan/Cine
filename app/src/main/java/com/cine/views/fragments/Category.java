@@ -394,10 +394,32 @@ private CineApplication app = CineApplication.getInstance();
         super.onResume();
         if(AppConstants.isFromLanguage) {
             apiCall();
+            subCategoryRelativeLayout.setVisibility(View.GONE);
+            subCatCardView.setVisibility(View.GONE);
+            radioGroup.setVisibility(View.GONE);
+            //super.setUserVisibleHint(true);
         }else{
             AppConstants.isFromLanguage = true;
         }
     }
+
+    /*@Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // load data here
+
+            if(AppConstants.isFromLanguage) {
+                apiCall();
+                subCategoryRelativeLayout.setVisibility(View.GONE);
+                subCatCardView.setVisibility(View.GONE);
+                radioGroup.setVisibility(View.GONE);
+
+            }
+        }else{
+            // fragment is no longer visible
+        }
+    }*/
 
     private void setUp() {
         new AsyncTask<Void, Void, Void>() {
@@ -411,7 +433,7 @@ private CineApplication app = CineApplication.getInstance();
             protected Void doInBackground(Void... params) {
                 FeedModel.Categories[] catArr = LocalStorage.feedModel.getCategories();
                 int length = LocalStorage.feedModel.getCategories().length;
-
+                categoryArr.clear();
                 for(FeedModel.Categories cat:catArr){
                     String catName = cat.getMaincategory_name();
                     category.put(catName,cat.getCategory_id());
