@@ -293,6 +293,7 @@ android:id="@+id/relVideoYouTubeView"
 
 
     <android.support.v7.widget.LinearLayoutCompat
+        android:visibility="gone"
         android:id="@+id/commentViewFromServer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -347,6 +348,7 @@ android:id="@+id/relVideoYouTubeView"
     </android.support.v7.widget.LinearLayoutCompat>
 
     <android.support.v7.widget.LinearLayoutCompat
+        android:visibility="gone"
         android:id="@+id/commentSection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

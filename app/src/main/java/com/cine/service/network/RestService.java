@@ -39,7 +39,7 @@
 			RestService.httpConn = httpConn;
 		}
 
-		public HttpURLConnection executePostResquest(String url,String params)throws IOException {
+		public HttpURLConnection executePostResquest(String url,String params,String contentType)throws IOException {
 
 			Log.d("URL---->",url+params);
 				URL postUrl = new URL(url);
@@ -52,7 +52,7 @@
 			httpConn.setConnectTimeout(15000 /* milliseconds */);
 			httpConn.setRequestProperty("User-Agent", "android");
 			httpConn.setRequestProperty("Accept", "application/json");
-			httpConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			httpConn.setRequestProperty("Content-Type", contentType);
 			httpConn.connect();
 
 		OutputStream os = httpConn.getOutputStream();

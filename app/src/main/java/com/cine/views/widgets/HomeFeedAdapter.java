@@ -115,6 +115,12 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                 "subcategory": "Hero",
                 "userlang_id": "4"
                 }*/
+        holder.commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) mContext).onShowPopup(holder.commentButton);
+            }
+        });
         if(post.getPost_user_language()!=null) {
             holder.languageView.setText(AppUtils.getLanguage(post.getPost_user_language()));
         }else{

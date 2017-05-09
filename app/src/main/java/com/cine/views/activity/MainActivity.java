@@ -17,19 +17,13 @@
     import android.support.v4.app.Fragment;
     import android.support.v4.app.FragmentManager;
     import android.support.v4.app.FragmentPagerAdapter;
-    import android.support.v4.view.MenuItemCompat;
     import android.support.v4.view.ViewPager;
     import android.support.v7.app.AlertDialog;
     import android.support.v7.app.AppCompatActivity;
     import android.support.v7.widget.AppCompatSpinner;
     import android.support.v7.widget.AppCompatTextView;
-
-    import android.support.v7.widget.RecyclerView;
-    import android.support.v7.widget.SearchView;
     import android.support.v7.widget.Toolbar;
-    import android.text.Editable;
     import android.text.TextUtils;
-    import android.text.TextWatcher;
     import android.util.Base64;
     import android.util.DisplayMetrics;
     import android.view.Display;
@@ -45,6 +39,7 @@
     import android.widget.ArrayAdapter;
     import android.widget.Button;
     import android.widget.EditText;
+    import android.widget.ImageView;
     import android.widget.LinearLayout;
     import android.widget.ListView;
     import android.widget.PopupWindow;
@@ -54,7 +49,6 @@
     import com.cine.R;
     import com.cine.service.WebService;
     import com.cine.service.WebServiceWrapper;
-    import com.cine.service.model.Alerts;
     import com.cine.service.model.FeedModel;
     import com.cine.service.network.Params;
     import com.cine.service.network.callback.ICallBack;
@@ -67,11 +61,8 @@
     import com.cine.views.fragments.Events;
     import com.cine.views.fragments.FansClub;
     import com.cine.views.fragments.Home;
-    import com.cine.views.fragments.Language;
-    import com.cine.views.widgets.CircularImageView;
     import com.cine.views.widgets.Loader;
     import com.google.gson.Gson;
-    import com.google.gson.reflect.TypeToken;
 
     import org.json.JSONObject;
 

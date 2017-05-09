@@ -12,13 +12,16 @@ import java.util.Map.Entry;
 
 public class Params {
     private Map<String, Object> params = new HashMap();
-    private String contentType = "plain";
+    private String contentType = "application/x-www-form-urlencoded";
 
     public Params() {
     }
 
     public void setContentType(String type) {
         this.contentType = type;
+    }
+    public String getContentType(){
+        return contentType;
     }
 
     public void addParam(String name, Object value) {

@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:drawableRight="@drawable/ic_search_grey600"
+        android:drawableRight="@drawable/ic_like"
         android:inputType="text" />
 
     <android.support.v7.widget.RecyclerView

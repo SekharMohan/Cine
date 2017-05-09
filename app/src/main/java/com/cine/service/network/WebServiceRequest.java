@@ -75,7 +75,7 @@ public class WebServiceRequest<R extends Object> extends
 
 		else {
 
-			 result= restService.executePostResquest(url,params.getParamList());
+			 result= restService.executePostResquest(url,params.getParamList(),params.getContentType());
 
 		}
 		return setResponse(result);
