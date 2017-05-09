@@ -30,82 +30,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:id="@+id/frameLayout">
-
             <ImageView
-                android:id="@+id/base"
+                android:id="@+id/mwProfileImage"
                 android:layout_height="200dp"
                 android:layout_width="match_parent"
-                android:src="@drawable/background_material"
+
                 />
 
-            <com.cine.views.widgets.CircularImageView
-                android:id="@+id/center"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@mipmap/ic_launcher_round"
-                android:layout_gravity="bottom|center_horizontal"
-                app:civ_border_color="#FFFFFF"
-                app:civ_border_width="2dp"
-                />
-        </FrameLayout>
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/nameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/frameLayout"
-
-            android:layout_centerHorizontal="true"
-            android:textSize="26sp"
+            android:layout_below="@+id/mwProfileImage"
+            android:textSize="20sp"
+            android:layout_marginLeft="5dp"
             android:textStyle="bold"
+            android:layout_marginTop="5dp"
              />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/lastVisitedLayout"
-            android:layout_below="@+id/nameTextView"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/lastVisitedTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-
-                android:text="Last visited"
-                android:textSize="15sp"
-                android:textStyle="bold"
-
-                />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/lastVisitedValueTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-
-                android:text="06:19 AM - Friday,21,Apr"
-                android:textSize="14sp"
-
-
-                />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/contactReqLayout"
-            android:layout_below="@+id/nameTextView"
-            android:layout_marginTop="8dp"
+            android:layout_below="@+id/mwProfileImage"
+
             android:layout_alignParentRight="true"
             android:orientation="horizontal">
-
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
             <ImageButton
                 android:id="@+id/mwEmailReq"
                 android:layout_width="wrap_content"
@@ -117,18 +70,45 @@
                 android:textStyle="bold"
 
                 />
-
+        <TextView
+            android:id="@+id/emailReqCount"
+            android:layout_height="15dp"
+            android:layout_width="15dp"
+            android:text="2"
+            android:layout_alignBottom="@id/mwEmailReq"
+            android:layout_alignRight="@id/mwEmailReq"
+            android:textColor="#fff"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:background="@drawable/textview_bg_count"
+            android:gravity="center_vertical|center_horizontal" />
+        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
             <ImageButton
                 android:id="@+id/mwMobileNumReq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
                 android:src="@drawable/contactreq_mob"
-
-                android:textSize="14sp"
-
-
                 />
+            <TextView
+                android:id="@+id/mobileReqCount"
+                android:layout_height="15dp"
+                android:layout_width="15dp"
+                android:text="2"
+                android:layout_alignBottom="@id/mwMobileNumReq"
+                android:layout_alignRight="@id/mwMobileNumReq"
+                android:textColor="#fff"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:background="@drawable/textview_bg_count"
+                android:gravity="center_vertical|center_horizontal" />
+            </RelativeLayout>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
             <ImageButton
                 android:id="@+id/mwAddressReq"
                 android:layout_width="wrap_content"
@@ -136,17 +116,61 @@
                 android:layout_marginLeft="8dp"
 
                 android:src="@drawable/contactreq_address"
+                />
+            <TextView
+                android:id="@+id/addressReqCount"
+                android:layout_height="15dp"
+                android:layout_width="15dp"
+                android:text="2"
+                android:layout_alignBottom="@id/mwAddressReq"
+                android:layout_alignRight="@id/mwAddressReq"
+                android:textColor="#fff"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:background="@drawable/textview_bg_count"
+                android:gravity="center_vertical|center_horizontal" />
+</RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lastVisitedLayout"
+            android:layout_below="@+id/contactReqLayout"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/lastVisitedTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+
+                android:text="Last visited : "
+                android:textSize="15sp"
+                android:textStyle="bold"
+
+                />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/lastVisitedValueTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+
+                android:text="06:19 AM - Friday,21,Apr"
                 android:textSize="14sp"
 
 
                 />
         </LinearLayout>
 
+
         <android.support.v7.widget.CardView
             android:id="@+id/card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/contactReqLayout"
+            android:layout_below="@+id/lastVisitedLayout"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
@@ -263,6 +287,7 @@
                         android:layout_height="wrap_content"
                         android:text="About Me :"
                         android:textSize="15sp"
+                        android:textColor="#6C9FCB"
                         android:textStyle="bold"/>
 
                     <android.support.v7.widget.AppCompatTextView
@@ -289,6 +314,7 @@
                         android:layout_height="wrap_content"
                         android:text="Recent Projects :"
                         android:textSize="15sp"
+                        android:textColor="#6C9FCB"
                         android:textStyle="bold"/>
 
                     <android.support.v7.widget.AppCompatTextView
@@ -313,6 +339,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Completed Projects :"
+                        android:textColor="#6C9FCB"
                         android:textSize="15sp"
                         android:textStyle="bold"/>
 
@@ -339,6 +366,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Awards :"
+                        android:textColor="#6C9FCB"
                         android:textSize="15sp"
                         android:textStyle="bold"/>
 
@@ -366,6 +394,7 @@
                         android:layout_height="wrap_content"
                         android:text="Known Languages :"
                         android:textSize="15sp"
+                        android:textColor="#6C9FCB"
                         android:textStyle="bold"/>
 
                     <android.support.v7.widget.AppCompatTextView
@@ -373,6 +402,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:maxLines="2"
                         android:text="I'm a director"
                         android:textSize="14sp" />
 
@@ -391,6 +421,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Skills :"
+                        android:textColor="#6C9FCB"
                         android:textSize="15sp"
                         android:textStyle="bold"/>
 
@@ -399,6 +430,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:maxLines="2"
                         android:text="I'm a director"
                         android:textSize="14sp" />
 
@@ -417,6 +449,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hobbies :"
+                        android:textColor="#6C9FCB"
                         android:textSize="15sp"
                         android:textStyle="bold"/>
 

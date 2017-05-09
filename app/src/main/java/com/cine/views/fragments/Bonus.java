@@ -67,8 +67,6 @@ public class Bonus extends Fragment implements ICallBack<String> {
                 apiCall();
 
             }
-        }else{
-            AppConstants.isFromLanguage = true;
         }
     }
 
@@ -97,7 +95,7 @@ public class Bonus extends Fragment implements ICallBack<String> {
     private void setFeedAdapter(ArrayList<AdsModel> adsList) {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         adRecyclerView.setLayoutManager(mLayoutManager);
-        AdsAdapter adsAdapter =new AdsAdapter(adsList,getContext());
+        AdsAdapter adsAdapter =new AdsAdapter(adsList,getActivity());
         adRecyclerView.setAdapter(adsAdapter);
     }
 

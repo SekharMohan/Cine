@@ -31,28 +31,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="250dp"
-                        android:id="@+id/frameLayout">
 
                         <ImageView
-                            android:id="@+id/base"
+                            android:id="@+id/edpProfileImage"
                             android:layout_height="200dp"
                             android:layout_width="match_parent"
-                            android:src="@drawable/background_material"
                             />
 
-                        <com.cine.views.widgets.CircularImageView
-                            android:id="@+id/center"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:src="@mipmap/ic_launcher_round"
-                            android:layout_gravity="bottom|center_horizontal"
-                            app:civ_border_color="#FFFFFF"
-                            app:civ_border_width="2dp"
-                            />
-                    </FrameLayout>
 
                 </RelativeLayout>
 

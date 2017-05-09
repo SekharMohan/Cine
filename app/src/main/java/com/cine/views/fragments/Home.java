@@ -139,9 +139,9 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
                 apiCall();
 
             }
-        }else{
+        }/*else{
             AppConstants.isFromLanguage = true;
-        }
+        }*/
     }
 
     private void setFeedAdapter() {

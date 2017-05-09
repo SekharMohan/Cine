@@ -132,11 +132,27 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
     @Override
     public void onResume() {
         super.onResume();
-        //if(AppConstants.isFromLanguage) {
+        if(AppConstants.isFromLanguage) {
             apiCall();
             setAlertsValue();
-        //}
+        }else {
+            AppConstants.isFromLanguage = true;
+        }
     }
+
+    /*@Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // load data here
+            if(AppConstants.isFromLanguage) {
+                apiCall();
+                setAlertsValue();
+            }
+        }else{
+            // fragment is no longer visible
+        }
+    }*/
 
     @SuppressLint("NewApi")
     private void setAlertsValue() {

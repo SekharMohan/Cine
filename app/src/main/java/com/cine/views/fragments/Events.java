@@ -102,6 +102,17 @@ public class Events extends Fragment implements ICallBack<String> {
         }
     }
 
+   /* @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            // load data here
+
+        }else{
+            // fragment is no longer visible
+        }
+    }*/
+
     private void apiCall() {
         Loader.showProgressBar(getContext());
         Params params=new Params();
@@ -128,7 +139,7 @@ public class Events extends Fragment implements ICallBack<String> {
     private void setFeedAdapter(ArrayList<EventsModel> eventsList) {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         evRecyclerView.setLayoutManager(mLayoutManager);
-        EventsAdapter adsAdapter =new EventsAdapter(eventsList,getContext());
+        EventsAdapter adsAdapter =new EventsAdapter(eventsList,getActivity());
         evRecyclerView.setAdapter(adsAdapter);
     }
 

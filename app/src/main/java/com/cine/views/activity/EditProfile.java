@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -70,8 +71,8 @@ import butterknife.OnClick;
 
 
 public class EditProfile extends AppCompatActivity {
-    @BindView(R.id.center)
-    public CircularImageView civProfileImage;
+    @BindView(R.id.edpProfileImage)
+    public ImageView edpProfileImage;
     private Permission permission;
     @BindView(R.id.editProfileEmail)
     AppCompatEditText etEmail;
@@ -230,7 +231,7 @@ AppCompatEditText etDay;
         setUserProfilePic();
 
         permission =  new Permission(this);
-        civProfileImage.setOnClickListener(new View.OnClickListener() {
+        edpProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectImage();
@@ -329,7 +330,7 @@ AppCompatEditText etDay;
                         JSONObject json = new JSONObject(response);
                         if(!json.getString("userimgurl").isEmpty()) {
 
-                            Picasso.with(EditProfile.this).load("http://www.buyarecaplates.com/" + json.getString("userimgurl")).into(civProfileImage);
+                            Picasso.with(EditProfile.this).load("http://www.buyarecaplates.com/" + json.getString("userimgurl")).into(edpProfileImage);
                         }else {
                             updateErrorUI("Unable to fetch profile picture");
                         }
@@ -466,7 +467,7 @@ AppCompatEditText etDay;
                         @Override
                         public void onSuccess(String response) {
                             dismissLoader();
-                            civProfileImage.setImageBitmap(finalBitmap);
+                            edpProfileImage.setImageBitmap(finalBitmap);
                             try {
                                 JSONObject json = new JSONObject(response);
                                 if (json.getString("status").equals("1")) {

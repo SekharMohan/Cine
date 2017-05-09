@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
@@ -187,9 +189,22 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
             holder.nameOfLikedPersonsTextView.setVisibility(View.GONE);
         }
         Picasso.with(mContext).load("http://www.buyarecaplates.com/" + user_datas[0].getUser_profile()).into(holder.feedCommentUserProfilePic);
-        holder.hoursView.setText(AppUtils.getDateFromMilliSeconds(post.getPost_date()) + ", ");
+        holder.hoursView.setText(!TextUtils.isEmpty(post.getPost_date()) ? post.getPost_date() + ", " : "");
        holder.nameView.setText(post.getPost_user_fullname());
         Picasso.with(mContext).load("http://www.buyarecaplates.com/" + post.getPost_user_image()).into(holder.userProfilePic);
+        holder.userProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(mContext, ImageViewer.class);
+                //i.putExtra("docimage", documentFilesListResponseArrayList);
+
+
+                i.putExtra("downloadurl", "http://www.buyarecaplates.com/");
+                i.putExtra("postimage", post.getPost_user_image());
+                mContext.startActivity(i);
+            }
+        });
+
        holder.professionView.setText((!TextUtils.isEmpty(post.getPost_uscat())) ? ", " + post.getPost_uscat() : "");
        if(post.getPost_photos()==null){
            holder.feedImageView.setVisibility(View.GONE);
@@ -290,11 +305,19 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
 
            if(post.getPost_photos()!=null) {
                holder.feedImageView.setVisibility(View.VISIBLE);
-               Picasso.with(mContext).load("http://www.buyarecaplates.com/vpb-wall-photos/" + post.getPost_photos()).into(holder.feedImageView);
+               if(post.getPost_photos().contains(",")){
+                   String[] images = post.getPost_photos().split(",");
+                   Picasso.with(mContext).load("http://www.buyarecaplates.com/vpb-wall-photos/" + images[0].trim()).into(holder.feedImageView);
+                 }else{
+                   //holder.feedImageView.setVisibility(View.VISIBLE);
+                   Picasso.with(mContext).load("http://www.buyarecaplates.com/vpb-wall-photos/" + post.getPost_photos()).into(holder.feedImageView);
+                  }
+
            }else{
                holder.feedImageView.setVisibility(View.GONE);
            }
        }
+
         holder.nameView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -330,12 +353,19 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
         holder.feedImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String imageToView = "";
+                imageToView = post.getPost_photos();
                 Intent i = new Intent(mContext, ImageViewer.class);
+                if(post.getPost_photos().contains(",")) {
+                    String[] images = post.getPost_photos().split(",");
+                    imageToView = images[0];
+                }
+
                 //i.putExtra("docimage", documentFilesListResponseArrayList);
 
 
                 i.putExtra("downloadurl", "http://www.buyarecaplates.com/vpb-wall-photos/");
-                i.putExtra("postimage", post.getPost_photos());
+                i.putExtra("postimage", imageToView);
                 mContext.startActivity(i);
             }
         });
@@ -355,7 +385,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
         public AppCompatImageButton sendReply;
         public EditText commentEditText,statusEditText;
         public CardView cardViewForStatus;
-        public RelativeLayout relativeLayoutStatusUpdate, relVideoYouTubeView;
+        public RelativeLayout relativeLayoutStatusUpdate, relVideoYouTubeView, feedImageVideoContainer;
 
         public YouTubeThumbnailView youTubeThump;
         public YouTubePlayerSupportFragment youTubePlayerSupportFragment;
@@ -363,6 +393,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
         public MyViewHolder(View view) {
             super(view);
             relativeLayoutStatusUpdate = (RelativeLayout)view.findViewById(R.id.relativeLayoutStatusUpdate);
+            feedImageVideoContainer  = (RelativeLayout)view.findViewById(R.id.feedImageVideoContainer);
             statusEditText = (EditText) view.findViewById(R.id.statusView);
             pickPhoto = (Button) view.findViewById(R.id.pickImage);
             pickVideo = (Button) view.findViewById(R.id.pickVideo);

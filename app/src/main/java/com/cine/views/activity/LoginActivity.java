@@ -17,6 +17,7 @@ import com.cine.service.model.Alerts;
 import com.cine.service.model.userinfo.User;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
+import com.cine.utils.AppConstants;
 import com.cine.utils.PrefUtils;
 import com.cine.utils.ToastUtil;
 import com.cine.utils.ValidationUtil;
@@ -152,7 +153,7 @@ CineApplication app = CineApplication.getInstance();
                 app.setUserInfo(new Gson().fromJson(response, User.class));
                 alertsApiCall();
                 setLastLogin();
-
+                AppConstants.isFromLanguage = true;
                 goToDashBoard();
                 finish();
             }else {
