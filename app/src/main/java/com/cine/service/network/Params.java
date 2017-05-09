@@ -39,7 +39,7 @@ public class Params {
     public String getParamList() {
         Entry entry;
         Iterator var3;
-        if(this.contentType.equals("plain")) {
+        if(this.contentType.equals("application/x-www-form-urlencoded")) {
             StringBuilder json1 = new StringBuilder();
             if(this.params.size() > 0) {
 //                json1.append("?");
