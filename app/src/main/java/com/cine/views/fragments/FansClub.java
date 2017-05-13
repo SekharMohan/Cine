@@ -158,7 +158,15 @@ public class FansClub extends Fragment implements ICallBack<String>,ItemClickLis
     private void setAlertsValue() {
         if(app.getAlertsList()!=null) {
            // ToastUtil.showErrorUpdate(getContext(), app.getAlertsList().get(0).getAlert_title());
-            alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertinfo));
+            if(app.getAlertsList().get(0).getAlert_tyoe().equals("information")) {
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertinfo));
+            }else if(app.getAlertsList().get(0).getAlert_tyoe().equals("warning")){
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alerwarning));
+            }else if(app.getAlertsList().get(0).getAlert_tyoe().equals("success")){
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertsuccess));
+            }else if(app.getAlertsList().get(0).getAlert_tyoe().equals("danger")){
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertdanger));
+            }
             String textColor = AppUtils.getAlertTextColor(app.getAlertsList().get(0).getAlert_tyoe());
             alertsTitle.setText(app.getAlertsList().get(0).getAlert_title());
             alertsTitle.setTextColor(Color.parseColor(textColor));

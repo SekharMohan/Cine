@@ -11,7 +11,11 @@ public class UserPersonal {
 
     private String maincategory;
 
+    private String image_gallery;
+
     private String first_name;
+
+    private String last_visited;
 
     private String birthday_privacy;
 
@@ -26,6 +30,8 @@ public class UserPersonal {
     private String from_city;
 
     private String to_city;
+
+    private String video_gallery;
 
     private String hobbies;
 
@@ -57,8 +63,6 @@ public class UserPersonal {
 
     private String full_name;
 
-    private String last_visited;
-
     public String getSkills ()
     {
         return skills;
@@ -89,6 +93,16 @@ public class UserPersonal {
         this.maincategory = maincategory;
     }
 
+    public String getImage_gallery ()
+    {
+        return image_gallery;
+    }
+
+    public void setImage_gallery (String image_gallery)
+    {
+        this.image_gallery = image_gallery;
+    }
+
     public String getFirst_name ()
     {
         return first_name;
@@ -97,6 +111,16 @@ public class UserPersonal {
     public void setFirst_name (String first_name)
     {
         this.first_name = first_name;
+    }
+
+    public String getLast_visited ()
+    {
+        return last_visited;
+    }
+
+    public void setLast_visited (String last_visited)
+    {
+        this.last_visited = last_visited;
     }
 
     public String getBirthday_privacy ()
@@ -167,6 +191,16 @@ public class UserPersonal {
     public void setTo_city (String to_city)
     {
         this.to_city = to_city;
+    }
+
+    public String getVideo_gallery ()
+    {
+        return video_gallery;
+    }
+
+    public void setVideo_gallery (String video_gallery)
+    {
+        this.video_gallery = video_gallery;
     }
 
     public String getHobbies ()
@@ -317,13 +351,5 @@ public class UserPersonal {
     public void setFull_name (String full_name)
     {
         this.full_name = full_name;
-    }
-
-    public String getLast_visited() {
-        return last_visited;
-    }
-
-    public void setLast_visited(String last_visited) {
-        this.last_visited = last_visited;
     }
 }

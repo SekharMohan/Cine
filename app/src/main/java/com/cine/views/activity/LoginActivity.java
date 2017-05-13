@@ -151,7 +151,7 @@ CineApplication app = CineApplication.getInstance();
             if(json.getString("cg_log_status").equals("1")) {
 
                 app.setUserInfo(new Gson().fromJson(response, User.class));
-                alertsApiCall();
+                //alertsApiCall();
                 setLastLogin();
                 AppConstants.isFromLanguage = true;
                 goToDashBoard();

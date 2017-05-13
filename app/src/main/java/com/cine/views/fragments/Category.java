@@ -118,6 +118,7 @@ private CineApplication app = CineApplication.getInstance();
         wallRadioButton = (RadioButton)view.findViewById(R.id.radioWall);
         ButterKnife.bind(this,view);
 //        apiCall();
+
         init();
 
         return  view;
@@ -213,7 +214,15 @@ private CineApplication app = CineApplication.getInstance();
     private void setAlertsValue() {
         if(app.getAlertsList()!=null) {
             //ToastUtil.showErrorUpdate(getContext(), app.getAlertsList().get(0).getAlert_title());
-            alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertinfo));
+            if(app.getAlertsList().get(0).getAlert_tyoe().equals("information")) {
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertinfo));
+            }else if(app.getAlertsList().get(0).getAlert_tyoe().equals("warning")){
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alerwarning));
+            }else if(app.getAlertsList().get(0).getAlert_tyoe().equals("success")){
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertsuccess));
+            }else if(app.getAlertsList().get(0).getAlert_tyoe().equals("danger")){
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertdanger));
+            }
             String textColor = AppUtils.getAlertTextColor(app.getAlertsList().get(0).getAlert_tyoe());
             alertsTitle.setText(app.getAlertsList().get(0).getAlert_title());
             alertsTitle.setTextColor(Color.parseColor(textColor));
@@ -403,23 +412,17 @@ private CineApplication app = CineApplication.getInstance();
         }
     }
 
-    /*@Override
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // load data here
 
-            if(AppConstants.isFromLanguage) {
-                apiCall();
-                subCategoryRelativeLayout.setVisibility(View.GONE);
-                subCatCardView.setVisibility(View.GONE);
-                radioGroup.setVisibility(View.GONE);
-
-            }
+            setAlertsValue();
         }else{
             // fragment is no longer visible
         }
-    }*/
+    }
 
     private void setUp() {
         new AsyncTask<Void, Void, Void>() {
@@ -533,7 +536,7 @@ private CineApplication app = CineApplication.getInstance();
     public void onSuccess(String response) {
         LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
         setFeedAdapter();
-        setAlertsValue();
+
         setUp();
         dismissLoader();
     }

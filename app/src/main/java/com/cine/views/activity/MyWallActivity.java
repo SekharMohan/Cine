@@ -4,15 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cine.CineApplication;
@@ -29,6 +32,7 @@ import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
 import com.cine.utils.ValidationUtil;
 import com.cine.views.widgets.CircularImageView;
+import com.cine.views.widgets.GalleryImagesAdapter;
 import com.cine.views.widgets.HomeFeedAdapter;
 import com.cine.views.widgets.Loader;
 import com.google.gson.Gson;
@@ -38,6 +42,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -90,11 +95,24 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
     TextView emailReqCount;
     @BindView(R.id.mobileReqCount)
     TextView mobileReqCount;
+    @BindView(R.id.mwRelativeImageGallery)
+    RelativeLayout mwRelativeImageGallery;
+    @BindView(R.id.mwRelativeVideoGallery)
+    RelativeLayout mwRelativeVideoGallery;
+    @BindView(R.id.mwImageGalleryTExtView)
+    TextView mwImageGalleryTExtView;
+    @BindView(R.id.mwVideoGalleryTExtView)
+    TextView mwVideoGalleryTExtView;
+    @BindView(R.id.mwImageGalleryRecycler)
+    RecyclerView mwImageGalleryRecycler;
+    @BindView(R.id.mwVideoGalleryRecycler)
+    RecyclerView mwVideoGalleryRecycler;
 
     CineApplication app = CineApplication.getInstance();
     private String userName;
     private String userType;
     private String userPicName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +168,18 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
                 startActivity(i);
             }
         });
+        mwRelativeImageGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mwImageGalleryRecycler.getVisibility() == View.VISIBLE) {
+                    // Its visible
+                     mwImageGalleryRecycler.setVisibility(View.GONE);
+                } else {
+                    // Either gone or invisible
+                    mwImageGalleryRecycler.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
 
@@ -194,8 +224,9 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
 
     private void setValuesToViews() {
 
+        List<String> galleryVideoList = new ArrayList<String>(Arrays.asList(app.getUserPersonal().get(0).getVideo_gallery().split(",")));
         mwNameView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getFull_name()) ? app.getUserPersonal().get(0).getFull_name() : "");
-lastVisitedView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getLast_visited()) ? app.getUserPersonal().get(0).getLast_visited() : "");
+        lastVisitedView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getLast_visited()) ? app.getUserPersonal().get(0).getLast_visited() : "");
         professionView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getSubcategory()) ? app.getUserPersonal().get(0).getSubcategory() : "");
 
         genderCityStatusView.setText(app.getUserPersonal().get(0).getFrom_city() + "," + app.getUserPersonal().get(0).getState());
@@ -211,6 +242,18 @@ lastVisitedView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getLast_
         mwKnownLangView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getKnown_languages()) ? app.getUserPersonal().get(0).getKnown_languages() : "");
         mwRecentProjView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getRecent_projects()) ? app.getUserPersonal().get(0).getRecent_projects() : "");
         mwSkillsView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getSkills()) ? app.getUserPersonal().get(0).getSkills() : "");
+        List<String> galleryImageList = new ArrayList<String>(Arrays.asList(app.getUserPersonal().get(0).getImage_gallery().split(",")));
+        setGalleryAdapter(galleryImageList);
+    }
+
+    private void setGalleryAdapter(List<String> galleryImageList) {
+        ToastUtil.showErrorUpdate(this, galleryImageList.get(0));
+        Log.i("imagename" ,galleryImageList.get(0));
+        GridLayoutManager mLayoutManager = new GridLayoutManager(MyWallActivity.this, 3);
+        mwImageGalleryRecycler.setLayoutManager(mLayoutManager);
+        GalleryImagesAdapter adapter =new GalleryImagesAdapter(galleryImageList, this);
+        mwImageGalleryRecycler.setAdapter(adapter);
+        dismissLoader();
     }
 
     private void dismissLoader() {
@@ -243,7 +286,7 @@ lastVisitedView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getLast_
         HomeFeedAdapter adapter =new HomeFeedAdapter(LocalStorage.feedModel.getCommonwall_posts(), this, false, LocalStorage.feedModel.getUser_datas());
         userType = LocalStorage.feedModel.getUser_datas()[0].getMaincategory();
         myWallFeedView.setAdapter(adapter);
-        dismissLoader();
+
         //setCurrentRequests(userType);
     }
 

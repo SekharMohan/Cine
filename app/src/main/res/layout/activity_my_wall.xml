@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
@@ -466,11 +467,77 @@
             </android.support.v7.widget.LinearLayoutCompat>
         </android.support.v7.widget.CardView>
     </RelativeLayout>
+        <android.support.v7.widget.CardView
+            android:id="@+id/mwImagesCatcard_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/relLayout"
+            card_view:cardCornerRadius="2dp"
+            card_view:contentPadding="8dp">
+        <RelativeLayout
+            android:id="@+id/mwRelativeImageGallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relLayout"
+            >
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/mwImageGalleryTExtView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Image Gallery"
+                />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mwImageGalleryRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/mwImageGalleryTExtView"/>
+        </RelativeLayout>
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:id="@+id/mwVideocard_view"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/mwImagesCatcard_view"
+            card_view:cardCornerRadius="2dp"
+            card_view:contentPadding="8dp">
+        <RelativeLayout
+            android:id="@+id/mwRelativeVideoGallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            >
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/mwVideoGalleryTExtView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Video Gallery"
+                />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mwVideoGalleryRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/mwVideoGalleryTExtView"/>
+        </RelativeLayout>
+        </android.support.v7.widget.CardView>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/myWallFeedView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/relLayout"
+            android:layout_below="@+id/mwVideocard_view"
             android:layout_marginTop="5dp">
 
         </android.support.v7.widget.RecyclerView>
