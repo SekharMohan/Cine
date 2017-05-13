@@ -1,8 +1,11 @@
 package com.cine.utils;
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageInfo;
+import android.graphics.drawable.Drawable;
 
 import com.cine.CineApplication;
+import com.cine.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,6 +23,7 @@ public class AppUtils {
     private static final int HOUR = 60 * MINUTE;
     private static final int DAY = 24 * HOUR;
     private static final int WEEK = 7 * DAY;
+
 
     public static int getVersionCode() {
         PackageInfo pInfo;
@@ -88,21 +92,52 @@ public class AppUtils {
 
     public static String getAlertTextColor(String alertType){
         String textColor = "";
+
         switch (alertType){
             case "information":
                 textColor = "#379BB8";
+
                 break;
             case "warning":
-                textColor = "#379BB8";
+
+                textColor = "#807360";
                 break;
             case "success":
-                textColor = "#379BB8";
+
+                textColor = "#66825C";
                 break;
             case "danger":
-                textColor = "#379BB8";
+
+                textColor = "#936567";
                 break;
 
         }
         return textColor;
+    }
+
+    @SuppressLint("NewApi")
+    public static Drawable getAlertBackground(String alertType){
+        Drawable bgDrawable = null;
+        CineApplication app = CineApplication.getInstance();
+        switch (alertType){
+            case "information":
+
+                bgDrawable = app.getApplicationContext().getDrawable(R.drawable.alertinfo);
+                break;
+            case "warning":
+                bgDrawable = app.getApplicationContext().getDrawable(R.drawable.alerwarning);
+
+                break;
+                case "success":
+                bgDrawable = app.getApplicationContext().getDrawable(R.drawable.alertsuccess);
+
+                break;
+            case "danger":
+                bgDrawable = app.getApplicationContext().getDrawable(R.drawable.alertdanger);
+
+                break;
+
+        }
+        return bgDrawable;
     }
 }

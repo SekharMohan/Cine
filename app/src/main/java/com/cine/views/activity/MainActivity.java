@@ -39,6 +39,7 @@
     import android.widget.ArrayAdapter;
     import android.widget.Button;
     import android.widget.EditText;
+    import android.widget.ExpandableListView;
     import android.widget.ImageView;
     import android.widget.LinearLayout;
     import android.widget.ListView;
@@ -753,7 +754,7 @@ return  false;
             // inflate the custom popup layout
         View    inflatedView = layoutInflater.inflate(R.layout.comment_xml, null,false);
             // find the ListView in the popup layout
-            ListView listView = (ListView)inflatedView.findViewById(R.id.commentsListView);
+            ExpandableListView listView = (ExpandableListView)inflatedView.findViewById(R.id.commentsListView);
             LinearLayout headerView = (LinearLayout)inflatedView.findViewById(R.id.headerLayout);
             // get device size
             Display display = getWindowManager().getDefaultDisplay();

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/inner_padding_medium">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/inner_padding_medium"
+        android:paddingRight="@dimen/inner_padding_medium"
+        android:paddingTop="@dimen/inner_padding_small"
+        android:paddingBottom="@dimen/inner_padding_small">
+        <ImageView
+            android:id="@+id/comment_avatar"
+            android:layout_width="@dimen/avatar_size_medium"
+            android:layout_height="@dimen/avatar_size_medium"
+            android:src="@drawable/ic_user"
+            android:padding="@dimen/avatar_padding_medium"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/inner_padding_medium">
+            <TextView
+                android:id="@+id/comment_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:layout_marginBottom="@dimen/inner_padding_small"
+                android:text="username"/>
+            <TextView
+                android:id="@+id/comment_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_marginBottom="@dimen/inner_padding_small"
+                android:text="adbdfa;sdl sad ;asdl asld ;asld;asedwad [qd ashd asdjsad "/>
+            <LinearLayout
+                android:layout_weight="2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_gravity="left|center_vertical"
+                android:text="Reply"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_weight="1"
+                android:gravity="end"
+                android:id="@+id/comment_date"
+                android:layout_gravity="end|center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:text="25.05.2017"
+                android:textAlignment="center"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:weightSum="3"
+        android:id="@+id/reply_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        >
+
+
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/writeComment"
+            android:hint="Reply to comment"
+            android:gravity="left|center_vertical"
+            android:layout_weight="3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:maxLines="2"
+            android:focusable="true"
+            android:layout_marginLeft="2dp"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:background="#00000000"/>
+
+        <ImageButton
+            android:id="@+id/comment_action_send"
+            android:layout_width="wrap_content"
+            android:minWidth="@dimen/action_icon_medium"
+            android:layout_height="@dimen/action_icon_medium"
+            android:background="@color/colorTransparent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:padding="@dimen/action_icon_padding_medium"
+            android:src="@drawable/ic_action_send" />
+    </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

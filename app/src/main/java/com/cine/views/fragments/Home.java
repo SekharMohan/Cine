@@ -45,7 +45,7 @@ import butterknife.ButterKnife;
 import static android.app.Activity.RESULT_OK;
 
 
-public class Home extends Fragment implements ICallBack<String>, View.OnClickListener ,SwipeRefreshLayout.OnRefreshListener{
+public class Home extends Fragment implements ICallBack<String>, SwipeRefreshLayout.OnRefreshListener{
 
     @BindView(R.id.feedView)
     public RecyclerView homeFeedView;
@@ -100,7 +100,15 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     private void setAlertsValue() {
         if(app.getAlertsList()!=null) {
             //ToastUtil.showErrorUpdate(getContext(), app.getAlertsList().get(0).getAlert_title());
-            alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertinfo));
+            if(app.getAlertsList().get(0).getAlert_tyoe().equals("information")) {
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertinfo));
+            }else if(app.getAlertsList().get(0).getAlert_tyoe().equals("warning")){
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alerwarning));
+            }else if(app.getAlertsList().get(0).getAlert_tyoe().equals("success")){
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertsuccess));
+            }else if(app.getAlertsList().get(0).getAlert_tyoe().equals("danger")){
+                alertsRelativeLayout.setBackground(getResources().getDrawable(R.drawable.alertdanger));
+            }
             String textColor = AppUtils.getAlertTextColor(app.getAlertsList().get(0).getAlert_tyoe());
             alertsTitle.setText(app.getAlertsList().get(0).getAlert_title());
             alertsTitle.setTextColor(Color.parseColor(textColor));
@@ -112,6 +120,7 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
                 alertsImage.setVisibility(View.GONE);
             }
         }
+        dismissLoader();
     }
 
 
@@ -137,7 +146,7 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
             if (app.getUserInfo() != null) {
                 info = app.getUserInfo();
                 apiCall();
-
+                alertsApiCall();
             }
         }/*else{
             AppConstants.isFromLanguage = true;
@@ -155,9 +164,9 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
     public void onSuccess(String response) {
         LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
         setFeedAdapter();
-        setAlertsValue();
+
         dimissSwipeLayout();
-        dismissLoader();
+
     }
 
     @Override
@@ -175,37 +184,35 @@ public class Home extends Fragment implements ICallBack<String>, View.OnClickLis
         ToastUtil.showErrorUpdate(getContext(), errorMsg);
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-/*
-            case R.id.pickImage:
-                openImageChooser();
-                break;
+    private void alertsApiCall(){
+        //Loader.showProgressBar(getContext());
+        Params query = new Params();
 
-            case R.id.pickVideo:
+        final CineApplication app =  CineApplication.getInstance();
+        query.addParam("cg_api_req_name", "getpagealerts");
+        query.addParam("cg_user_name", info.getCg_info().getCgusername());
+        WebServiceWrapper.getInstance().callService(getContext(), WebService.ALERTS_URL, query, new ICallBack<String>() {
+            @Override
+            public void onSuccess(String response) {
+                dismissLoader();
+                try {
+                    app.setAlertsList((List<Alerts>) new Gson().fromJson(response,new TypeToken<ArrayList<Alerts>>(){}.getType()));
+                setAlertsValue();
+                    // ArrayList<Alerts> eventsList = new Gson().fromJson(response,new TypeToken<ArrayList<Alerts>>(){}.getType());
+                    //app.setAlertsList(eventsList);
 
-                break;
-*/
-        }
-    }
-
-    private void openImageChooser() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-
-                Uri selectedImageUri = data.getData();
-
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
 
             }
-        }
+
+            @Override
+            public void onFailure(String response) {
+                updateErrorUI(response);
+                dismissLoader();
+            }
+        });
     }
 
     @Override

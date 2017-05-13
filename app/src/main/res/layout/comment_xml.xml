@@ -23,7 +23,7 @@
             android:layout_margin="5dp"/>
     </LinearLayout>
 
-    <ListView
+    <ExpandableListView
         android:id="@+id/commentsListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,6 +32,7 @@
         android:layout_marginBottom="0dp"/>
 
     <LinearLayout
+        android:weightSum="3"
         android:id="@+id/comment_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -44,15 +45,34 @@
         android:gravity="center"
         >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxHeight="30dp"
-            android:minHeight="20dp"
-            android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher"
-            />
-        <EditText
+
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/writeComment"
+                android:hint="Write a Comment"
+                android:gravity="left|center_vertical"
+                android:layout_weight="3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:maxLines="2"
+                android:focusable="true"
+                android:layout_marginLeft="2dp"
+                android:textSize="12sp"
+                android:textColor="@android:color/black"
+                android:background="#00000000"/>
+
+            <ImageButton
+                android:id="@+id/comment_action_send"
+                android:layout_width="wrap_content"
+                android:minWidth="@dimen/action_icon_medium"
+                android:layout_height="@dimen/action_icon_medium"
+                android:background="@color/colorTransparent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:padding="@dimen/action_icon_padding_medium"
+                android:src="@drawable/ic_action_send" />
+        </LinearLayout>
+       <!-- <EditText
             android:id="@+id/writeComment"
             android:hint="Write a Comment"
             android:layout_width="match_parent"
@@ -62,8 +82,8 @@
             android:layout_marginLeft="2dp"
             android:textSize="12sp"
             android:textColor="@android:color/black"
-            android:background="#00000000"/>
+            android:background="#00000000"/>-->
 
-    </LinearLayout>
+
 
 </RelativeLayout>

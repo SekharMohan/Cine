@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.cine.CineApplication;
 import com.cine.R;
@@ -151,7 +150,7 @@ CineApplication app = CineApplication.getInstance();
             if(json.getString("cg_log_status").equals("1")) {
 
                 app.setUserInfo(new Gson().fromJson(response, User.class));
-                alertsApiCall();
+                //alertsApiCall();
                 setLastLogin();
                 AppConstants.isFromLanguage = true;
                 goToDashBoard();
