@@ -31,6 +31,7 @@ import com.cine.utils.AppConstants;
 import com.cine.utils.LocalStorage;
 import com.cine.utils.ToastUtil;
 import com.cine.utils.ValidationUtil;
+import com.cine.views.widgets.CircularImageView;
 import com.cine.views.widgets.GalleryImagesAdapter;
 import com.cine.views.widgets.HomeFeedAdapter;
 import com.cine.views.widgets.Loader;
@@ -41,6 +42,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -222,7 +224,7 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
 
     private void setValuesToViews() {
 
-//        List<String> galleryVideoList = new ArrayList<String>(Arrays.asList(app.getUserPersonal().get(0).getVideo_gallery().split(",")));
+        List<String> galleryVideoList = new ArrayList<String>(Arrays.asList(app.getUserPersonal().get(0).getVideo_gallery().split(",")));
         mwNameView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getFull_name()) ? app.getUserPersonal().get(0).getFull_name() : "");
         lastVisitedView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getLast_visited()) ? app.getUserPersonal().get(0).getLast_visited() : "");
         professionView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getSubcategory()) ? app.getUserPersonal().get(0).getSubcategory() : "");
@@ -240,8 +242,8 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
         mwKnownLangView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getKnown_languages()) ? app.getUserPersonal().get(0).getKnown_languages() : "");
         mwRecentProjView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getRecent_projects()) ? app.getUserPersonal().get(0).getRecent_projects() : "");
         mwSkillsView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getSkills()) ? app.getUserPersonal().get(0).getSkills() : "");
-        //List<String> galleryImageList = new ArrayList<String>(Arrays.asList(app.getUserPersonal().get(0).getImage_gallery().split(",")));//
-     //   setGalleryAdapter(galleryImageList);
+        List<String> galleryImageList = new ArrayList<String>(Arrays.asList(app.getUserPersonal().get(0).getImage_gallery().split(",")));
+        setGalleryAdapter(galleryImageList);
     }
 
     private void setGalleryAdapter(List<String> galleryImageList) {
