@@ -117,7 +117,7 @@
                 comts.tvComments.setText(entry.getValue().toString());
 
             }
-    comts.tvCommentCount.setText(commentItem.size()+" People are commented");
+    comts.tvCommentCount.setText(commentItem.size()+" people have discussed");
 
             return convertView;
         }

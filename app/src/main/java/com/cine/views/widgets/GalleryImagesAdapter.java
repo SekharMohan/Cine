@@ -2,6 +2,7 @@ package com.cine.views.widgets;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,9 @@ public class GalleryImagesAdapter extends RecyclerView.Adapter<GalleryImagesAdap
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Picasso.with(context).load("http://www.buyarecaplates.com/vpb-wall-photos/" + imagesList.get(position)).into(holder.galleryImageView);
+        if(!TextUtils.isEmpty(imagesList.get(position))) {
+            Picasso.with(context).load("http://www.buyarecaplates.com/vpb-wall-photos/" + imagesList.get(position)).into(holder.galleryImageView);
+        }
     }
 
     @Override
