@@ -17,8 +17,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
@@ -86,7 +84,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
 
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final  int position) {
 
         final FeedModel.Commonwall_posts post = commonwall_posts[position];
 
@@ -115,10 +113,11 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                 "subcategory": "Hero",
                 "userlang_id": "4"
                 }*/
+
         holder.commentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) mContext).onShowPopup(holder.commentButton);
+                ((MainActivity) mContext).onShowPopup(holder.commentButton,commonwall_posts[position],position);
             }
         });
         if(post.getPost_user_language()!=null) {
@@ -190,7 +189,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
         }
         if(!TextUtils.isEmpty(post.getPost_likes())){
             holder.nameOfLikedPersonsTextView.setVisibility(View.VISIBLE);
-            holder.nameOfLikedPersonsTextView.setText(post.getPost_likes() + "likes this");
+            setLikes(holder.nameOfLikedPersonsTextView,post.getPost_likes());
+//            holder.nameOfLikedPersonsTextView.setText(post.getPost_likes() + "likes this");
         }else{
             holder.nameOfLikedPersonsTextView.setVisibility(View.GONE);
         }
@@ -338,6 +338,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
             @Override
             public void onClick(View v) {
                 /// button click event
+
                 if (holder.likeButton.getTextColors().getDefaultColor() == Color.parseColor("#FFFFFF")) {
                     holder.likeButton.setBackgroundResource(R.drawable.button_click);
                     holder.likeButton.setTextColor(Color.BLACK);
@@ -346,6 +347,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                     holder.likeButton.setTextColor(Color.parseColor("#FFFFFF"));
 
                 }
+                callLikeApi(commonwall_posts[position]);
             }
         });
         holder.commentEditText.setOnClickListener(new View.OnClickListener() {
@@ -375,6 +377,31 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.MyView
                 mContext.startActivity(i);
             }
         });
+    }
+
+    private void setLikes(AppCompatTextView nameOfLikedPersonsTextView, String post_likes) {
+        String[] likesArr = post_likes.split(",");
+        String personLiked = "";
+        for(String likes:likesArr){
+            String whoLiked[] = likes.split("-");
+            if(whoLiked[1].equals(app.getUserInfo().getCg_info().getCgusername())){
+                if(personLiked.isEmpty()) {
+                    personLiked += "You";
+                }else{
+                    personLiked  +=","+whoLiked[1];
+                }
+            }else
+            {
+                if(personLiked.isEmpty()) {
+                    personLiked += whoLiked[1];
+                }else{
+                    personLiked  +=","+whoLiked[1];
+                }
+            }
+        }
+        if(!personLiked.isEmpty()) {
+            nameOfLikedPersonsTextView.setText(personLiked+" admire this");
+        }
     }
 
     @Override
@@ -542,5 +569,32 @@ private void showLoader(){
         });
     }
 
+    void callLikeApi(FeedModel.Commonwall_posts commonwall_post){
+        if(app.getUserInfo()!=null) {
 
+            Cg_info obj = app.getUserInfo().getCg_info();
+            Loader.showProgressBar(mContext);
+            Params params = new Params();
+
+            params.addParam("REQUEST_METHOD", "POST");
+            params.addParam("cg_api_req_name", "newlike");
+            params.addParam("cg_username", obj.getCgusername());
+            params.addParam("post_id", commonwall_post.getPost_id());
+            WebServiceWrapper.getInstance().callService(mContext, WebService.FEEDS_URL, params, new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+
+                   apiCall();
+                }
+
+                @Override
+                public void onFailure(String response) {
+                    dismissLoader();
+                }
+            });
+        }
+    }
+    private void dismissLoader() {
+        Loader.dismissProgressBar();
+    }
 }

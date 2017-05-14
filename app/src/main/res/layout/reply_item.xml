@@ -67,7 +67,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="gone"
+        android:visibility="visible"
         android:weightSum="3"
         android:id="@+id/reply_section"
         android:layout_width="match_parent"

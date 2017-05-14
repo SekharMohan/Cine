@@ -14,10 +14,11 @@
         android:gravity="center">
 
         <TextView
+            android:id="@+id/comment_count"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Some One and 20 Others Like this"
+            android:text="Yet to comment"
             android:textColor="@android:color/black"
             android:textStyle="bold"
             android:layout_margin="5dp"/>
@@ -70,7 +71,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:padding="@dimen/action_icon_padding_medium"
-                android:src="@drawable/ic_action_send" />
+                android:src="@drawable/ic_send" />
         </LinearLayout>
        <!-- <EditText
             android:id="@+id/writeComment"
