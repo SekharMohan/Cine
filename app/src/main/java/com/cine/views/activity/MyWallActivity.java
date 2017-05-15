@@ -24,6 +24,7 @@ import com.cine.service.WebService;
 import com.cine.service.WebServiceWrapper;
 import com.cine.service.model.FeedModel;
 import com.cine.service.model.GetCurrecntRequestsModel;
+import com.cine.service.model.GetReqStatusModel;
 import com.cine.service.model.userinfo.UserPersonal;
 import com.cine.service.network.Params;
 import com.cine.service.network.callback.ICallBack;
@@ -33,6 +34,7 @@ import com.cine.utils.ToastUtil;
 import com.cine.utils.ValidationUtil;
 import com.cine.views.widgets.CircularImageView;
 import com.cine.views.widgets.GalleryImagesAdapter;
+import com.cine.views.widgets.GalleryVideoAdapter;
 import com.cine.views.widgets.HomeFeedAdapter;
 import com.cine.views.widgets.Loader;
 import com.google.gson.Gson;
@@ -112,7 +114,8 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
     private String userName;
     private String userType;
     private String userPicName;
-
+    String[] reqUserName;
+    String[] reqUserFullName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +126,11 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
         init();
         apiCallWallPost();
         setUserProfilePic(userName);
-
+        if(userName.equals(app.getUserInfo().getCg_info().getCgusername())){
+          //  setCurrentRequests(userName);
+        }else {
+            getRequestStatus(userName);
+        }
     }
 
     @Override
@@ -180,6 +187,18 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
                 }
             }
         });
+        mwRelativeVideoGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mwVideoGalleryRecycler.getVisibility() == View.VISIBLE) {
+                    // Its visible
+                    mwVideoGalleryRecycler.setVisibility(View.GONE);
+                } else {
+                    // Either gone or invisible
+                    mwVideoGalleryRecycler.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
 
@@ -224,7 +243,7 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
 
     private void setValuesToViews() {
 
-        List<String> galleryVideoList = new ArrayList<String>(Arrays.asList(app.getUserPersonal().get(0).getVideo_gallery().split(",")));
+
         mwNameView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getFull_name()) ? app.getUserPersonal().get(0).getFull_name() : "");
         lastVisitedView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getLast_visited()) ? app.getUserPersonal().get(0).getLast_visited() : "");
         professionView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getSubcategory()) ? app.getUserPersonal().get(0).getSubcategory() : "");
@@ -243,17 +262,31 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
         mwRecentProjView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getRecent_projects()) ? app.getUserPersonal().get(0).getRecent_projects() : "");
         mwSkillsView.setText(!TextUtils.isEmpty(app.getUserPersonal().get(0).getSkills()) ? app.getUserPersonal().get(0).getSkills() : "");
         List<String> galleryImageList = new ArrayList<String>(Arrays.asList(app.getUserPersonal().get(0).getImage_gallery().split(",")));
-        setGalleryAdapter(galleryImageList);
+        setGalleryImageAdapter(galleryImageList);
+        List<String> galleryVideoList = new ArrayList<String>(Arrays.asList(app.getUserPersonal().get(0).getVideo_gallery().split(",")));
+        setGalleryVideoAdapter(galleryVideoList);
     }
 
-    private void setGalleryAdapter(List<String> galleryImageList) {
-        ToastUtil.showErrorUpdate(this, galleryImageList.get(0));
-        Log.i("imagename" ,galleryImageList.get(0));
-        GridLayoutManager mLayoutManager = new GridLayoutManager(MyWallActivity.this, 3);
-        mwImageGalleryRecycler.setLayoutManager(mLayoutManager);
-        GalleryImagesAdapter adapter =new GalleryImagesAdapter(galleryImageList, this);
-        mwImageGalleryRecycler.setAdapter(adapter);
-        dismissLoader();
+    private void setGalleryImageAdapter(List<String> galleryImageList) {
+        if(galleryImageList!=null) {
+            Log.i("imagename", galleryImageList.get(0));
+            GridLayoutManager mLayoutManager = new GridLayoutManager(MyWallActivity.this, 3);
+            mwImageGalleryRecycler.setLayoutManager(mLayoutManager);
+            GalleryImagesAdapter adapter = new GalleryImagesAdapter(galleryImageList, this);
+            mwImageGalleryRecycler.setAdapter(adapter);
+            dismissLoader();
+        }
+    }
+
+    private void setGalleryVideoAdapter(List<String> galleryVideoList) {
+        if(galleryVideoList!=null) {
+            Log.i("videoone", galleryVideoList.get(0));
+            GridLayoutManager mLayoutManager = new GridLayoutManager(MyWallActivity.this, 3);
+            mwVideoGalleryRecycler.setLayoutManager(mLayoutManager);
+            GalleryVideoAdapter adapter = new GalleryVideoAdapter(galleryVideoList, this);
+            mwVideoGalleryRecycler.setAdapter(adapter);
+            dismissLoader();
+        }
     }
 
     private void dismissLoader() {
@@ -290,13 +323,40 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
         //setCurrentRequests(userType);
     }
 
-    private void setCurrentRequests(String reqUserType) {
-        if((!reqUserType.equals("Fans")) && (userName.equals(app.getUserInfo().getCg_info().getCgusername()))){
+    private void getRequestStatus(String profileName){
+        if(!(profileName.equals(app.getUserInfo().getCg_info().getCgusername()))){
+            Params params = new Params();
+
+            params.addParam("cg_api_req_name", "checkstatus");
+            params.addParam("cg_session_user_name", app.getUserInfo().getCg_info().getCgusername());
+            params.addParam("cg_page_user_name", profileName);
+            WebServiceWrapper.getInstance().callService(this, WebService.REQUEST_URL, params, new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+                    try{
+                        LocalStorage.getRequestStatusModel = new Gson().fromJson(response,GetReqStatusModel.class);
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(String response) {
+                    dismissLoader();
+
+                }
+            });
+        }
+    }
+
+    private void setCurrentRequests(String reqUserName) {
+        if((reqUserName.equals(app.getUserInfo().getCg_info().getCgusername()))){
             Params params = new Params();
 /*		cg_api_req_name = getpageowner_details
 		user_name = (pass current username)*/
             params.addParam("cg_api_req_name", "getuserrequests");
-            params.addParam("cg_session_user_name", userName);
+            params.addParam("cg_session_user_name", reqUserName);
             WebServiceWrapper.getInstance().callService(this, WebService.REQUEST_URL, params, new ICallBack<String>() {
                 @Override
                 public void onSuccess(String response) {
@@ -372,25 +432,36 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
 
         switch (view.getId()) {
             case R.id.mwAddressReq:
-               /* if(userName.equals(app.getUserInfo().getCg_info().getCgusername())){
-                    invokeReqRecPopup(view , addressReqCount.getText().toString());
-                }else{*/
-                    invokeCreateReqPopip(view, "address");
+                //if(userName.equals(app.getUserInfo().getCg_info().getCgusername()) && addressReqCount.getVisibility() == View.VISIBLE){
+                 //   invokeReqRecPopup(view , "addressReq");
+                //}else{
+                    if(LocalStorage.getRequestStatusModel.getAddressrequests()!=null){
+                        invokeCreateReqPopip(view, "Address already requested");
+                    }else {
+                        invokeCreateReqPopip(view, "Send address request");
+                    }
                 //}
                 break;
             case R.id.mwEmailReq:
-                //if(userName.equals(app.getUserInfo().getCg_info().getCgusername())) {
-                 //   invokeReqRecPopup(view, emailReqCount.getText().toString());
+                //if(userName.equals(app.getUserInfo().getCg_info().getCgusername()) && emailReqCount.getVisibility() == View.VISIBLE) {
+                 //   invokeReqRecPopup(view, "emailReq");
                 //}else{
-
-                    invokeCreateReqPopip(view, "Email");
+                    if(LocalStorage.getRequestStatusModel.getEmailrequests()!=null){
+                        invokeCreateReqPopip(view, "Email already requested");
+                    }else {
+                        invokeCreateReqPopip(view, "Send Email request");
+                    }
                 //}
                 break;
             case R.id.mwMobileNumReq:
-                //if(userName.equals(app.getUserInfo().getCg_info().getCgusername())) {
-                 //   invokeReqRecPopup(view, mobileReqCount.getText().toString());
+                //if(userName.equals(app.getUserInfo().getCg_info().getCgusername()) && mobileReqCount.getVisibility() == View.VISIBLE) {
+                 //   invokeReqRecPopup(view, "mobilereq");
                 //}else{
-                    invokeCreateReqPopip(view, "mobile number");
+                        if(LocalStorage.getRequestStatusModel.getMobilerequests()!=null){
+                            invokeCreateReqPopip(view, "Mobile number already requested");
+                        }else {
+                            invokeCreateReqPopip(view, "Send mobile number request");
+                        }
                 //}
                 break;
         }
@@ -401,26 +472,27 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
         PopupMenu popup = new PopupMenu(this, view);
         //popup.getMenuInflater().inflate(R.menu.send_req, popup.getMenu());
 
-        popup.getMenu().add("Send "+ type + " request");
-
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                ToastUtil.showErrorUpdate(MyWallActivity.this, "Menu Clicked");
-                sendRequestToUser(type);
-                return true;
-            }
-        });
+        popup.getMenu().add(type);
+        if(!type.contains("already")) {
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    ToastUtil.showErrorUpdate(MyWallActivity.this, "Menu Clicked");
+                    sendRequestToUser(type);
+                    return true;
+                }
+            });
+        }
 
         popup.show();
     }
 
     private void sendRequestToUser(String type) {
         String requestAction = "";
-        if(type.equals("address")){
+        if(type.contains("address")){
             requestAction = "sendeadsreq";
-        }else if(type.equals("Email")){
+        }else if(type.contains("Email")){
             requestAction = "sendemailreq";
-        }else if(type.equals("mobile number")){
+        }else if(type.contains("mobile number")){
             requestAction = "sendemobilereq";
         }
 
@@ -435,10 +507,10 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
                 try{
                     JSONObject json = new JSONObject(response);
                     if(json.getString("request_status").equals("1")) {
-
+                        getRequestStatus(userName);
                         ToastUtil.showErrorUpdate(MyWallActivity.this, json.getString("cg_requestmsg"));
                     }else {
-                        updateErrorUI("Unable to fetch profile picture");
+                        updateErrorUI("Unable to request");
                     }
                 }catch (Exception e){
                     e.printStackTrace();
@@ -448,14 +520,57 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
             @Override
             public void onFailure(String response) {
                 dismissLoader();
-
+                updateErrorUI("Unable to request");
             }
         });
 //
     }
 
-    private void invokeReqRecPopup(View view, String count) {
+    private void invokeReqRecPopup(View view, final String type) {
+        PopupMenu popup = new PopupMenu(this, view);
 
+        //popup.getMenuInflater().inflate(R.menu.send_req, popup.getMenu());
+        if (type.contains("address")) {
+            reqUserName = new String[LocalStorage.getCurrecntRequestsModel.getAddressrequests().length];
+            reqUserFullName = new String[LocalStorage.getCurrecntRequestsModel.getAddressrequests().length];
+            for (int i = 0; i < LocalStorage.getCurrecntRequestsModel.getAddressrequests().length; i++) {
+                popup.getMenu().add(LocalStorage.getCurrecntRequestsModel.getAddressrequests()[i].getUser_fullname());
+                reqUserName[i] = LocalStorage.getCurrecntRequestsModel.getAddressrequests()[i].getRequested_username();
+                reqUserFullName[i] = LocalStorage.getCurrecntRequestsModel.getAddressrequests()[i].getUser_fullname();
+            }
+        } else if (type.contains("email")) {
+            reqUserName = new String[LocalStorage.getCurrecntRequestsModel.getEmailrequests().length];
+            reqUserFullName = new String[LocalStorage.getCurrecntRequestsModel.getEmailrequests().length];
+            for (int i = 0; i < LocalStorage.getCurrecntRequestsModel.getEmailrequests().length; i++) {
+                popup.getMenu().add(LocalStorage.getCurrecntRequestsModel.getEmailrequests()[i].getUser_fullname());
+                reqUserName[i] = LocalStorage.getCurrecntRequestsModel.getEmailrequests()[i].getRequested_username();
+                reqUserFullName[i] = LocalStorage.getCurrecntRequestsModel.getEmailrequests()[i].getUser_fullname();
+            }
+        } else if (type.contains("mobile")) {
+            reqUserName = new String[LocalStorage.getCurrecntRequestsModel.getMobilerequests().length];
+            reqUserFullName = new String[LocalStorage.getCurrecntRequestsModel.getMobilerequests().length];
+            for (int i = 0; i < LocalStorage.getCurrecntRequestsModel.getMobilerequests().length; i++) {
+                popup.getMenu().add(LocalStorage.getCurrecntRequestsModel.getMobilerequests()[i].getUser_fullname());
+                reqUserName[i] = LocalStorage.getCurrecntRequestsModel.getMobilerequests()[i].getRequested_username();
+                reqUserFullName[i] = LocalStorage.getCurrecntRequestsModel.getMobilerequests()[i].getUser_fullname();
+            }
+        }
+
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                ToastUtil.showErrorUpdate(MyWallActivity.this, "Menu Clicked");
+                for(int i = 0 ; i < reqUserFullName.length; i ++){
+
+                }
+                approveReqAPI(item.getTitle().toString());
+                return true;
+            }
+        });
+
+
+        popup.show();
+       /*
         PopupMenu popup = new PopupMenu(this, view);
         popup.getMenuInflater().inflate(R.menu.received_req_menu, popup.getMenu());
         if(Integer.parseInt(count) > 0){
@@ -469,7 +584,10 @@ public class MyWallActivity extends AppCompatActivity implements ICallBack<Strin
             }
         });
 
-        popup.show();
+        popup.show();*/
+
     }
 
+    private void approveReqAPI(String userName) {
+    }
 }

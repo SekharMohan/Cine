@@ -164,7 +164,7 @@ public class Home extends Fragment implements ICallBack<String>, SwipeRefreshLay
     public void onSuccess(String response) {
         LocalStorage.feedModel = new Gson().fromJson(response,FeedModel.class);
         setFeedAdapter();
-
+        //dismissLoader();
         dimissSwipeLayout();
 
     }
@@ -218,6 +218,7 @@ public class Home extends Fragment implements ICallBack<String>, SwipeRefreshLay
     @Override
     public void onRefresh() {
         apiCall();
+        alertsApiCall();
     }
 
     private void dimissSwipeLayout(){
