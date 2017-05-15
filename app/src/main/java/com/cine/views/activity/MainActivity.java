@@ -693,6 +693,7 @@
             View    inflatedView = layoutInflater.inflate(R.layout.comment_xml, null,false);
                 // find the ListView in the popup layout
                 ExpandableListView listView = (ExpandableListView)inflatedView.findViewById(R.id.commentsListView);
+
                 LinearLayout headerView = (LinearLayout)inflatedView.findViewById(R.id.headerLayout);
              final   AppCompatEditText edtComments = (AppCompatEditText) inflatedView.findViewById(R.id.writeComment);
                 ImageButton imSend = (ImageButton) inflatedView.findViewById(R.id.comment_action_send);
@@ -738,37 +739,8 @@
                 popWindow.showAtLocation(v, Gravity.BOTTOM, 0,100);
             }
             void setSimpleList(ExpandableListView listView, FeedModel.Commonwall_posts post, int postion, TextView tvCommentCount){
-                 adapter = new CommentsAdapter(this,post,postion,tvCommentCount);
+                 adapter = new CommentsAdapter(this,post,postion,tvCommentCount,listView);
                 listView.setAdapter(adapter);
-
-
-            }
-
-
-
-
-            void callReplyApi(){
-                Loader.showProgressBar(this);
-                Params params=new Params();
-
-                params.addParam("REQUEST_METHOD","POST");
-                params.addParam("cg_api_req_name","newreply");
-                params.addParam("cg_username","prabu944");
-
-                params.addParam("comment_id",1);
-                params.addParam("reply","test");
-                WebServiceWrapper.getInstance().callService(this, WebService.FEEDS_URL, params, new ICallBack<String>() {
-                    @Override
-                    public void onSuccess(String response) {
-
-                        dismissLoader();
-                    }
-
-                    @Override
-                    public void onFailure(String response) {
-
-                    }
-                });
             }
 
 

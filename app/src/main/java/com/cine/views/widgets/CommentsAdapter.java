@@ -1,12 +1,16 @@
     package com.cine.views.widgets;
 
     import android.content.Context;
+    import android.support.v7.widget.AppCompatEditText;
     import android.text.Editable;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
     import android.widget.BaseExpandableListAdapter;
+    import android.widget.ExpandableListView;
+    import android.widget.ImageButton;
     import android.widget.ImageView;
+    import android.widget.LinearLayout;
     import android.widget.TextView;
 
     import com.cine.CineApplication;
@@ -36,14 +40,16 @@
         private LayoutInflater inflater;
 
         List<Map<String ,String>> commentItem = new ArrayList<>();
-        private HashMap<Map<String ,String>, List<String>> expandableListDetail;
-        List<String> reply = new ArrayList<>();
+        private HashMap<Map<String ,String>, List<Map<String ,String>>> expandableListDetail = new HashMap<>();
+        private HashMap<Map<String,String>,String> cmtIDList = new HashMap<>();
         Context mContext;
         TextView tvCommentCount;
         public int position;
+        ExpandableListView listView;
         public CineApplication app = CineApplication.getInstance();
         FeedModel.Commonwall_posts post;
-        public CommentsAdapter(Context context, FeedModel.Commonwall_posts post, int postion, TextView tvCommentCount){
+        public CommentsAdapter(Context context, FeedModel.Commonwall_posts post, int postion, TextView tvCommentCount,ExpandableListView listView){
+            this.listView = listView;
             this.tvCommentCount = tvCommentCount;
             this.post = post;
             this.position = postion;
@@ -54,7 +60,9 @@
             this.inflater = LayoutInflater.from(context);
         }
 
-    void setComments(String postComments){
+
+
+        void setComments(String postComments){
         /*65-prabu944-Test 1,64-prabu944-test*/
         String[] commentArr = postComments.split(",");
         for(String commnt:commentArr){
@@ -65,17 +73,32 @@
             /*65:41-prabu944-you,64:39-prabu944-hai,64:40-prabu944-hai hai hai,65:42-prabu944-lam,65:45-iamsanthosh-க்ஹ்*/
             if(post.getPost_comment_replies()!=null && !post.getPost_comment_replies().isEmpty()){
                 String replySplit[] = post.getPost_comment_replies().split(",");
-                List<String> childItem = new ArrayList<>();
+                List<Map<String,String>> replylist = new ArrayList<>();
                 for(String reply:replySplit) {
                     String replyId[] = reply.split(":");
                     if(cmtsDesc[0].equals(replyId[0])){
-
+                        String getReplyStr[] = replyId[1].split("-");
+                        Map<String,String> whoReplied = new HashMap<>();
+                        whoReplied.put(getReplyStr[1],getReplyStr[2]);
+                        cmtIDList.put(whoReplied,replyId[0]);
+                  replylist.add(whoReplied);
                     }
                 }
+                if(replylist.size()>0) {
+                    expandableListDetail.put(whoComment, replylist);
+                }
             }
-        }
+        }if(commentItem.size()>0){
+                expandAll();
+            }
 
     }
+
+        private void expandAll() {
+            for(int i =0 ;i<commentItem.size();i++){
+                listView.expandGroup(i);
+            }
+        }
 
         @Override
         public int getGroupCount() {
@@ -84,27 +107,32 @@
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return reply.size();
+            Map<String ,String>  test = this.commentItem.get(groupPosition);
+            int size = this.expandableListDetail.get(test)
+                    .size();
+            return size;
+
         }
 
         @Override
         public Object getGroup(int groupPosition) {
-            return null;
+            return commentItem.get(groupPosition);
         }
 
         @Override
-        public Object getChild(int groupPosition, int childPosition) {
-            return null;
+        public Map<String,String> getChild(int listPosition, int expandedListPosition) {
+           return this.expandableListDetail.get(this.commentItem.get(listPosition))
+                    .get(expandedListPosition);
         }
 
         @Override
         public long getGroupId(int groupPosition) {
-            return 0;
+            return groupPosition;
         }
 
         @Override
         public long getChildId(int groupPosition, int childPosition) {
-            return 0;
+            return childPosition;
         }
 
         @Override
@@ -132,9 +160,33 @@
 
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View view, ViewGroup parent) {
+            final Map<String,String> child =  getChild(groupPosition, childPosition);
             if (view == null) {
                 view = inflater.inflate(R.layout.reply_item, parent, false);
             }
+            final ReplyItem comts = new ReplyItem(view);
+
+
+            for(Map.Entry entry:child.entrySet()){
+                comts.tvUserName.setText(entry.getKey().toString());
+                comts.tvComments.setText(entry.getValue().toString());
+
+            }
+            comts.tvReply.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    comts.llReplySection.setVisibility(View.VISIBLE);
+                }
+            });
+            comts.replyButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(!comts.edtReply.getText().toString().isEmpty()){
+                        callReplyApi(comts.edtReply.getText(),cmtIDList.get(child));
+                        comts.llReplySection.setVisibility(View.GONE);
+                    }
+                }
+            });
             return view;
         }
 
@@ -167,6 +219,14 @@
             TextView tvComments;
             @BindView(R.id.comment_date)
             TextView tvDate;
+            @BindView(R.id.reply_section)
+            LinearLayout llReplySection;
+            @BindView(R.id.reply)
+                    TextView tvReply;
+            @BindView(R.id.comment_action_send)
+            ImageButton replyButton ;
+            @BindView(R.id.writeComment)
+            AppCompatEditText edtReply;
             ReplyItem(View v){
                 ButterKnife.bind(this,v);
             }
@@ -226,6 +286,30 @@
                 public void onFailure(String response) {
 
                     dismissLoader();
+                }
+            });
+        }
+        void callReplyApi(Editable text, String id){
+            Loader.showProgressBar(mContext);
+            Params params=new Params();
+
+            params.addParam("REQUEST_METHOD","POST");
+            params.addParam("cg_api_req_name","newreply");
+            params.addParam("cg_username","prabu944");
+
+            params.addParam("comment_id",id);
+            params.addParam("reply",text);
+            WebServiceWrapper.getInstance().callService(mContext, WebService.FEEDS_URL, params, new ICallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+apiCall();
+
+                }
+
+                @Override
+                public void onFailure(String response) {
+                    dismissLoader();
+
                 }
             });
         }
