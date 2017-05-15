@@ -88,17 +88,10 @@
                     expandableListDetail.put(whoComment, replylist);
                 }
             }
-        }if(commentItem.size()>0){
-                expandAll();
-            }
+        }
 
     }
 
-        private void expandAll() {
-            for(int i =0 ;i<commentItem.size();i++){
-                listView.expandGroup(i);
-            }
-        }
 
         @Override
         public int getGroupCount() {
@@ -108,8 +101,12 @@
         @Override
         public int getChildrenCount(int groupPosition) {
             Map<String ,String>  test = this.commentItem.get(groupPosition);
-            int size = this.expandableListDetail.get(test)
-                    .size();
+            int size =0;
+            if(this.expandableListDetail.get(test)!=null
+                   ){
+                size= this.expandableListDetail.get(test)
+                        .size();
+            }
             return size;
 
         }
@@ -145,6 +142,8 @@
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.comment_item, parent, false);
             }
+            ExpandableListView mExpandableListView = (ExpandableListView) parent;
+            mExpandableListView.expandGroup(groupPosition);
             CommentsItem comts = new CommentsItem(convertView);
 
             Map<String , String> getComments = commentItem.get(groupPosition);
