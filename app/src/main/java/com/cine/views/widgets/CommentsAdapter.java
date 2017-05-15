@@ -36,35 +36,43 @@
         private LayoutInflater inflater;
 
         List<Map<String ,String>> commentItem = new ArrayList<>();
+        private HashMap<Map<String ,String>, List<String>> expandableListDetail;
         List<String> reply = new ArrayList<>();
         Context mContext;
+        TextView tvCommentCount;
         public int position;
         public CineApplication app = CineApplication.getInstance();
         FeedModel.Commonwall_posts post;
-        public CommentsAdapter(Context context,FeedModel.Commonwall_posts post,int postion){
+        public CommentsAdapter(Context context, FeedModel.Commonwall_posts post, int postion, TextView tvCommentCount){
+            this.tvCommentCount = tvCommentCount;
             this.post = post;
             this.position = postion;
             if(post.getPost_comments()!=null &&!post.getPost_comments().isEmpty()) {
                 setComments(post.getPost_comments());
             }
-           /* String[] commentArr = post.getPost_comments().split(",");
-            setComments();
-            comments = Arrays.asList(commentArr);
-            String[] replyArr = post.getPost_comment_replies().split(",");
-            reply =Arrays.asList(replyArr);*/
             mContext = context;
             this.inflater = LayoutInflater.from(context);
         }
 
-    void setComments(String post){
+    void setComments(String postComments){
         /*65-prabu944-Test 1,64-prabu944-test*/
-        String[] commentArr = post.split(",");
+        String[] commentArr = postComments.split(",");
         for(String commnt:commentArr){
             String cmtsDesc[] = commnt.split("-");
             Map<String,String> whoComment = new HashMap<>();
             whoComment.put(cmtsDesc[1],cmtsDesc[2]);
-
             commentItem.add(whoComment);
+            /*65:41-prabu944-you,64:39-prabu944-hai,64:40-prabu944-hai hai hai,65:42-prabu944-lam,65:45-iamsanthosh-க்ஹ்*/
+            if(post.getPost_comment_replies()!=null && !post.getPost_comment_replies().isEmpty()){
+                String replySplit[] = post.getPost_comment_replies().split(",");
+                List<String> childItem = new ArrayList<>();
+                for(String reply:replySplit) {
+                    String replyId[] = reply.split(":");
+                    if(cmtsDesc[0].equals(replyId[0])){
+
+                    }
+                }
+            }
         }
 
     }
@@ -117,7 +125,7 @@
                 comts.tvComments.setText(entry.getValue().toString());
 
             }
-    comts.tvCommentCount.setText(commentItem.size()+" People are commented");
+    tvCommentCount.setText(commentItem.size()+" People are commented");
 
             return convertView;
         }
@@ -144,8 +152,7 @@
             TextView tvComments;
             @BindView(R.id.comment_date)
             TextView tvDate;
-            @BindView(R.id.comment_count)
-            TextView tvCommentCount;
+
             CommentsItem(View v){
                 ButterKnife.bind(this,v);
             }

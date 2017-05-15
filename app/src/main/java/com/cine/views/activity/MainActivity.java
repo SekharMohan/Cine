@@ -696,12 +696,14 @@
                 LinearLayout headerView = (LinearLayout)inflatedView.findViewById(R.id.headerLayout);
              final   AppCompatEditText edtComments = (AppCompatEditText) inflatedView.findViewById(R.id.writeComment);
                 ImageButton imSend = (ImageButton) inflatedView.findViewById(R.id.comment_action_send);
+                TextView tvCommentCount = (TextView) inflatedView.findViewById(R.id.comment_count);
                 imSend.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                             if(!edtComments.getText().toString().isEmpty()){
                           adapter.callCommentsApi(edtComments.getText());
+                                edtComments.setText("");
                             }else{
                                 updateErrorUI("Please enter the comments to the post");
                             }
@@ -719,7 +721,7 @@
 
 
                 // fill the data to the list items
-                setSimpleList(listView,post,postion);
+                setSimpleList(listView,post,postion,tvCommentCount);
 
 
                 // set height depends on the device size
@@ -735,8 +737,8 @@
                 // show the popup at bottom of the screen and set some margin at bottom ie,
                 popWindow.showAtLocation(v, Gravity.BOTTOM, 0,100);
             }
-            void setSimpleList(ExpandableListView listView, FeedModel.Commonwall_posts post, int postion){
-                 adapter = new CommentsAdapter(this,post,postion);
+            void setSimpleList(ExpandableListView listView, FeedModel.Commonwall_posts post, int postion, TextView tvCommentCount){
+                 adapter = new CommentsAdapter(this,post,postion,tvCommentCount);
                 listView.setAdapter(adapter);
 
 
